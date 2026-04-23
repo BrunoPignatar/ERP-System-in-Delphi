@@ -1,0 +1,73 @@
+unit uConLog;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHerancaConsulta, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async,
+  FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ExtCtrls;
+
+type
+  TfrmLog = class(TfrmTelaHerancaConsulta)
+    btnPesquisar: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure mskPesquisaChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmLog: TfrmLog;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmLog.FormCreate(Sender: TObject);
+var i: Integer;
+begin
+  inherited;
+     grdPesquisa.TitleFont.Color:=clWhite;
+
+  // Centraliza os titulos
+    for i := 0 to grdPesquisa.Columns.Count - 1 do
+    grdPesquisa.Columns[i].Title.Alignment := taCenter;
+end;
+
+procedure TfrmLog.mskPesquisaChange(Sender: TObject);
+var Date:TDateTime;
+begin
+
+  if(trim(TMaskEdit(Sender).Text) = '')then
+    Exit;
+
+  if(QryListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
+  begin
+    QryListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
+  end
+
+  else if(QryListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
+  begin
+   try
+     QryListagem.Locate(IndiceAtual, (TMaskEdit(Sender).Text), [])
+   except
+
+   end;
+  end
+
+  else if(QryListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
+  begin
+   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
+   begin
+     QryListagem.Locate(IndiceAtual, Date, []);
+   end
+  end
+  else
+     QryListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
+end;
+
+end.

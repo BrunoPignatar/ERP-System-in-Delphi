@@ -1,0 +1,84 @@
+unit uRelCadClienteFicha;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, uDTMConexao, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, RLReport, RLFilters, RLPDFFilter, Vcl.Imaging.pngimage;
+
+type
+  TfrmRelCadClienteFicha = class(TForm)
+    QryCliente: TFDQuery;
+    dtsCliente: TDataSource;
+    Relatorio: TRLReport;
+    Cabecalho: TRLBand;
+    RLLabel1: TRLLabel;
+    RLDraw1: TRLDraw;
+    Rodape: TRLBand;
+    RLDraw2: TRLDraw;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLLabel4: TRLLabel;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+    RLDBText2: TRLDBText;
+    RLLabel5: TRLLabel;
+    QryClienteclienteId: TFDAutoIncField;
+    QryClienteNome: TStringField;
+    QryClienteemail: TStringField;
+    QryClientetelefone: TStringField;
+    RLDBText3: TRLDBText;
+    RLDBText4: TRLDBText;
+    QryClientecep: TStringField;
+    QryClienteendereco: TStringField;
+    QryClientebairro: TStringField;
+    QryClientecidade: TStringField;
+    QryClienteestado: TStringField;
+    QryClientedataNascimento: TSQLTimeStampField;
+    RLLabel7: TRLLabel;
+    RLLabel8: TRLLabel;
+    RLLabel9: TRLLabel;
+    RLLabel6: TRLLabel;
+    RLLabel10: TRLLabel;
+    RLDBText5: TRLDBText;
+    RLLabel11: TRLLabel;
+    RLDBText6: TRLDBText;
+    RLLabel12: TRLLabel;
+    RLDBText7: TRLDBText;
+    RLLabel13: TRLLabel;
+    RLDBText8: TRLDBText;
+    RLLabel14: TRLLabel;
+    RLDBText9: TRLDBText;
+    RLDraw3: TRLDraw;
+    RLImage1: TRLImage;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmRelCadClienteFicha: TfrmRelCadClienteFicha;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmRelCadClienteFicha.FormCreate(Sender: TObject);
+begin
+    QryCliente.Open;
+end;
+
+procedure TfrmRelCadClienteFicha.FormDestroy(Sender: TObject);
+begin
+   frmRelCadCliente.Close;
+end;
+
+end.

@@ -1,0 +1,25 @@
+unit cAtualizacaoBancoDeDados;
+
+interface
+
+
+uses IdUserAccounts, System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+  FireDAC.Comp.Client, Vcl.Dialogs, System.SysUtils, uEnum;
+
+
+
+type
+  TAtualizaBancoDados = class
+
+    private
+
+    public
+      ConexaoDB:TFDConnection;
+      constructor Create (aConexao:TFDConnection);
+      procedure ExecutaDiretoBancoDeDados(aScript: String);
+
+  end;
+
+implementation
+
+end.

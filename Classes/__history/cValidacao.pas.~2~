@@ -1,0 +1,52 @@
+//unit cValidacao;
+//
+//interface
+//
+//uses
+//  System.SysUtils;
+//
+//// Declaramos a função para o sistema inteiro enxergar
+//function ValidarCPF(const aCPF: string): Boolean;
+//
+//implementation
+//
+//function ValidarCPF(const aCPF: string): Boolean;
+//var
+//  CPF_Limpo: string;
+//  // Aqui você declararia as variáveis de laço (I, Soma, Resto, Digito1, Digito2)
+//begin
+//  // 1. TIRAR A SUJEIRA:
+//  // O usuário pode digitar '123.456.789-00'. O cálculo só aceita números.
+//  // Use a função StringReplace para trocar '.' e '-' por nada ('').
+//  CPF_Limpo := // lógica de limpeza...
+//
+//  // 2. BARRAR OS ENGRAÇADINHOS (Filtro Básico):
+//  // Se o CPF_Limpo não tiver exatamente 11 caracteres, ou se for uma
+//  // sequência de números iguais (tipo '11111111111' que passa no cálculo mas é falso),
+//  // a função já chuta a porta e retorna False direto.
+//  if (Length(CPF_Limpo) <> 11) or (CPF_Limpo = '00000000000') {.. e os outros ..} then
+//  begin
+//    Result := False;
+//    Exit;
+//  end;
+//
+//  // 3. A MATEMÁTICA DO PRIMEIRO SEGURANÇA (1º Dígito):
+//  // Aqui vai um laço 'for' de 1 até 9. Você multiplica cada número pelo seu peso
+//  // (que começa em 10 e vai caindo).
+//  // Faz a conta de divisão (mod 11) para descobrir qual deveria ser o 1º dígito.
+//
+//  // 4. A MATEMÁTICA DO SEGUNDO SEGURANÇA (2º Dígito):
+//  // Aqui vai outro laço 'for', agora de 1 até 10 (incluindo o dígito que você acabou de achar).
+//  // Faz a mesma conta de pesos para achar qual deveria ser o 2º dígito.
+//
+//  // 5. O VEREDITO FINAL:
+//  // Se o 1º e o 2º dígitos que a SUA matemática achou forem EXATAMENTE IGUAIS
+//  // aos 2 últimos números que o usuário digitou na tela, então o CPF é verdadeiro.
+//  if (Dígitos_Calculados = Dígitos_Digitados) then
+//    Result := True
+//  else
+//    Result := False;
+//end;
+//
+//{Dica de Ouro: Na sua tela de cadastro (uCadCliente), no evento de clique do botão "Gravar" ou na saída do campo (OnExit), você só chama: if not ValidarCPF(edtCPF.Text) then begin ShowMessage('CPF Inválido'); Abort; end;}
+//end.

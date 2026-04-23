@@ -1,0 +1,30 @@
+object DTMGrafico: TDTMGrafico
+  OldCreateOrder = False
+  Height = 377
+  Width = 583
+  object dtsProdutoEstoque: TDataSource
+    Left = 111
+    Top = 62
+  end
+  object QryProdutoEstoque: TFDQuery
+    Connection = dtmConexao.dtmPrincipal
+    SQL.Strings = (
+      
+        'select CONVERT(varchar,produtoId) +'#39' - '#39'+nome as label, Quantida' +
+        'de as value from produtos')
+    Left = 39
+    Top = 54
+    object QryProdutoEstoquelabel: TStringField
+      FieldName = 'label'
+      Origin = 'label'
+      ReadOnly = True
+      Size = 93
+    end
+    object QryProdutoEstoquevalue: TFMTBCDField
+      FieldName = 'value'
+      Origin = 'value'
+      Precision = 18
+      Size = 5
+    end
+  end
+end

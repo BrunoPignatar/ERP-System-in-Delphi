@@ -1,0 +1,97 @@
+﻿inherited frmCadCategorias: TfrmCadCategorias
+  Caption = 'Cadastro de Categorias'
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    inherited Listagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 698
+      ExplicitHeight = 315
+      inherited pnlListagemTopo: TPanel
+        inherited lblIndice: TLabel
+          Left = 12
+          Top = 0
+          ExplicitLeft = 12
+          ExplicitTop = 0
+        end
+        inherited mskEdit: TMaskEdit
+          Left = 12
+          Text = ''
+          TextHint = 'Digite sua Pesquisa'
+          ExplicitLeft = 12
+        end
+        inherited btnPesquisar: TBitBtn
+          Left = 291
+          ExplicitLeft = 291
+        end
+      end
+      inherited dbgrdListagem: TDBGrid
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'categoriaId'
+            Title.Caption = 'ID'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'descricao'
+            Title.Caption = 'Descri'#231#227'o'
+            Visible = True
+          end>
+      end
+    end
+    inherited Manutenção: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 698
+      ExplicitHeight = 315
+      object edtCategoriaId: TLabeledEdit
+        Tag = 1
+        Left = 23
+        Top = 32
+        Width = 121
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 26
+        EditLabel.Caption = 'Codigo'#13#10
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 0
+      end
+      object edtDescricao: TLabeledEdit
+        Tag = 2
+        Left = 23
+        Top = 88
+        Width = 282
+        Height = 21
+        EditLabel.Width = 46
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Descri'#231#227'o'
+        MaxLength = 30
+        TabOrder = 1
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited QryListagem: TFDQuery
+    SQL.Strings = (
+      'select categoriaId, descricao from categorias')
+    object QryListagemcategoriaId: TFDAutoIncField
+      DisplayLabel = 'Codigo'
+      FieldName = 'categoriaId'
+      ReadOnly = True
+    end
+    object QryListagemdescricao: TStringField
+      DisplayLabel = 'Descri'#231#227'o'#13#10
+      FieldName = 'descricao'
+      Size = 50
+    end
+  end
+end

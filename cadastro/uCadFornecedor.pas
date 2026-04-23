@@ -1,0 +1,269 @@
+unit uCadFornecedor;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Vcl.ExtCtrls,
+  Vcl.StdCtrls, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.Mask,
+  Vcl.ComCtrls, cCadFornecedor, uEnum, uDTMConexao;
+
+type
+  TfrmCadFornecedor = class(TfrmTelaHeranca)
+    QryListagemfornId: TFDAutoIncField;
+    QryListagemnome: TStringField;
+    QryListagemcnpj: TStringField;
+    QryListagemendereco: TStringField;
+    QryListagemtelefone: TStringField;
+    QryListagememail: TStringField;
+    edtDocumento: TEdit;
+    lblDoc: TLabel;
+    edtNome: TLabeledEdit;
+    edtTelefone: TEdit;
+    lbl2: TLabel;
+    edtEmail: TLabeledEdit;
+    edtEndereco: TLabeledEdit;
+    Panel2: TPanel;
+    edtObservacao: TEdit;
+    Label10: TLabel;
+    strngfldQryListagemobservacao: TStringField;
+    edtFornId: TLabeledEdit;
+    procedure edtDocumentoChange(Sender: TObject);
+    procedure edtTelefoneChange(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure dbgrdListagemDblClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure mskEditChange(Sender: TObject);
+  private
+    { Private declarations }
+    oFornecedor:TFornecedor;
+    procedure CarregarItensSelecionados;
+    function GetDesc: string; override;
+  public
+  procedure limparComponenteitem;
+  function Excluir:Boolean; override;
+  function Gravar(EstadoDoCadastro:TEstadoDoCadastro): Boolean; override;
+  function ApenasNumeros(const S: string): string;
+    { Public declarations }
+  end;
+
+var
+  frmCadFornecedor: TfrmCadFornecedor;
+
+implementation
+
+uses
+  cValidacaoDocumento;
+
+
+
+{$R *.dfm}
+
+
+function TfrmCadFornecedor.GetDesc:string;
+begin
+  Result := oFornecedor.nome;
+end;
+
+function TfrmCadFornecedor.ApenasNumeros(const S: string): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 1 to Length(S) do
+    if CharInSet(S[i], ['0'..'9']) then
+      Result := Result + S[i];
+end;
+
+function TfrmCadFornecedor.Excluir: Boolean;
+begin
+  if oFornecedor.Seleciona(QryListagem.FieldByName('fornId').AsInteger) then begin
+    result:=oFornecedor.Apagar;
+  end;
+end;
+
+procedure TfrmCadFornecedor.CarregarItensSelecionados;
+begin
+  edtNome.Text := QryListagem.FieldByName('nome').AsString;
+  edtTelefone.Text:= QryListagem.FieldByName('telefone').AsString;
+  edtDocumento.Text:= QryListagem.FieldByName('cnpj').AsString;
+  edtFornId.Text := QryListagem.FieldByName('fornId').AsString;
+  edtEmail.Text:= QryListagem.FieldByName('email').AsString;
+  edtEndereco.Text:= QryListagem.FieldByName('endereco').AsString;
+  edtObservacao.Text:= QryListagem.FieldByName('observacao').AsString;
+end;
+
+procedure TfrmCadFornecedor.dbgrdListagemDblClick(Sender: TObject);
+begin
+  inherited;
+  CarregarItensSelecionados;
+end;
+
+procedure TfrmCadFornecedor.FormCreate(Sender: TObject);
+begin
+  inherited;
+    oFornecedor:=TFornecedor.create(dtmConexao.dtmPrincipal);
+    IndiceAtual:='nome';
+end;
+
+function TfrmCadFornecedor.Gravar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+begin
+  if edtFornId.Text<>EmptyStr then
+     oFornecedor.codigo:=StrToInt(edtFornId.Text)
+  else
+     oFornecedor.codigo:=0;
+
+  oFornecedor.nome                   :=edtNome.Text;
+  oFornecedor.endereco               :=edtEndereco.Text;
+  oFornecedor.telefone               :=edtTelefone.Text;
+  oFornecedor.email                  :=edtEmail.Text;
+  oFornecedor.doc                    :=edtDocumento.Text;
+  oFornecedor.observacao             :=edtObservacao.Text;
+
+  if (EstadoDoCadastro=ecInserir) then
+    result:=oFornecedor.Gravar
+  else if (EstadoDoCadastro=ecAlterar) then
+    result:=oFornecedor.Atualizar;
+    limparComponenteitem;
+end;
+
+procedure TfrmCadFornecedor.LimparComponenteItem;
+begin
+  edtNome.Text := '';
+  edtEndereco.Text := '';
+  edtTelefone.Text := '';
+  edtEmail.Text := '';
+  edtDocumento.Text := '';
+  edtObservacao.Text := '';
+end;
+
+procedure TfrmCadFornecedor.mskEditChange(Sender: TObject);
+var
+  Texto, N: string;
+  PosCursor: Integer;
+begin
+  if IndiceAtual = 'cnpj' then begin
+  PosCursor := mskEdit.SelStart;
+  mskEdit.OnChange := nil;
+  try
+    N := ApenasNumeros(mskEdit.Text);
+    Texto := N;
+
+    if Length(N) <= 14 then
+    begin
+      if Length(N) > 2 then Texto := Copy(N,1,2) + '.' + Copy(N,3,Length(N)-2);
+      if Length(N) > 5 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,Length(N)-5);
+      if Length(N) > 8 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,Length(N)-8);
+      if Length(N) > 12 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,4) + '-' + Copy(N,13,Length(N)-12);
+    end;
+
+    mskEdit.Text := Texto;
+    mskEdit.SelStart := Length(Texto);
+  finally
+    mskEdit.OnChange := mskEditChange;
+  end;
+  end;
+end;
+
+procedure TfrmCadFornecedor.btnAlterarClick(Sender: TObject);
+begin
+
+  if oFornecedor.Seleciona(QryListagem.FieldByName('fornId').AsInteger) then begin
+     edtFornId.Text:=IntToStr(oFornecedor.codigo);
+     edtNome.Text:=oFornecedor.nome;
+     edtEndereco.Text:=oFornecedor.endereco;
+     edtTelefone.Text:=oFornecedor.telefone;
+     edtEmail.Text:=oFornecedor.email;
+     edtDocumento.Text:=oFornecedor.doc;
+     edtObservacao.Text:=oFornecedor.observacao;
+  end
+  else begin
+    btnCancelar.Click;
+    Abort;
+  end;
+
+  inherited;
+
+end;
+
+procedure TfrmCadFornecedor.btnGravarClick(Sender: TObject);
+begin
+  if not ValidarCNPJ(edtDocumento.Text) then
+  begin
+    ShowMessage('CNPJ Inválido');
+    Exit;
+  end;
+inherited;
+end;
+
+procedure TfrmCadFornecedor.edtDocumentoChange(Sender: TObject);
+var
+  Texto, N: string;
+  PosCursor: Integer;
+begin
+  PosCursor := edtDocumento.SelStart;
+
+  edtDocumento.OnChange := nil;
+  try
+    N := ApenasNumeros(edtDocumento.Text);
+    Texto := N;
+
+    if Length(N) <= 14 then
+    begin
+      if Length(N) > 2 then Texto := Copy(N,1,2) + '.' + Copy(N,3,Length(N)-2);
+      if Length(N) > 5 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,Length(N)-5);
+      if Length(N) > 8 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,Length(N)-8);
+      if Length(N) > 12 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,4) + '-' + Copy(N,13,Length(N)-12);
+    end;
+    edtDocumento.Text := Texto;
+    edtDocumento.SelStart := Length(Texto);
+  finally
+    edtDocumento.OnChange := edtDocumentoChange;
+  end;
+end;
+
+procedure TfrmCadFornecedor.edtTelefoneChange(Sender: TObject);
+var Texto: string;
+begin
+  inherited;
+begin
+  Texto := edtTelefone.Text;
+
+
+  Texto := ApenasNumeros(edtTelefone.Text);
+
+  if Texto = '' then Exit;
+
+
+  if Texto[1] = '0' then
+  begin
+    if Length(Texto) <= 4 then
+      edtTelefone.Text := Copy(Texto, 1, Length(Texto))
+    else if Length(Texto) <= 7 then
+      edtTelefone.Text := Copy(Texto,1,4) + ' ' + Copy(Texto,5,3)
+    else
+      edtTelefone.Text := Copy(Texto,1,4) + ' ' + Copy(Texto,5,3) + ' ' + Copy(Texto,8,4);
+
+    edtTelefone.SelStart := Length(edtTelefone.Text);
+  end
+  else if Length(Texto) <= 10 then
+  begin
+    if Length(Texto) <= 2 then
+       edtTelefone.Text := '(' + Copy(Texto,1,Length(Texto))
+    else if Length(Texto) <= 6 then
+      edtTelefone.Text := '(' + Copy(Texto, 1,2) + ')' + Copy(Texto,3,Length(Texto)-2)
+    else
+      edtTelefone.Text := '(' + Copy(Texto,1,2) + ')' + Copy(Texto,3,4) + '-' + Copy(Texto,7,4);
+  end
+  else
+  begin
+     edtTelefone.MaxLength:= 14;
+     edtTelefone.Text := '(' + Copy(Texto,1,2) + ')' + Copy(Texto,3,5) + '-' + Copy(Texto,8,Length(Texto)-7);
+  end;
+
+    edtTelefone.SelStart := Length(edtTelefone.Text);
+end;
+end;
+end.

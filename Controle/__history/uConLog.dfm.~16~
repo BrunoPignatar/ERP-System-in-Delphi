@@ -1,0 +1,30 @@
+inherited frmLog: TfrmLog
+  Align = alClient
+  Caption = 'Log do Sistema'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    inherited mskPesquisa: TMaskEdit
+      Width = 592
+      Align = alNone
+      ExplicitWidth = 592
+    end
+    object btnPesquisar: TButton
+      Left = 599
+      Top = 17
+      Width = 75
+      Height = 25
+      Caption = 'Pesquisar'
+      TabOrder = 1
+    end
+  end
+  inherited Panel3: TPanel
+    inherited grdPesquisa: TDBGrid
+      OnDblClick = nil
+    end
+  end
+  inherited QryListagem: TFDQuery
+    SQL.Strings = (
+      'select * from auditoria')
+  end
+end

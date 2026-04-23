@@ -1,0 +1,347 @@
+object frmRelCadClienteFicha: TfrmRelCadClienteFicha
+  Left = 0
+  Top = 0
+  Caption = 'frmRelCadClienteFicha'
+  ClientHeight = 459
+  ClientWidth = 715
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Relatorio: TRLReport
+    Left = 0
+    Top = 0
+    Width = 794
+    Height = 1123
+    DataSource = dtsCliente
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 1
+    Font.Name = 'Arial'
+    Font.Style = []
+    object Cabecalho: TRLBand
+      Left = 38
+      Top = 38
+      Width = 718
+      Height = 51
+      BandType = btHeader
+      object RLLabel1: TRLLabel
+        Left = 19
+        Top = 8
+        Width = 179
+        Height = 24
+        Caption = 'Ficha de Clientes'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDraw1: TRLDraw
+        Left = 0
+        Top = 32
+        Width = 718
+        Height = 19
+        Align = faBottom
+        DrawKind = dkLine
+        Pen.Width = 2
+      end
+    end
+    object Rodape: TRLBand
+      Left = 38
+      Top = 273
+      Width = 718
+      Height = 40
+      BandType = btFooter
+      object RLDraw2: TRLDraw
+        Left = 0
+        Top = 0
+        Width = 718
+        Height = 19
+        Align = faTop
+        DrawKind = dkLine
+        Pen.Width = 2
+      end
+      object RLSystemInfo1: TRLSystemInfo
+        Left = 3
+        Top = 16
+        Width = 9
+        Height = 2
+        Info = itFullDate
+        Text = ''
+      end
+      object RLSystemInfo2: TRLSystemInfo
+        Left = 610
+        Top = 21
+        Width = 14
+        Height = 2
+        Alignment = taRightJustify
+        Info = itPageNumber
+        Text = ''
+      end
+      object RLSystemInfo3: TRLSystemInfo
+        Left = 587
+        Top = 46
+        Width = 18
+        Height = 2
+        Info = itLastPageNumber
+        Text = ''
+      end
+      object RLLabel2: TRLLabel
+        Left = 622
+        Top = 21
+        Width = 2
+        Height = 2
+        Caption = '/'
+      end
+      object RLLabel4: TRLLabel
+        Left = 556
+        Top = 21
+        Width = 7
+        Height = 2
+        Caption = 'P'#225'gina:'
+      end
+    end
+    object RLLabel3: TRLLabel
+      Left = 376
+      Top = 552
+      Width = 1
+      Height = 2
+    end
+    object RLBand1: TRLBand
+      Left = 38
+      Top = 89
+      Width = 718
+      Height = 184
+      object RLDBText1: TRLDBText
+        Left = 62
+        Top = 7
+        Width = 42
+        Height = 14
+        DataField = 'clienteId'
+        DataSource = dtsCliente
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        Text = ''
+      end
+      object RLDBText2: TRLDBText
+        Left = 231
+        Top = 7
+        Width = 30
+        Height = 14
+        DataField = 'Nome'
+        DataSource = dtsCliente
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        Text = ''
+      end
+      object RLDBText3: TRLDBText
+        Left = 278
+        Top = 33
+        Width = 27
+        Height = 14
+        DataField = 'email'
+        DataSource = dtsCliente
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        Text = ''
+      end
+      object RLDBText4: TRLDBText
+        Left = 622
+        Top = 33
+        Width = 42
+        Height = 14
+        DataField = 'telefone'
+        DataSource = dtsCliente
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        Text = ''
+      end
+      object RLLabel7: TRLLabel
+        Left = 180
+        Top = 6
+        Width = 45
+        Height = 16
+        Caption = 'Nome:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLLabel8: TRLLabel
+        Left = 265
+        Top = 89
+        Width = 40
+        Height = 16
+        Caption = 'Email'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLLabel9: TRLLabel
+        Left = 564
+        Top = 91
+        Width = 60
+        Height = 16
+        Alignment = taRightJustify
+        Caption = 'Telefone'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLLabel6: TRLLabel
+        Left = 3
+        Top = 6
+        Width = 53
+        Height = 16
+        Caption = 'C'#243'digo:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+    end
+    object RLLabel5: TRLLabel
+      Left = 384
+      Top = 560
+      Width = 1
+      Height = 2
+    end
+  end
+  object RLDBText5: TRLDBText
+    Left = 100
+    Top = 116
+    Width = 21
+    Height = 14
+    DataField = 'cep'
+    DataSource = dtsCliente
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+    Text = ''
+  end
+  object RLLabel10: TRLLabel
+    Left = 41
+    Top = 114
+    Width = 34
+    Height = 16
+    Caption = 'CEP:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object QryCliente: TFDQuery
+    Active = True
+    Connection = dtmConexao.dtmPrincipal
+    SQL.Strings = (
+      'select clienteId,'
+      'Nome,'
+      'cep,'
+      'endereco,'
+      'bairro,'
+      'cidade,'
+      'estado,'
+      'email,'
+      'telefone,'
+      'dataNascimento'
+      'from clientes'
+      'order by nome')
+    Left = 584
+    Top = 328
+    object QryClienteclienteId: TFDAutoIncField
+      FieldName = 'clienteId'
+      Origin = 'clienteId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryClienteNome: TStringField
+      FieldName = 'Nome'
+      Origin = 'Nome'
+      Size = 60
+    end
+    object QryClienteemail: TStringField
+      FieldName = 'email'
+      Origin = 'email'
+      Size = 100
+    end
+    object QryClientetelefone: TStringField
+      FieldName = 'telefone'
+      Origin = 'telefone'
+      Size = 15
+    end
+    object QryClientecep: TStringField
+      FieldName = 'cep'
+      Origin = 'cep'
+      Size = 10
+    end
+    object QryClienteendereco: TStringField
+      FieldName = 'endereco'
+      Origin = 'endereco'
+      Size = 60
+    end
+    object QryClientebairro: TStringField
+      FieldName = 'bairro'
+      Origin = 'bairro'
+      Size = 40
+    end
+    object QryClientecidade: TStringField
+      FieldName = 'cidade'
+      Origin = 'cidade'
+      Size = 50
+    end
+    object QryClienteestado: TStringField
+      FieldName = 'estado'
+      Origin = 'estado'
+      Size = 2
+    end
+    object QryClientedataNascimento: TSQLTimeStampField
+      FieldName = 'dataNascimento'
+      Origin = 'dataNascimento'
+    end
+  end
+  object dtsCliente: TDataSource
+    DataSet = QryCliente
+    Left = 664
+    Top = 368
+  end
+end

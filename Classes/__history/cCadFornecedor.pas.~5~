@@ -1,0 +1,217 @@
+unit cCadFornecedor;
+
+interface
+
+uses IdUserAccounts, System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+  FireDAC.Comp.Client, Vcl.Dialogs, System.SysUtils, uEnum;
+
+type
+  TFornecedor = class
+  private
+    ConexaoDB:TFDConnection;
+    F_fornId:Integer;
+    F_nome:string;
+    F_endereco:string;
+    F_telefone:string;
+    F_email:string;
+    F_doc: string;
+    F_obs : string;
+
+  public
+    constructor Create(aConexao: TFDConnection);
+    destructor Destroy; override;
+    function Gravar:Boolean;
+    function Atualizar:Boolean;
+    function Seleciona(id: Integer):Boolean;
+    function Apagar:Boolean;
+  published
+    property codigo : Integer read F_fornId write F_fornId;
+    property nome : string read F_nome write F_nome;
+    property endereco : string read F_endereco write F_endereco;
+    property telefone : string read F_telefone write F_telefone;
+    property email : string read F_email write F_email;
+    property doc: string read F_doc write F_doc;
+    property observacao: string read F_obs write F_obs;
+  end;
+
+
+implementation
+
+
+
+{ TCliente }
+
+{$REGION 'CREATE AND DESTROY'}
+constructor TFornecedor.Create(aConexao: TFDConnection);
+begin
+  ConexaoDB:=aConexao;
+end;
+
+destructor TFornecedor.Destroy;
+begin
+
+  inherited;
+end;
+{$ENDREGION}
+
+{$REGION 'CRUD'}
+
+function TFornecedor.Gravar: Boolean;
+var QryGravar:TFDQuery;
+begin
+  try
+    QryGravar:=TFDQuery.Create(nil);
+    QryGravar.Connection:=ConexaoDB;
+    QryGravar.SQL.Clear;
+    QryGravar.SQL.Add('insert into fornecedor (nome, cnpj, endereco, telefone, '+
+                      '  email, observacao) '+
+                      '  values (:nome, :cnpj, :endereco, :telefone, :email, :observacao)');
+    QryGravar.ParamByName('nome').AsString:=Self.F_nome;
+    QryGravar.ParamByName('endereco').AsString:=Self.F_endereco;
+    QryGravar.ParamByName('telefone').AsString:=Self.F_telefone;
+    QryGravar.ParamByName('email').AsString:=Self.F_email;
+    QryGravar.ParamByName('cnpj').AsString:=Self.F_doc;
+    QryGravar.ParamByName('observacao').AsString:=Self.F_obs;
+
+    try
+      QryGravar.ExecSQL;
+      ConexaoDB.Commit;
+      Result:=True;
+    except
+      Result:=False;
+      ConexaoDB.Rollback;
+    end;
+  finally
+   if Assigned(QryGravar)   then
+      FreeAndNil(QryGravar);
+  end;
+end;
+function TFornecedor.Seleciona(id: Integer): Boolean;
+var QrySeleciona:TFDQuery;
+begin
+  try
+    F_fornId := id;
+    Result:=True;
+    QrySeleciona:=TFDQuery.Create(nil);
+    QrySeleciona.Connection:=ConexaoDB;
+    QrySeleciona.SQL.Clear;
+    QrySeleciona.SQL.Add(
+      'SELECT clienteId, nome, endereco, cidade, bairro, estado, cep, telefone, email, dataNascimento, doc, IDSituacao, observacao '+
+      'FROM clientes '+
+      'WHERE clienteId = :clienteId'
+      );
+    QrySeleciona.ParamByName('clienteId').Value:=F_clienteId;
+    try
+      QrySeleciona.Open;
+
+      Self.F_clienteId := QrySeleciona.FieldByName('clienteId').AsInteger;
+      Self.F_nome := QrySeleciona.FieldByName('nome').AsString;
+      Self.F_endereco := QrySeleciona.FieldByName('endereco').AsString;
+      Self.F_cidade := QrySeleciona.FieldByName('cidade').AsString;
+      Self.F_bairro := QrySeleciona.FieldByName('bairro').AsString;
+      Self.F_estado := QrySeleciona.FieldByName('estado').AsString;
+      Self.F_cep := QrySeleciona.FieldByName('cep').AsString;
+      Self.F_telefone := QrySeleciona.FieldByName('telefone').AsString;
+      Self.F_email := QrySeleciona.FieldByName('email').AsString;
+      Self.F_dataNascimento := QrySeleciona.FieldByName('dataNascimento').AsDateTime;
+      Self.F_doc := QrySeleciona.FieldByName('doc').AsString;
+      Self.F_situacao := QrySeleciona.FieldByName('IDSituacao').AsInteger;
+      Self.F_obs:=QrySeleciona.FieldByName('observacao').AsString;
+
+    except
+    Result:=false;
+    end;
+
+  finally
+     if Assigned(QrySeleciona) then
+        FreeAndNil(QrySeleciona);
+  end;
+end;
+
+function TFornecedor.Apagar: Boolean;
+var QryApagar:TFDQuery;
+begin
+  if MessageDlg('Apagar o Registro: '+#13+#13+
+                'Código: '+IntToStr(F_clienteId)+#13+
+                'Descrição: '+F_nome,mtConfirmation,[mbYes, mbNo],0)=mrNo then begin
+                  Result:=False;
+                  Abort;
+  end;
+
+  try
+    Result:=True;
+    QryApagar:=TFDQuery.Create(nil);
+    QryApagar.Connection:=ConexaoDB;
+    QryApagar.SQL.Clear;
+    QryApagar.SQL.Add('DELETE FROM clientes '+
+                      ' WHERE clienteId=:clienteId ');
+    QryApagar.ParamByName('clienteId').AsInteger :=F_clienteId;
+
+    try
+      QryApagar.ExecSQL;
+    except
+      Result:=False;
+    end;
+  finally
+     if Assigned(QryApagar) then
+        FreeAndNil(QryApagar)
+  end;
+end;
+
+function TFornecedor.Atualizar: Boolean;
+var QryAtualizar:TFDQuery;
+begin
+try
+    Result:=True;
+    QryAtualizar:=TFDQuery.Create(nil);
+    QryAtualizar.Connection:=ConexaoDB;
+    QryAtualizar.SQL.Clear;
+    QryAtualizar.SQL.Add(
+      'UPDATE clientes '+
+      '  SET nome               =:nome '+
+      '      ,endereco          =:endereco '+
+      '      ,cidade            =:cidade '+
+      '      ,bairro            =:bairro '+
+      '      ,estado            =:estado '+
+      '      ,cep               =:cep '+
+      '      ,telefone          =:telefone '+
+      '      ,email             =:email '+
+      '      ,dataNascimento    =:dataNascimento '+
+      '      ,doc               =:doc '+
+      '      ,IDSituacao               =:IDSituacao '+
+      '      ,observacao               =:observacao ' +
+      'WHERE clienteId=:clienteId ');
+
+
+    QryAtualizar.ParamByName('clienteId').AsInteger:=Self.F_clienteId;
+    QryAtualizar.ParamByName('nome').AsString:=Self.F_nome;
+    QryAtualizar.ParamByName('endereco').AsString:=Self.F_endereco;
+    QryAtualizar.ParamByName('cidade').AsString:=Self.F_cidade;
+    QryAtualizar.ParamByName('bairro').AsString:=Self.F_bairro;
+    QryAtualizar.ParamByName('estado').AsString:=Self.F_estado;
+    QryAtualizar.ParamByName('cep').AsString:=Self.F_cep;
+    QryAtualizar.ParamByName('telefone').AsString:=Self.F_telefone;
+    QryAtualizar.ParamByName('email').AsString:=Self.F_email;
+    QryAtualizar.ParamByName('dataNascimento').AsDateTime:=Self.F_dataNascimento;
+    QryAtualizar.ParamByName('doc').AsString:=Self.F_doc;
+    QryAtualizar.ParamByName('IDSituacao').AsInteger:=Self.F_situacao;
+    QryAtualizar.ParamByName('observacao').AsString:=Self.F_obs;
+
+    try
+      QryAtualizar.ExecSQL;
+    except
+    Result:=False;
+    end;
+
+finally
+  if Assigned(QryAtualizar) then
+      FreeAndNil(QryAtualizar);
+end;
+end;
+
+
+{$ENDREGION}
+
+
+
+end.

@@ -1,0 +1,579 @@
+unit uProVenda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ExtCtrls, Vcl.ComCtrls, uDTMConexao, uDTMVenda, RxToolEdit,
+   RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto;
+
+type
+  TfrmProVenda = class(TfrmTelaHeranca)
+    QryListagemvendaId: TFDAutoIncField;
+    QryListagemclienteId: TIntegerField;
+    QryListagemnome: TStringField;
+    QryListagemdataVenda: TSQLTimeStampField;
+    QryListagemtotalVenda: TFMTBCDField;
+    edtVendaId: TLabeledEdit;
+    lbl4: TLabel;
+    lkpCliente: TDBLookupComboBox;
+    edtDataVenda: TDateEdit;
+    Label1: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    edtValorTotal: TCurrencyEdit;
+    lbl2: TLabel;
+    btnNovoCliente: TSpeedButton;
+    btnPesquisarClientes: TSpeedButton;
+    Panel4: TPanel;
+    Label2: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    btnNovoProduto: TSpeedButton;
+    btnPesquisarProduto: TSpeedButton;
+    lkpProduto: TDBLookupComboBox;
+    edtValorUnitario: TCurrencyEdit;
+    edtQuantidade: TCurrencyEdit;
+    edtTotalProduto: TCurrencyEdit;
+    btnAdicionarItem: TBitBtn;
+    btnApagarItem: TBitBtn;
+    dbGridItensVenda: TDBGrid;
+    Label3: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnAdicionarItemClick(Sender: TObject);
+    procedure edtQuantidadeExit(Sender: TObject);
+    procedure edtQuantidadeEnter(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure btnApagarItemClick(Sender: TObject);
+    procedure dbGridItensVendaDblClick(Sender: TObject);
+    procedure btnNovoClienteClick(Sender: TObject);
+    procedure btnPesquisarClientesClick(Sender: TObject);
+    procedure btnNovoProdutoClick(Sender: TObject);
+    procedure btnPesquisarProdutoClick(Sender: TObject);
+    procedure lkpClienteCloseUp(Sender: TObject);
+    procedure dbGridItensVendaDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure lkpProdutoExit(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+
+
+  private
+    { Private declarations }
+    dtmVendas:TdtmVendas;
+    oVenda:TVenda;
+    function TotalizarProduto(valorUnitario, Quantidade: Double): Double;
+    procedure LimparComponenteItem;
+    procedure LimparCds;
+    procedure CarregarRegistroSelecionado;
+    function TotalizarVenda: Double;
+    function GetDesc: string; override;
+
+  public
+    { Public declarations }
+    function Gravar(EstadoDoCadastro:TEstadoDoCadastro):Boolean; override;
+    function Excluir:Boolean; override;
+  end;
+
+var
+  frmProVenda: TfrmProVenda;
+
+implementation
+
+uses
+  uRelProVenda, cFuncao, uCadCliente, uConCliente, cUsuarioLogado, uPrincipal, uConProdutos;
+
+{$R *.dfm}
+
+function TfrmProVenda.GetDesc:string;
+begin
+  Result := IntToStr(oVenda.VendaId);
+end;
+
+
+function TfrmProVenda.Excluir: Boolean;
+begin
+  if oVenda.Selecionar(QryListagem.FieldByName('vendaId').AsInteger, dtmVendas.cdsItensVenda) then begin
+    Result:=oVenda.Apagar;
+    if Assigned(frmPrincipal) then
+      frmPrincipal.AtualizarDashBoard;
+  end;
+end;
+
+
+function TfrmProVenda.Gravar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+begin
+  if edtVendaId.Text<>EmptyStr then
+    oVenda.VendaId:=StrToInt(edtVendaId.Text)
+  else
+    oVenda.VendaId:=0;
+
+  oVenda.ClienteId :=lkpCliente.KeyValue;
+  oVenda.DataVenda :=edtDataVenda.Date;
+  oVenda.TotalVenda :=edtValorTotal.Value;
+
+  if (EstadoDoCadastro=ecInserir) then
+    oVenda.VendaId := oVenda.Inserir(dtmVendas.cdsItensVenda)
+  else if (EstadoDoCadastro=ecAlterar) then
+    oVenda.Atualizar(dtmVendas.cdsItensVenda);
+
+
+  frmRelProVenda:=TfrmRelProVenda.Create(self);
+  frmRelProVenda.QryVendas.Close;
+  frmRelProVenda.QryVendas.ParamByName('VendaId').AsInteger:= oVenda.VendaId;
+  frmRelProVenda.QryVendas.Open;
+
+  frmRelProVenda.QryVendasItens.Close;
+  frmRelProVenda.QryVendasItens.ParamByName('VendaId').AsInteger:= oVenda.VendaId;
+  frmRelProVenda.QryVendasItens.Open;
+
+
+  frmRelProVenda.Relatorio.PreviewModal;
+  frmRelProVenda.Release;
+
+    result:=True;
+
+  if Assigned(frmPrincipal) then
+      frmPrincipal.AtualizarDashBoard;
+end;
+
+
+
+
+
+procedure TfrmProVenda.lkpClienteCloseUp(Sender: TObject);
+var obs:string;
+begin
+  inherited;
+  obs:=dtmVendas.QryCliente.FieldByName('observacao').AsString;
+
+  if(dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 3) then
+  begin
+    if obs <> '' then
+      ShowMessage('Cliente com a seguinte observação: ' + sLineBreak + obs)
+    else
+      ShowMessage('Cliente em Atenção!!' + sLineBreak+ 'Sem Observações');
+  end;
+
+  if(dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 2) then
+  begin
+    if obs <> '' then
+    begin
+      ShowMessage('Cliente BLOQUEADO por: ' + sLineBreak + obs);
+      lkpCliente.KeyValue:='';
+    end
+    else  begin
+      ShowMessage('Cliente BLOQUEADO!!' + sLineBreak+ 'Sem Observações');
+      lkpCliente.KeyValue:='';
+    end;
+  end;
+
+  if(dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 4) then
+  begin
+    ShowMessage('Cliente INATIVO!!');
+    lkpCliente.KeyValue:='';
+  end;
+
+  if (dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 5)then
+  begin
+    if MessageDlg('Deseja tornar o cliente ativo?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+
+      with dtmVendas.QryClienteUpdate do
+      begin
+        SQL.Text := 'UPDATE clientes SET IDSituacao = :IDSituacao WHERE clienteId = :id';
+        ParamByName('IDSituacao').AsInteger := 1;
+        ParamByName('id').AsInteger := dtmVendas.QryCliente.FieldByName('clienteId').AsInteger;
+        ExecSQL;
+      end;
+
+      ShowMessage('Cliente atualizado para ATIVO!');
+
+
+      dtmVendas.QryCliente.Close;
+      dtmVendas.QryCliente.Open;
+    end
+    else
+      lkpCliente.KeyValue:='';
+  end;
+end;
+
+
+
+procedure TfrmProVenda.lkpProdutoExit(Sender: TObject);
+begin
+  inherited;
+  if TDBLookupComboBox(Sender).KeyValue<>Null then begin
+     edtValorUnitario.Value:=dtmVendas.QryProdutos.FieldByName('valor').AsFloat;
+     edtQuantidade.Value:=1;
+     edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
+  end;
+end;
+
+procedure TfrmProVenda.btnAdicionarItemClick(Sender: TObject);
+var estoque: Integer;
+    qntDigitada: Integer;
+    qntmini:Double;
+begin
+  inherited;
+
+  estoque := dtmVendas.QryProdutos.FieldByName('quantidade').AsInteger;
+  qntDigitada:= StrToInt(edtQuantidade.Text);
+  qntmini:= dtmVendas.QryProdutos.FieldByName('qntmini').AsFloat;
+
+
+  if qntDigitada = estoque then
+  begin
+   MessageDlg('Após está venda o estoque será zerado!!',  mtWarning,[mbOK],0);
+  end
+  else if estoque <  qntmini then    begin
+   MessageDlg('Estoque Baixo!!'  +
+           ' (Estoque Atual: ' +IntToStr(estoque) + ' Unidades)',mtWarning,[mbOK],0);
+  end;
+
+
+  if(qntDigitada > estoque) then begin
+     MessageDlg('Quantidade Digitada Maior que o Estoque'  +
+               ' (Estoque Atual: ' +IntToStr(estoque) + ' Unidades)',mtError,[mbOK],0);
+     Abort;
+  end
+  else begin
+    dtmVendas.QryProdutos.Close;
+    dtmVendas.QryProdutos.Open;
+  end;
+
+  if lkpProduto.KeyValue=Null then begin
+     MessageDlg('Produto um campo obrigatorio' ,mtInformation,[mbOK],0);
+     lkpProduto.SetFocus;
+     abort;
+  end;
+
+  if edtValorUnitario.value<=0 then begin
+     MessageDlg('Valor Unitario n o pode ser Zero' ,mtInformation,[mbOK],0);
+     edtValorUnitario.SetFocus;
+     abort;
+  end;
+
+  if edtQuantidade.value<=0 then begin
+     MessageDlg('Quantidade nao pode ser Zero' ,mtInformation,[mbOK],0);
+     edtQuantidade.SetFocus;
+     abort;
+  end;
+
+  if dtmVendas.cdsItensVenda.Locate('produtoId', lkpProduto.KeyValue, []) then begin
+     MessageDlg('Este Produto ja foi selecionado' ,mtInformation,[mbOK],0);
+     lkpProduto.SetFocus;
+     abort;
+  end;
+
+  edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
+
+  dtmVendas.cdsItensVenda.Append;
+  dtmVendas.cdsItensVenda.FieldByName('produtoId').AsString:=lkpProduto.KeyValue;
+  dtmVendas.cdsItensVenda.FieldByName('nomeProduto').AsString:=dtmVendas.QryProdutos.FieldByName('nome').AsString;
+  dtmVendas.cdsItensVenda.FieldByName('quantidade').AsFloat:=edtQuantidade.Value;
+  dtmVendas.cdsItensVenda.FieldByName('valorUnitario').AsFloat:=edtValorUnitario.Value;
+  dtmVendas.cdsItensVenda.FieldByName('valorTotalProduto').AsFloat:=edtTotalProduto.Value;
+  dtmVendas.cdsItensVenda.Post;
+  edtValorTotal.Value:=TotalizarVenda;
+  LimparComponenteItem;
+  lkpProduto.SetFocus;
+
+
+end;
+
+procedure TfrmProVenda.LimparComponenteItem;
+begin
+  lkpProduto.KeyValue   := null;
+  edtQuantidade.Value   := 0;
+  edtValorUnitario.Value:= 0;
+  edtTotalProduto.Value := 0;
+end;
+
+
+function TfrmProVenda.TotalizarProduto(valorUnitario, Quantidade:Double):Double;
+begin
+  Result:=valorUnitario * Quantidade;
+end;
+
+
+procedure TfrmProVenda.LimparCds;
+begin
+  dtmVendas.cdsItensVenda.First;
+  while not dtmVendas.cdsItensVenda.Eof do
+    dtmVendas.cdsItensVenda.Delete;
+
+end;
+
+procedure TfrmProVenda.btnAlterarClick(Sender: TObject);
+begin
+  if oVenda.Selecionar(QryListagem.FieldByName('vendaId').AsInteger, dtmVendas.cdsItensVenda) then begin
+    edtVendaId.Text     :=IntToStr(oVenda.VendaId);
+    lkpCliente.KeyValue :=oVenda.ClienteId;
+    edtDataVenda.Date   :=oVenda.DataVenda;
+    edtValorTotal.Value :=oVenda.TotalVenda;
+  end
+  else begin
+    btnCancelar.Click;
+    Abort;
+  end;
+  inherited;
+end;
+
+procedure TfrmProVenda.btnApagarItemClick(Sender: TObject);
+begin
+  inherited;
+  if lkpProduto.KeyValue=Null then begin
+     MessageDlg('Selecione o Produto a ser excluido' ,mtInformation,[mbOK],0);
+     dbgridItensVenda.SetFocus;
+     abort;
+  end;
+
+  if dtmVendas.cdsItensVenda.Locate('produtoId', lkpProduto.KeyValue, []) then begin
+     dtmVendas.cdsItensVenda.Delete;
+     edtValorTotal.Value:=TotalizarVenda;
+     LimparComponenteItem;
+  end;
+end;
+
+procedure TfrmProVenda.btnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  LimparCds;
+end;
+
+procedure TfrmProVenda.btnGravarClick(Sender: TObject);
+begin
+  if dtmVendas.cdsItensVenda.IsEmpty then
+  begin
+    MessageDlg('Adicione pelo menos um item à venda', mtInformation, [mbOK], 0);
+    lkpProduto.SetFocus;
+    Abort;
+  end;
+
+  inherited;
+  LimparCds;
+end;
+
+procedure TfrmProVenda.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  dtmVendas.QryProdutos.Close;
+  dtmVendas.QryProdutos.Open;
+  edtDataVenda.Date:=Date;
+  lkpCliente.SetFocus;
+  LimparCds;
+end;
+
+procedure TfrmProVenda.btnNovoClienteClick(Sender: TObject);
+begin
+  inherited;
+  TFuncao.CriarForm(TfrmCadCliente, oUsuarioLogado, dtmConexao.dtmPrincipal);
+  dtmVendas.QryCliente.Close;
+  dtmVendas.QryCliente.Open;
+end;
+
+procedure TfrmProVenda.btnNovoProdutoClick(Sender: TObject);
+begin
+  inherited;
+  TFuncao.CriarForm(TfrmCadProduto, oUsuarioLogado, dtmConexao.dtmPrincipal);
+  dtmVendas.QryProdutos.Close;
+  dtmVendas.QryProdutos.Open;
+end;
+
+procedure TfrmProVenda.btnPesquisarClientesClick(Sender: TObject);
+begin
+  inherited;
+  try
+  frmConCliente:=TfrmConCliente.Create(self);
+
+  if lkpCliente.KeyValue<>null then
+      frmConCliente.aIniciarPesquisaId:=lkpCliente.KeyValue;
+
+      frmConCliente.ShowModal;
+
+  if frmConCliente.aRetornarIdSelecionado<>Unassigned then
+    lkpCliente.KeyValue:=frmConCliente.aRetornarIdSelecionado;
+
+  finally
+    frmConCliente.Release;
+  end;
+end;
+
+procedure TfrmProVenda.btnPesquisarProdutoClick(Sender: TObject);
+begin
+  inherited;
+  try
+  frmConProduto:=TfrmConProduto.Create(self);
+
+  if lkpCliente.KeyValue<>null then
+      frmConProduto.aIniciarPesquisaId:=lkpProduto.KeyValue;
+
+      frmConProduto.ShowModal;
+
+  if frmConProduto.aRetornarIdSelecionado<>Unassigned then
+    lkpProduto.KeyValue:=frmConProduto.aRetornarIdSelecionado;
+
+  finally
+    frmConProduto.Release;
+  end;
+end;
+
+procedure TfrmProVenda.dbGridItensVendaDblClick(Sender: TObject);
+begin
+  inherited;
+  CarregarRegistroSelecionado;
+end;
+
+procedure TfrmProVenda.dbGridItensVendaDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var Linha: Integer;
+begin
+
+  if (gdFixed in State) then
+  begin
+    dbGridItensVenda.Canvas.Brush.Color := clGray;
+    dbGridItensVenda.Canvas.FillRect(Rect);
+
+    Exit;
+  end;
+
+
+  Linha := dbGridItensVenda.DataSource.DataSet.RecNo;
+
+  if not (gdSelected in State) then
+  begin
+    if (Linha mod 2) = 0 then
+      dbGridItensVenda.Canvas.Brush.Color := clWebLightgrey
+    else
+      dbGridItensVenda.Canvas.Brush.Color := clWhite;
+  end
+  else
+  begin
+    dbGridItensVenda.Canvas.Brush.Color := $00D8A76F;
+    dbGridItensVenda.Canvas.Font.Color := clWhite;
+  end;
+
+  dbGridItensVenda.Canvas.FillRect(Rect);
+  dbGridItensVenda.Canvas.TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
+end;
+
+procedure TfrmProVenda.dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+  BloqueiaCTRL_DEL_DBGrid(Key,Shift);
+end;
+
+procedure TfrmProVenda.edtQuantidadeEnter(Sender: TObject);
+begin
+  inherited;
+  edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
+end;
+
+procedure TfrmProVenda.edtQuantidadeExit(Sender: TObject);
+begin
+  inherited;
+  edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
+end;
+
+procedure TfrmProVenda.FormClose(Sender: TObject; var Action: TCloseAction);
+var ArquivoINI:TIniFile; // Variável para criar o arquivo INI para salvar preferências de Grid por usuário.
+    I: Integer; // Ponteiro para passar por todas as colunas (pastas)
+begin
+  inherited;
+  if Assigned(dtmVendas) then FreeAndNil(dtmVendas);
+
+  if Assigned(oVenda)    then FreeAndNil(oVenda);
+
+  ExtractFilePath(Application.ExeName); // Garante que o INI fique na mesma pasta do .exe
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGridVendas.ini'); //Criamos o INI File na pasta do .exe
+
+  try
+    for I := 0 to dbgridItensVenda.Columns.Count - 1 do  // O laço percorre do 0 à ultima coluna desenhada no Grid
+    begin
+      ArquivoINI.WriteInteger(
+      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem é a preferência.
+      'Coluna_' + IntToStr(I), // Nomeamos a pasta com o Indice da coluna.
+      dbgridItensVenda.Columns[I].Width); //A largura atual da coluna naquele exato segundo.
+    end;
+  finally
+    ArquivoINI.Free;// Independentemente de dar erro ou não, sempre fechamos o caderninho para liberar a memória
+  end;
+
+  QryListagem.Close;
+
+end;
+
+procedure TfrmProVenda.FormCreate(Sender: TObject);
+var i : Integer;
+begin
+  inherited;
+
+    dbGridItensVenda.TitleFont.Color:=clWhite;
+
+  // Centraliza os titulos
+    for i := 0 to dbgrdListagem.Columns.Count - 1 do
+    dbGridItensVenda.Columns[i].Title.Alignment := taCenter;
+
+  dtmVendas:=TdtmVendas.Create(Self);
+
+  oVenda:=TVenda.Create(dtmConexao.dtmPrincipal);
+  IndiceAtual:='clienteId';
+
+ if QryListagem.FieldByName('TotalVenda').IsNull then
+  ShowMessage('É NULL')
+else
+  ShowMessage(FloatToStr(QryListagem.FieldByName('TotalVenda').AsFloat));
+
+end;
+
+
+procedure TfrmProVenda.FormShow(Sender: TObject);
+var ArquivoINI: TIniFile ; //Referenciamos novamente nosso Arquivo
+    I:Integer; //Passamos o ponteiro
+begin
+  inherited;
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGridVendas.ini');// Apontamos para o mesmo endereço que salvamos no FormClose
+
+  try
+    for I := 0 to dbgridItensVenda.Columns.Count - 1 do //Percorremos o grid recem desenhado
+    begin
+      dbgridItensVenda.Columns[I].Width := ArquivoINI.ReadInteger //Redefinimos a largura do grid baseado no que está desenhado
+      (oUsuarioLogado.nome, // Pegamos o UsuarioLogado
+      'Coluna_' + IntToStr(I),//Procuramos a anotação correspondente à coluna atual.
+      dbgridItensVenda.Columns[I].Width); //Se for primeiro acesso, mantém o Width padrão do Delphi.
+    end;
+  finally
+    ArquivoINI.Free; //Liberamos o INI da memória.
+  end;
+
+end;
+
+procedure TfrmProVenda.CarregarRegistroSelecionado;
+begin
+  lkpProduto.KeyValue   := dtmVendas.cdsItensVenda.FieldByName('produtoId').AsString;
+  edtQuantidade.Value   := dtmVendas.cdsItensVenda.FieldByName('quantidade').AsFloat;
+  edtValorUnitario.Value:= dtmVendas.cdsItensVenda.FieldByName('valorUnitario').AsFloat;
+  edtTotalProduto.Value := dtmVendas.cdsItensVenda.FieldByName('valorTotalProduto').AsFloat;
+end;
+
+
+function TfrmProVenda.TotalizarVenda:Double;
+begin
+  result:=0;
+  dtmVendas.cdsItensVenda.First;
+  while not dtmVendas.cdsItensVenda.Eof do begin
+    result := result + dtmVendas.cdsItensVenda.FieldByName('valorTotalProduto').AsFloat;
+    dtmVendas.cdsItensVenda.Next;
+  end;
+end;
+
+end.

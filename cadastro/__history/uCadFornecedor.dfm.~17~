@@ -1,0 +1,222 @@
+﻿inherited frmCadFornecedor: TfrmCadFornecedor
+  Caption = 'Cadastro de Fornecedor'
+  ClientHeight = 503
+  ClientWidth = 1254
+  Position = poScreenCenter
+  ExplicitWidth = 1260
+  ExplicitHeight = 532
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    Width = 1254
+    Height = 462
+    inherited Listagem: TTabSheet
+      inherited pnlListagemTopo: TPanel
+        Width = 1246
+      end
+      inherited dbgrdListagem: TDBGrid
+        Width = 1246
+        Height = 353
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'fornId'
+            Title.Caption = 'C'#243'digo'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Width = 146
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'cnpj'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'telefone'
+            Width = 110
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'email'
+            Width = 107
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'observacao'
+            Visible = True
+          end>
+      end
+    end
+    inherited Manutenção: TTabSheet
+      object lblDoc: TLabel
+        Left = 303
+        Top = 90
+        Width = 25
+        Height = 13
+        Caption = 'CNPJ'
+      end
+      object lbl2: TLabel
+        Left = 654
+        Top = 92
+        Width = 45
+        Height = 11
+        Caption = 'Telefone'
+      end
+      object Label10: TLabel
+        Left = 302
+        Top = 205
+        Width = 58
+        Height = 13
+        Caption = 'Observa'#231#227'o'
+      end
+      object edtDocumento: TEdit
+        Left = 302
+        Top = 109
+        Width = 282
+        Height = 21
+        MaxLength = 18
+        TabOrder = 0
+        OnChange = edtDocumentoChange
+      end
+      object edtNome: TLabeledEdit
+        Tag = 2
+        Left = 302
+        Top = 58
+        Width = 282
+        Height = 21
+        EditLabel.Width = 27
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Nome'
+        MaxLength = 50
+        TabOrder = 1
+      end
+      object edtTelefone: TEdit
+        Left = 654
+        Top = 109
+        Width = 282
+        Height = 21
+        TabOrder = 2
+        OnChange = edtTelefoneChange
+      end
+      object edtEmail: TLabeledEdit
+        Tag = 2
+        Left = 654
+        Top = 160
+        Width = 282
+        Height = 21
+        EditLabel.Width = 24
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Email'
+        MaxLength = 50
+        TabOrder = 3
+      end
+      object edtEndereco: TLabeledEdit
+        Tag = 2
+        Left = 303
+        Top = 160
+        Width = 282
+        Height = 21
+        EditLabel.Width = 45
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Endere'#231'o'
+        MaxLength = 60
+        TabOrder = 4
+      end
+      object Panel2: TPanel
+        Left = 302
+        Top = 224
+        Width = 634
+        Height = 161
+        TabOrder = 5
+        object edtObservacao: TEdit
+          Left = 1
+          Top = 1
+          Width = 632
+          Height = 159
+          Align = alClient
+          MaxLength = 500
+          TabOrder = 0
+          ExplicitHeight = 40
+        end
+      end
+      object edtFornId: TLabeledEdit
+        Tag = 1
+        Left = 302
+        Top = 18
+        Width = 121
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Codigo'
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 6
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    Top = 462
+    Width = 1254
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+    inherited btnFechar: TBitBtn
+      Left = 1199
+    end
+  end
+  inherited QryListagem: TFDQuery
+    SQL.Strings = (
+      
+        'select fornId, nome, cnpj, endereco, telefone, email, observacao' +
+        ' from fornecedor')
+    Left = 748
+    Top = 40
+    object QryListagemfornId: TFDAutoIncField
+      DisplayLabel = 'Codigo'
+      FieldName = 'fornId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryListagemnome: TStringField
+      DisplayLabel = 'Nome Fornecedor'
+      FieldName = 'nome'
+      Size = 50
+    end
+    object QryListagemcnpj: TStringField
+      DisplayLabel = 'CNPJ'
+      FieldName = 'cnpj'
+      Size = 18
+    end
+    object QryListagemendereco: TStringField
+      DisplayLabel = 'Endere'#231'o'
+      FieldName = 'endereco'
+      Size = 50
+    end
+    object QryListagemtelefone: TStringField
+      DisplayLabel = 'Telefone'
+      FieldName = 'telefone'
+      Size = 15
+    end
+    object QryListagememail: TStringField
+      DisplayLabel = 'Email'
+      FieldName = 'email'
+      Size = 50
+    end
+    object strngfldQryListagemobservacao: TStringField
+      DisplayLabel = 'Observa'#231#227'o'
+      FieldName = 'observacao'
+      Size = 100
+    end
+  end
+  inherited dtsListagem: TDataSource
+    Left = 860
+    Top = 24
+  end
+end

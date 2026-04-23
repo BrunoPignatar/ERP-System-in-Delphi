@@ -1,0 +1,39 @@
+inherited frmConCliente: TfrmConCliente
+  Caption = 'Consulta de Cliente'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel3: TPanel
+    inherited grdPesquisa: TDBGrid
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'clienteId'
+          Width = 130
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'nome'
+          Width = 552
+          Visible = True
+        end>
+    end
+  end
+  inherited QryListagem: TFDQuery
+    SQL.Strings = (
+      'select clienteId, nome  from clientes;')
+    object QryListagemclienteId: TFDAutoIncField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'clienteId'
+      Origin = 'clienteId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryListagemnome: TStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Origin = 'nome'
+      Size = 60
+    end
+  end
+end

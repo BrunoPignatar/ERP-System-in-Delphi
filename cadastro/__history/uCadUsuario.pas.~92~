@@ -1,0 +1,393 @@
+﻿unit uCadUsuario;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask, cCadUsuario, uEnum, uFuncaoCriptografia,
+  Vcl.ExtCtrls, Vcl.ComCtrls;
+
+type
+  TfrmCadUsuario = class(TfrmTelaHeranca)
+    QryListagemusuarioId: TFDAutoIncField;
+    QryListagemnome: TStringField;
+    QryListagemsenha: TStringField;
+    edtUsuarioId: TLabeledEdit;
+    edtNome: TLabeledEdit;
+    edtSenha: TLabeledEdit;
+    SpeedButton1: TSpeedButton;
+    Label1: TLabel;
+    SpeedButton2: TSpeedButton;
+    lkpFuncao: TDBLookupComboBox;
+    QryFuncao: TFDQuery;
+    dtsFuncao: TDataSource;
+    QryFuncaoperfilId: TFDAutoIncField;
+    QryFuncaodescricao: TStringField;
+    QryListagemperfilId: TIntegerField;
+    Label2: TLabel;
+    procedure btnGravarClick(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure dbgrdListagemDblClick(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure dbgrdListagemCellClick(Column: TColumn);
+  private
+    { Private declarations }
+    oUsuario:TUsuario;
+    function Gravar(EstadoDoCadastro:TEstadoDoCadastro):boolean; override;
+    function Excluir:Boolean; override;
+    procedure btnAlterarClick(Sender: TObject);
+    procedure CarregarRegistrosSelecionar;
+    function GerarSenha(Tamanho: Integer): string;
+    function GetDesc: string;  override;
+    procedure AplicarFuncoes(AUsuarioId, APerfilId: Integer);
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadUsuario: TfrmCadUsuario;
+
+implementation
+
+uses
+  uDTMConexao, cAcaoAcesso;
+
+{$R *.dfm}
+
+{ TfrmCadUsuario }
+
+Bruno M. Pignatari
+bruno_pignatari
+Disponível
+
+Bruno M. Pignatari — 20/04/2026 08:15
+colocar no botao gravar
+e na funcao gravar
+Bruno M. Pignatari — 20/04/2026 09:31
+unit uConLog;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+
+message.txt
+6 KB
+Mateus — 20/04/2026 10:56
+15% + 20% + 20% = 55% (0,55)
+Preço = 300 / (1 - 0,55)
+Preço = 300 / 0,45
+Preço ≈ R$ 666,67
+Mateus — 20/04/2026 11:13
+SELECT produtoId,
+       nome,
+     ceiling (valor / 0.45) as valor_final,
+       quantidade
+FROM produtos
+Mateus — 20/04/2026 11:27
+edtValorUnitario.value:= Ceil(edtValorUnitario.Value / 0.45); no lookupexit
+select produtoId, nome, ceiling (valor / 0.45) as valor_final, quantidade from produtos na qrylistagem da consulta
+Bruno M. Pignatari — 20/04/2026 11:48
+procedure TfrmCadProduto.SpeedButton1Click(Sender: TObject);
+var
+  Msg: string;
+begin
+  Msg := 'Os produtos que estão com quantidade baixa em estoque:' + sLineBreak + sLineBreak;
+
+  QryListagem.First;
+  while not QryListagem.Eof do
+  begin
+    if QryListagem.FieldByName('quantidade').AsInteger <=
+       QryListagem.FieldByName('qntmini').AsInteger then
+    begin
+      Msg := Msg +
+             QryListagem.FieldByName('nome').AsString +
+             ' - Qtd: ' + QryListagem.FieldByName('quantidade').AsString + ' Qtd.Minima: ' + QryListagem.FieldByName('qntmini').AsString +
+             sLineBreak;
+    end;
+
+    QryListagem.Next;
+  end;
+
+  ShowMessage(Msg);
+end;
+Mateus — 08:37
+if dtpDataNascimento.Date > Date then begin
+    ShowMessage('Data inválida');
+    dtpDataNascimento.Date := date;
+    Exit;
+  end
+  else if YearsBetween(dtpDataNascimento.Date, Date) < 18 then
+  begin
+    ShowMessage('O Cliente deve ter 18 anos ou mais');
+    dtpDataNascimento.SetFocus;
+    dtpDataNascimento.Date := date;
+    Exit;
+  end;
+Bruno M. Pignatari — 09:13
+edtUsuarioId.Text:=QryListagem.FieldByName('usuarioId').AsString;
+  edtNome.Text:=QryListagem.FieldByName('nome').AsString;
+  edtSenha.Text:= Descriptografar(QryListagem.FieldByName('senha').AsString);
+  lkpFuncao.KeyValue:= QryListagem.FieldByName('perfilId').AsString;
+  oUsuario.perfilId := QryListagem.FieldByName('perfilId').AsInteger;
+Mateus — 10:39
+unit uCadUsuario; interface uses Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask, Vcl.ExtCtrls, Vcl.ComCtrls, cCadUsuario, uEnum, uDTMconexao, cAcaoAcesso; type TfrmCadUsuario = class(TfrmTelaHeranca) f1ListagemusuarioID: TFDAutoIncField; f2Listagemnome: TStringField; f2Listagemsenha: TStringField; edtUsuarioId: TLabeledEdit; edtNome: TLabeledEdit; edtSenha: TLabeledEdit; btnExibir: TSpeedButton; btnAleatorio: TSpeedButton; lbl1: TLabel; lkpFuncao: TDBLookupComboBox; QryFuncao: TFDQuery; dsFuncao: TDataSource; f1QryFuncaoperfilId: TFDAutoIncField; f2QryFuncaodescricao: TStringField; lbl2: TLabel; intgrfldListagemperfilId: TIntegerField; procedure btnAlterarClick(Sender: TObject); procedure btnGravarClick(Sender: TObject); procedure btnNovoClick(Sender: TObject); procedure FormClose(Sender: TObject; var Action: TCloseAction); procedure FormCreate(Sender: TObject); procedure btnAleatorioClick(Sender: TObject); procedure btnExibirClick(Sender: TObject); procedure grdListagemDblClick(Sender: TObject); private { Private declarations } oUsuario:TUsuario; function Gravar(EstadoDoCadastro:TEstadoDoCadastro):Boolean; override; function Apagar:Boolean; override; function GetDesc: string; override; function GerarSenha(Tamanho: Integer): string; procedure AplicarFuncoes(AUsuarioId, APerfilId: Integer); procedure RetornarInfos; public { Public declarations } end; var frmCadUsuario: TfrmCadUsuario; implementation uses uPrincipal, uFuncaoCriptografia; {$R *.dfm} { TfrmCadUsuario } function TfrmCadUsuario.Apagar: Boolean; begin if oUsuario.Selecionar(fdqryListagem.FieldByName('usuarioID').AsInteger) then begin result:=oUsuario.Apagar; end; end; function TfrmCadUsuario.GetDesc: string; begin result := oUsuario.nome; end; procedure TfrmCadUsuario.btnAleatorioClick(Sender: TObject); begin inherited; edtSenha.Text := GerarSenha(10); end; function TfrmCadUsuario.GerarSenha(Tamanho: Integer): string; const Caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*'; var i, Posicao: Integer; begin Result := ''; for i := 1 to Tamanho do begin Posicao := Random(Length(Caracteres)) + 1; Result := Result + Caracteres[Posicao]; end; end; procedure TfrmCadUsuario.btnAlterarClick(Sender: TObject); begin // if oUsuario.Selecionar(fdqryListagem.FieldByName('usuarioID').AsInteger) then begin // edtUsuarioId.Text:=IntToStr(oUsuario.codigo); // edtNome.Text :=oUsuario.nome; // edtSenha.Text :=oUsuario.senha; // oUsuario.senha:= edtSenha.Text; // // end // else begin // btnCancelar.Click; // Abort; // end; RetornarInfos; EstadoDoCadastro:=ecAlterar; inherited; end; procedure TfrmCadUsuario.btnExibirClick(Sender: TObject); begin inherited; if edtSenha.PasswordChar = '*' then begin edtSenha.PasswordChar:= #0; btnExibir.Caption := '🔓' end else begin edtSenha.PasswordChar:= '*'; btnExibir.Caption := '🔒' end; end; procedure TfrmCadUsuario.btnGravarClick(Sender: TObject); var PerfilId: Integer; begin if oUsuario.UsuarioExiste(edtNome.Text) then begin MessageDlg('Usuário ja cadastrado', mtInformation, [mbok],0); edtNome.SetFocus; Abort; end; if edtUsuarioId.Text <>EmptyStr then oUsuario.codigo:=StrToInt(edtUsuarioId.Text) else oUsuario.codigo:= 0; oUsuario.nome := edtNome.Text; oUsuario.senha:= edtSenha.Text; oUsuario.perfilId:= lkpFuncao.KeyValue; inherited; if VarIsNull(lkpFuncao.KeyValue) then PerfilId := 0 else PerfilId := lkpFuncao.KeyValue; if PerfilId > 0 then AplicarFuncoes(oUsuario.codigo, PerfilId); end; procedure TfrmCadUsuario.AplicarFuncoes(AUsuarioId, APerfilId: Integer); var Qry: TFDQuery; begin Qry := TFDQuery.Create(nil); try Qry.Connection := dtmConexao.ConexaoDB; dtmConexao.ConexaoDB.StartTransaction; try if APerfilId = 1 then be
+message.txt
+13 KB
+Mateus — 11:01
+Qry.SQL.Text := 'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId';
+      Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
+      Qry.ExecSQL;
+Mateus — 13:28
+procedure TfrmCadUsuario.btnGravarClick(Sender: TObject);
+var
+  PerfilId: Integer;
+begin
+  if (EstadoDoCadastro = ecInserir) and oUsuario.UsuarioExiste(edtNome.Text) then
+  begin
+    MessageDlg('Usuário ja cadastrado', mtInformation, [mbok], 0);
+    edtNome.SetFocus;
+    Abort;
+  end;
+
+  if edtUsuarioId.Text <> EmptyStr then
+    oUsuario.codigo := StrToInt(edtUsuarioId.Text)
+  else
+    oUsuario.codigo := 0;
+
+  oUsuario.nome := edtNome.Text;
+  oUsuario.senha := edtSenha.Text;
+  oUsuario.perfilId := lkpFuncao.KeyValue;
+
+  inherited;
+
+  if VarIsNull(lkpFuncao.KeyValue) then
+    PerfilId := 0
+  else
+    PerfilId := lkpFuncao.KeyValue;
+end;
+Mateus — 13:43
+function TfrmCadUsuario.Apagar: Boolean;
+begin
+  if oUsuario.Selecionar(fdqryListagem.FieldByName('usuarioID').AsInteger) then
+  begin
+    result := oUsuario.Apagar;
+  end;
+
+message.txt
+6 KB
+rebente
+﻿
+Mateus
+mateusdomtec
+function TfrmCadUsuario.Apagar: Boolean;
+begin
+  if oUsuario.Selecionar(fdqryListagem.FieldByName('usuarioID').AsInteger) then
+  begin
+    result := oUsuario.Apagar;
+  end;
+end;
+
+function TfrmCadUsuario.GetDesc: string;
+begin
+  result := oUsuario.nome;
+end;
+
+procedure TfrmCadUsuario.btnAleatorioClick(Sender: TObject);
+begin
+  inherited;
+  edtSenha.Text := GerarSenha(10);
+end;
+
+function TfrmCadUsuario.GerarSenha(Tamanho: Integer): string;
+const
+  Caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+var
+  i, Posicao: Integer;
+begin
+  Result := '';
+  for i := 1 to Tamanho do
+  begin
+    Posicao := Random(Length(Caracteres)) + 1;
+    Result := Result + Caracteres[Posicao];
+  end;
+end;
+
+procedure TfrmCadUsuario.btnAlterarClick(Sender: TObject);
+begin
+  if oUsuario.Selecionar(fdqryListagem.FieldByName('usuarioID').AsInteger) then
+  begin
+    edtUsuarioId.Text := IntToStr(oUsuario.codigo);
+    edtNome.Text := oUsuario.nome;
+    edtSenha.Text := oUsuario.senha;
+    oUsuario.senha := edtSenha.Text;
+
+  end
+  else
+  begin
+    btnCancelar.Click;
+    Abort;
+  end;
+
+  RetornarInfos;
+  EstadoDoCadastro := ecAlterar;
+  fdqryListagem.Refresh;
+  inherited;
+
+end;
+
+procedure TfrmCadUsuario.btnExibirClick(Sender: TObject);
+begin
+  inherited;
+  if edtSenha.PasswordChar = '*' then
+  begin
+    edtSenha.PasswordChar := #0;
+    btnExibir.Caption := '🔓'
+  end
+  else
+  begin
+    edtSenha.PasswordChar := '*';
+    btnExibir.Caption := '🔒'
+  end;
+end;
+
+procedure TfrmCadUsuario.btnGravarClick(Sender: TObject);
+var
+  PerfilId: Integer;
+begin
+  if (EstadoDoCadastro = ecInserir) and oUsuario.UsuarioExiste(edtNome.Text) then
+  begin
+    MessageDlg('Usuário ja cadastrado', mtInformation, [mbok], 0);
+    edtNome.SetFocus;
+    Abort;
+  end;
+
+  if edtUsuarioId.Text <> EmptyStr then
+    oUsuario.codigo := StrToInt(edtUsuarioId.Text)
+  else
+    oUsuario.codigo := 0;
+
+  oUsuario.nome := edtNome.Text;
+  oUsuario.senha := edtSenha.Text;
+  oUsuario.perfilId := lkpFuncao.KeyValue;
+
+  if VarIsNull(lkpFuncao.KeyValue) then
+    PerfilId := 0
+  else
+    PerfilId := lkpFuncao.KeyValue;
+
+    inherited;
+end;
+
+procedure TfrmCadUsuario.AplicarFuncoes(AUsuarioId, APerfilId: Integer);
+var
+  Qry: TFDQuery;
+begin
+  Qry := TFDQuery.Create(nil);
+  try
+    Qry.Connection := dtmConexao.ConexaoDB;
+
+    dtmConexao.ConexaoDB.StartTransaction;
+    try
+      if APerfilId = 1 then
+      begin
+        Qry.SQL.Text := 'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
+                        ' INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) ' + 'SELECT :usuarioId, acaoAcessoId, ativo ' + 'FROM usuariosAcaoAcesso ' + 'WHERE usuarioId = 18';
+
+        Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
+      end;
+
+      if APerfilId = 2 then
+      begin
+        Qry.SQL.Text := 'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) ' + 'SELECT :usuarioId, acaoAcessoId, ativo ' + 'FROM usuariosAcaoAcesso ' + 'WHERE usuarioId = 26';
+
+        Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
+      end;
+
+      if APerfilId = 3 then
+      begin
+        Qry.SQL.Text := 'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' + 'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) ' + 'SELECT :usuarioId, acaoAcessoId, ativo ' + 'FROM usuariosAcaoAcesso ' + 'WHERE usuarioId = 13';
+
+        Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
+      end;
+
+      Qry.ExecSQL;
+
+      dtmConexao.ConexaoDB.Commit;
+    except
+      dtmConexao.ConexaoDB.Rollback;
+      raise;
+    end;
+
+  finally
+    Qry.Free;
+  end;
+end;
+
+procedure TfrmCadUsuario.RetornarInfos;
+begin
+  edtUsuarioId.Text := fdqryListagem.FieldByName('usuarioId').AsString;
+  edtNome.Text := fdqryListagem.FieldByName('nome').AsString;
+  edtSenha.Text := Descriptografar(fdqryListagem.FieldByName('senha').AsString);
+  lkpFuncao.KeyValue := fdqryListagem.FieldByName('perfilId').AsInteger;
+  oUsuario.perfilId := fdqryListagem.FieldByName('perfilId').AsInteger;
+end;
+
+procedure TfrmCadUsuario.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  edtNome.SetFocus;
+end;
+
+procedure TfrmCadUsuario.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  if Assigned(oUsuario) then
+    FreeAndNil(oUsuario);
+end;
+
+procedure TfrmCadUsuario.FormCreate(Sender: TObject);
+begin
+  inherited;
+  oUsuario := TUsuario.Create(dtmConexao.ConexaoDB);
+  IndiceAtual := 'nome';
+end;
+
+function TfrmCadUsuario.Gravar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+var perfilId: Integer;
+begin
+  Result := False;
+
+  if EstadoDoCadastro = ecInserir then
+    Result := oUsuario.Inserir
+  else if EstadoDoCadastro = ecAlterar then
+    Result := oUsuario.Atualizar
+  else
+    Exit;
+
+  if VarIsNull(lkpFuncao.KeyValue) then
+    perfilId := 0
+  else
+    perfilId := lkpFuncao.KeyValue;
+
+  if perfilId > 0 then
+    AplicarFuncoes(oUsuario.codigo, perfilId);
+
+  TAcaoAcesso.PreencherUsuariosVsAcoes(dtmConexao.ConexaoDB);
+end;
+
+procedure TfrmCadUsuario.grdListagemDblClick(Sender: TObject);
+begin
+  RetornarInfos;
+  inherited;
+end;
+
+end.
+message.txt
+6 KB

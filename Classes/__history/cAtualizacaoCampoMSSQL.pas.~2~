@@ -1,0 +1,27 @@
+unit cAtualizacaoCampoMSSQL;
+
+interface
+
+uses IdUserAccounts, System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+  FireDAC.Comp.Client, Vcl.Dialogs, System.SysUtils, uEnum, cAtualizacaoBancoDeDados;
+
+
+type
+  TAtualizacaoCampoMSSQL = class(TAtualizaBancoDados)
+
+  private
+    function CampoExisteNaTabela(aNomeTabela, aCampo: String): Boolean;
+    procedure Versao1;
+
+  protected
+
+  public
+    constructor Create(aConexao:TFDConnection);
+    destructor Destroy; override;
+
+end;
+
+
+implementation
+
+end.

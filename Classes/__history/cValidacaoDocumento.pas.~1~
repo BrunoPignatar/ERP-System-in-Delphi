@@ -1,0 +1,135 @@
+unit cValidacaoDocumento;
+
+interface
+
+uses System.Classes,
+   Vcl.Controls,
+   Vcl.ExtCtrls,
+  FireDAC.Comp.Client,
+  Vcl.Dialogs,
+  System.SysUtils,
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+   FireDAC.Stan.Param,
+  FireDAC.Stan.Error,
+   FireDAC.DatS,
+    FireDAC.Phys.Intf,
+     FireDAC.DApt.Intf,
+      FireDAC.Stan.Async,
+       FireDAC.DApt,
+  FireDAC.Comp.DataSet,
+  uDTMconexao;
+
+function ValidarCPF(const CPF: string): Boolean;
+function ValidarCNPJ(const CNPJ: string): Boolean;
+
+implementation
+
+function SomenteNumeros(const Texto: string): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 1 to Length(Texto) do
+    if Texto[I] in ['0'..'9'] then
+      Result := Result + Texto[I];
+end;
+
+function ValidarCPF(const CPF: string): Boolean;
+var
+  Num: string;
+  I, Soma, Resto: Integer;
+  Dig1, Dig2: Integer;
+begin
+  Result := False;
+  Num := SomenteNumeros(CPF);
+
+  if Length(Num) <> 11 then
+    Exit;
+
+  if Num = StringOfChar(Num[1], 11) then
+    Exit;
+
+  Soma := 0;
+  for I := 1 to 9 do
+    Soma := Soma + StrToInt(Num[I]) * (11 - I);
+
+  Resto := (Soma * 10) mod 11;
+  if Resto = 10 then
+    Resto := 0;
+
+  Dig1 := Resto;
+
+  Soma := 0;
+  for I := 1 to 10 do
+    Soma := Soma + StrToInt(Num[I]) * (12 - I);
+
+  Resto := (Soma * 10) mod 11;
+  if Resto = 10 then
+    Resto := 0;
+
+  Dig2 := Resto;
+
+  Result :=
+    (Dig1 = StrToInt(Num[10])) and
+    (Dig2 = StrToInt(Num[11]));
+end;
+
+function ValidarCNPJ(const CNPJ: string): Boolean;
+var
+  Num: string;
+  I, Soma, Peso, Resto: Integer;
+begin
+  Result := False;
+  Num := SomenteNumeros(CNPJ);
+
+  if Length(Num) <> 14 then
+    Exit;
+
+  if Num = StringOfChar(Num[1], 14) then
+    Exit;
+
+  Soma := 0;
+  Peso := 5;
+
+  for I := 1 to 12 do
+  begin
+    Soma := Soma + StrToInt(Num[I]) * Peso;
+    Dec(Peso);
+    if Peso < 2 then
+      Peso := 9;
+  end;
+
+  Resto := Soma mod 11;
+  if Resto < 2 then
+    Resto := 0
+  else
+    Resto := 11 - Resto;
+
+  if Resto <> StrToInt(Num[13]) then
+    Exit;
+
+  Soma := 0;
+  Peso := 6;
+
+  for I := 1 to 13 do
+  begin
+    Soma := Soma + StrToInt(Num[I]) * Peso;
+    Dec(Peso);
+    if Peso < 2 then
+      Peso := 9;
+  end;
+
+  Resto := Soma mod 11;
+  if Resto < 2 then
+    Resto := 0
+  else
+    Resto := 11 - Resto;
+
+  if Resto <> StrToInt(Num[14]) then
+    Exit;
+
+  Result := True;
+end;
+
+end.

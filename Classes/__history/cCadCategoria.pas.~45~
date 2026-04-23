@@ -1,0 +1,185 @@
+unit cCadCategoria;
+
+interface
+
+uses
+  System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+  FireDAC.Comp.Client, Vcl.Dialogs, System.SysUtils;
+
+type
+  TCategoria = class
+  private
+    ConexaoDB: TFDConnection;
+    F_categoriaId: Integer;
+    F_descricao: string;
+    function GetCategoriaId: Integer;
+    function GetDescricao: string;
+    procedure SetCategoriaId(const Value: Integer);
+    procedure SetDescricao(const Value: string);
+  public
+    constructor Create(aConexao: TFDConnection);
+    destructor Destroy; override;
+
+    function Gravar:Boolean;
+    function Atualizar:Boolean;
+    function Seleciona:Boolean;
+    function Apagar(id:Integer):Boolean;
+
+    property CategoriaId: Integer read GetCategoriaId write SetCategoriaId;
+    property Descricao: string read GetDescricao write SetDescricao;
+  end;
+
+implementation
+
+{ TCategoria }
+
+{$REGION 'CREATE AND DESTRUCT'}
+constructor TCategoria.Create(aConexao:TFDConnection);
+begin
+  ConexaoDB := aConexao;
+end;
+
+destructor TCategoria.Destroy;
+begin
+  inherited;
+end;
+
+{$ENDREGION}
+
+{$REGION 'GETS AND SETS'}
+function TCategoria.GetCategoriaId: Integer;
+begin
+  Result := F_categoriaId;
+end;
+
+function TCategoria.GetDescricao: string;
+begin
+  Result := F_descricao;
+end;
+
+procedure TCategoria.SetCategoriaId(const Value: Integer);
+begin
+  F_categoriaId := Value;
+end;
+
+procedure TCategoria.SetDescricao(const Value: string);
+begin
+  F_descricao := Value;
+end;
+
+{$ENDREGION}
+
+
+{$REGION 'CRUD'}
+function TCategoria.Gravar: Boolean;  //inserir do curso
+var QryGravar:TFDQuery;
+begin
+  try
+    QryGravar:=TFDQuery.Create(nil);
+    QryGravar.Connection:=ConexaoDB;
+    QryGravar.SQL.Clear;
+    QryGravar.SQL.Add('insert into categorias (descricao) values (:descricao)');
+    QryGravar.ParamByName('descricao').AsString:=Self.F_descricao;
+    try
+      QryGravar.ExecSQL;
+    except
+    Result:=False;
+    end;
+  finally
+   if Assigned(QryGravar)   then
+      FreeAndNil(QryGravar);
+  end;
+end;
+
+function TCategoria.Seleciona: Boolean;
+var QrySeleciona:TFDQuery;
+begin
+  try
+    Result:=True;
+    QrySeleciona:=TFDQuery.Create(nil);
+    QrySeleciona.Connection:=ConexaoDB;
+    QrySeleciona.SQL.Clear;
+    QrySeleciona.SQL.Add(
+      'SELECT categoriaId, descricao '+
+      'FROM categorias '+
+      'WHERE categoriaId = :categoriaId'
+      );
+    QrySeleciona.ParamByName('categoriaId').Value:=F_categoriaId;
+    try
+      QrySeleciona.Open;
+
+      Self.F_categoriaId := QrySeleciona.FieldByName('categoriaId').AsInteger;
+      Self.F_descricao := QrySeleciona.FieldByName('descricao').AsString;
+    except
+    Result:=false;
+    end;
+
+  finally
+     if Assigned(QrySeleciona) then
+        FreeAndNil(QrySeleciona);
+  end;
+end;
+
+function TCategoria.Apagar(id:Integer): Boolean;
+var QryApagar:TFDQuery;
+begin
+  if MessageDlg('Apagar o Registro: '+#13+#13+
+                'Código: '+IntToStr(F_categoriaId)+#13+
+                'Descrição: '+F_descricao,mtConfirmation,[mbYes, mbNo],0)=mrNo then begin
+                  Result:=False;
+                  Abort;
+  end;
+
+  try
+    Result:=True;
+    Result:=True;
+    QryApagar:=TFDQuery.Create(nil);
+    QryApagar.Connection:=ConexaoDB;
+    QryApagar.SQL.Clear;
+    QryApagar.SQL.Add('DELETE FROM categoriaId '+
+                      ' WHERE categoriaId=:categoriaId ');
+    QryApagar.ParamByName('categoriaId').AsInteger :=id;
+
+    try
+      QryApagar.ExecSQL;
+    except
+      Result:=False;
+    end;
+  finally
+     if Assigned(QryApagar) then
+        FreeAndNil(QryApagar)
+  end;
+
+end;
+
+function TCategoria.Atualizar: Boolean;
+var QryAtualizar:TFDQuery;
+begin
+try
+    Result:=True;
+    QryAtualizar:=TFDQuery.Create(nil);
+    QryAtualizar.Connection:=ConexaoDB;
+    QryAtualizar.SQL.Clear;
+    QryAtualizar.SQL.Add(
+      'UPDATE categorias '+
+      '  SET descricao=:descricao '+
+      'WHERE categoriaId =:categoriaId ');
+    QryAtualizar.ParamByName('categoriaId').AsInteger:=Self.F_categoriaId;
+    QryAtualizar.ParamByName('descricao').AsString:=Self.F_descricao;
+
+    try
+      QryAtualizar.ExecSQL;
+    except
+    Result:=False;
+    end;
+
+finally
+  if Assigned(QryAtualizar) then
+      FreeAndNil(QryAtualizar);
+end;
+end;
+
+{$ENDREGION}
+
+
+end.

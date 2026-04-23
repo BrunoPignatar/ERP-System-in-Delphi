@@ -1,0 +1,159 @@
+unit uConLog;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHerancaConsulta, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async,
+  FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ExtCtrls;
+
+type
+  TfrmLog = class(TfrmTelaHerancaConsulta)
+    btnPesquisar: TButton;
+    QryListagemID: TFDAutoIncField;
+    QryListagemDATA_HORA: TSQLTimeStampField;
+    QryListagemUSUARIO: TStringField;
+    QryListagemACAO: TStringField;
+    QryListagemTELA: TStringField;
+    QryListagemDESCRICAO: TStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure mskPesquisaChange(Sender: TObject);
+    procedure btnPesquisarClick(Sender: TObject);
+  private
+    { Private declarations }
+    SelectOriginal:string;
+    IndiceAtual:string;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmLog: TfrmLog;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmLog.btnPesquisarClick(Sender: TObject);
+var I:Integer;
+    TipoCampo:TFieldType;
+    NomeCampo: string;
+    WhereOrAnd: string;
+    CondicaoSQL: string;
+begin
+
+  if mskPesquisa.Text='' then
+  begin
+    QryListagem.Close;
+    QryListagem.SQL.Clear;
+    QryListagem.SQL.Add(SelectOriginal);
+    QryListagem.Open;
+    Abort;
+  end;
+
+  for I := 0 to QryListagem.FieldCount-1 do
+  begin
+    if QryListagem.Fields[i].FieldName=IndiceAtual then
+    begin
+      TipoCampo := QryListagem.Fields[i].DataType;
+      if QryListagem.Fields[i].Origin<>'' then
+      begin
+        if Pos('.',QryListagem.Fields[i].Origin) > 1 then
+        NomeCampo := QryListagem.Fields[i].Origin
+        else
+        NomeCampo := QryListagem.Fields[i].Origin+'.'+QryListagem.Fields[i].FieldName
+      end
+      else
+      NomeCampo := QryListagem.Fields[i].FieldName;
+      Break;
+    end;
+  end;
+
+  if Pos('where', LowerCase(SelectOriginal)) > 0 then
+  begin
+    WhereOrAnd := ' and '
+  end
+  else
+  begin
+    WhereOrAnd := ' where ';
+  end;
+
+  if (TipoCampo=ftString) or (TipoCampo=ftWideString) then
+  begin
+    CondicaoSQL := WhereOrAnd+' '+ NomeCampo + ' LIKE '+QuotedStr('%'+mskPesquisa.Text+'%');
+  end
+  else if (TipoCampo in [ftInteger, ftSmallint, ftAutoInc]) then
+  begin
+    CondicaoSQL := WhereOrAnd+''+NomeCampo + '='+mskPesquisa.Text
+  end
+
+
+  else if (TipoCampo in [ftDate, ftDateTime, ftdate, ftTimeStamp]) then
+  begin
+      CondicaoSQL := WhereOrAnd+' '+' CAST '+'('+NomeCampo +' as date)' + '='+QuotedStr(mskPesquisa.Text)
+  end
+
+
+ else if (TipoCampo in [ftFloat, ftCurrency, ftFMTBcd]) then
+ begin
+    CondicaoSQl := WhereOrAnd+''+NomeCampo + '='+StringReplace(mskPesquisa.Text,',','.',[rfReplaceAll]);
+ end;
+
+
+  QryListagem.Close;
+  QryListagem.SQL.Clear;
+  QryListagem.SQL.Add(SelectOriginal);
+  QryListagem.SQL.Add(CondicaoSQL);
+  QryListagem.Open;
+
+  mskPesquisa.Text:='';
+  mskPesquisa.SetFocus;
+
+end;
+
+procedure TfrmLog.FormCreate(Sender: TObject);
+var i: Integer;
+begin
+  inherited;
+     grdPesquisa.TitleFont.Color:=clWhite;
+
+  // Centraliza os titulos
+    for i := 0 to grdPesquisa.Columns.Count - 1 do
+    grdPesquisa.Columns[i].Title.Alignment := taCenter;
+end;
+
+procedure TfrmLog.mskPesquisaChange(Sender: TObject);
+var Date:TDateTime;
+begin
+
+  if(trim(TMaskEdit(Sender).Text) = '')then
+    Exit;
+
+  if(QryListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
+  begin
+    QryListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
+  end
+
+  else if(QryListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
+  begin
+   try
+     QryListagem.Locate(IndiceAtual, (TMaskEdit(Sender).Text), [])
+   except
+
+   end;
+  end
+
+  else if(QryListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
+  begin
+   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
+   begin
+     QryListagem.Locate(IndiceAtual, Date, []);
+   end
+  end
+  else
+     QryListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
+end;
+
+end.

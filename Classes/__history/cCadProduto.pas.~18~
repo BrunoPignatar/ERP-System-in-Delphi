@@ -1,0 +1,202 @@
+unit cCadProduto;
+
+interface
+uses IdUserAccounts, System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+  FireDAC.Comp.Client, Vcl.Dialogs, System.SysUtils, uEnum,
+  System.StrUtils, Vcl.Imaging.jpeg, Vcl.Graphics;
+
+  type
+  TProduto = class
+  private
+    ConexaoDB:TFDConnection;
+    F_produtoId:Integer;
+    F_nome:string;
+    F_descricao:string;
+    F_valor:Double;
+    F_quantidade:Double;
+    F_categoriaId: Integer;
+    F_foto:TBitmap;
+
+  public
+    constructor Create(aConexao: TFDConnection);
+    destructor Destroy; override;
+    function Gravar:Boolean;
+    function Atualizar:Boolean;
+    function Seleciona(id: Integer):Boolean;
+    function Apagar:Boolean;
+  published
+    property codigo : Integer read F_produtoId write F_produtoId;
+    property nome : string read F_nome write F_nome;
+    property descricao : string read F_descricao write F_descricao;
+    property valor : Double read F_valor write F_valor;
+    property quantidade : Double read F_quantidade write F_quantidade;
+    property categoriaId : Integer read F_categoriaId write F_categoriaId;
+    property foto :TBitmap read F_foto write F_foto;
+  end;
+
+implementation
+
+{$REGION 'CREATE AND DESTROY'}
+constructor TProduto.Create(aConexao: TFDConnection);
+begin
+  ConexaoDB:=aConexao;
+  F_foto := TBitmap.Create;
+  F_foto.Assign(nil);
+end;
+
+destructor TProduto.Destroy;
+begin
+   if Assigned(F_foto) then begin
+     F_foto.Assign(nil);
+     F_foto.Free;
+   end;
+  inherited;
+end;
+{$ENDREGION}
+
+
+{$REGION 'CRUD'}
+
+function TProduto.Gravar: Boolean;
+var QryGravar:TFDQuery;
+begin
+  try
+    QryGravar:=TFDQuery.Create(nil);
+    QryGravar.Connection:=ConexaoDB;
+    QryGravar.SQL.Clear;
+    QryGravar.SQL.Add('insert into produtos (nome, descricao, valor, quantidade, '+
+                      '  categoriaId, foto) '+
+                      '  values (:nome, :descricao, :valor, :quantidade, :categoriaId, :foto)');
+    QryGravar.ParamByName('nome').AsString:=Self.F_nome;
+    QryGravar.ParamByName('descricao').AsString:=Self.F_descricao;
+    QryGravar.ParamByName('valor').AsFloat:=Self.F_valor;
+    QryGravar.ParamByName('quantidade').AsFloat:=Self.F_quantidade;
+    QryGravar.ParamByName('categoriaId').AsInteger:=Self.F_categoriaId;
+
+    if Self.F_foto.Empty then
+      QryGravar.ParamByName('foto').Clear
+    else
+      QryGravar.ParamByName('foto').Assign(Self.F_foto);
+
+    try
+      QryGravar.ExecSQL;
+      Result:=True;
+    except
+    Result:=False;
+    end;
+  finally
+   if Assigned(QryGravar)   then
+      FreeAndNil(QryGravar);
+  end;
+end;
+function TProduto.Seleciona(id: Integer): Boolean;
+var QrySeleciona:TFDQuery;
+begin
+  try
+    F_produtoId := id;
+    Result:=True;
+    QrySeleciona:=TFDQuery.Create(nil);
+    QrySeleciona.Connection:=ConexaoDB;
+    QrySeleciona.SQL.Clear;
+    QrySeleciona.SQL.Add(
+      'SELECT produtoId, nome, descricao, valor, quantidade, categoriaId, foto '+
+      'FROM produtos '+
+      'WHERE produtoId =:produtoId'
+      );
+    QrySeleciona.ParamByName('produtoId').Value:=F_produtoId;
+    try
+      QrySeleciona.Open;
+
+      Self.F_produtoId := QrySeleciona.FieldByName('produtoId').AsInteger;
+      Self.F_nome := QrySeleciona.FieldByName('nome').AsString;
+      Self.F_descricao := QrySeleciona.FieldByName('descricao').AsString;
+      Self.F_valor := QrySeleciona.FieldByName('valor').AsFloat;
+      Self.F_quantidade := QrySeleciona.FieldByName('quantidade').AsFloat;
+      Self.F_categoriaId := QrySeleciona.FieldByName('categoriaId').AsInteger;
+      Self.F_foto.Assign(QrySeleciona.FieldByName('foto'));
+    except
+    Result:=false;
+    end;
+
+  finally
+     if Assigned(QrySeleciona) then
+        FreeAndNil(QrySeleciona);
+  end;
+end;
+
+function TProduto.Apagar: Boolean;
+var QryApagar:TFDQuery;
+begin
+  if MessageDlg('Apagar o Registro: '+#13+#13+
+                'Código: '+IntToStr(F_produtoId)+#13+
+                'Descrição: '+F_nome,mtConfirmation,[mbYes, mbNo],0)=mrNo then begin
+                  Result:=False;
+                  Abort;
+  end;
+
+  try
+    Result:=True;
+    QryApagar:=TFDQuery.Create(nil);
+    QryApagar.Connection:=ConexaoDB;
+    QryApagar.SQL.Clear;
+    QryApagar.SQL.Add('DELETE FROM produtos '+
+                      ' WHERE produtoId=:produtoId ');
+    QryApagar.ParamByName('produtoId').AsInteger :=F_produtoId;
+
+    try
+      QryApagar.ExecSQL;
+    except
+      Result:=False;
+    end;
+  finally
+     if Assigned(QryApagar) then
+        FreeAndNil(QryApagar)
+  end;
+end;
+
+function TProduto.Atualizar: Boolean;
+var QryAtualizar:TFDQuery;
+begin
+try
+    Result:=True;
+    QryAtualizar:=TFDQuery.Create(nil);
+    QryAtualizar.Connection:=ConexaoDB;
+    QryAtualizar.SQL.Clear;
+    QryAtualizar.SQL.Add(
+      'UPDATE produtos '+
+      '      SET nome            =:nome '+
+      '      ,descricao          =:descricao '+
+      '      ,valor              =:valor '+
+      '      ,quantidade         =:quantidade '+
+      '      ,categoriaId        =:categoriaId '+
+      '      ,foto               =:foto '+
+      'WHERE produtoId=:produtoId ');
+
+
+    QryAtualizar.ParamByName('produtoId').AsInteger:=Self.F_produtoId;
+    QryAtualizar.ParamByName('nome').AsString:=Self.F_nome;
+    QryAtualizar.ParamByName('descricao').AsString:=Self.F_descricao;
+    QryAtualizar.ParamByName('valor').AsFloat:=Self.F_valor;
+    QryAtualizar.ParamByName('quantidade').AsFloat:=Self.F_quantidade;
+    QryAtualizar.ParamByName('categoriaId').AsInteger:=Self.F_categoriaId;
+
+    if Self.F_foto.Empty then
+      QryAtualizar.ParamByName('foto').Clear
+    else
+      QryAtualizar.ParamByName('foto').Assign(Self.F_foto);
+
+    try
+      QryAtualizar.ExecSQL;
+    except
+    Result:=False;
+    end;
+
+finally
+  if Assigned(QryAtualizar) then
+      FreeAndNil(QryAtualizar);
+end;
+end;
+
+
+{$ENDREGION}
+end.

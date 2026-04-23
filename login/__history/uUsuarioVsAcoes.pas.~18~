@@ -1,0 +1,216 @@
+unit uUsuarioVsAcoes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, uDTMConexao, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async,
+  FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  TfrmUsuarioVsAcoes = class(TForm)
+    Panel1: TPanel;
+    Panel3: TPanel;
+    Splitter1: TSplitter;
+    Splitter2: TSplitter;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
+    DBGrid2: TDBGrid;
+    QryAcoes: TFDQuery;
+    QryUsuario: TFDQuery;
+    dtsAcoes: TDataSource;
+    dtsUsuario: TDataSource;
+    QryUsuariousuarioID: TFDAutoIncField;
+    QryUsuarioNome: TStringField;
+    QryAcoesusuarioId: TIntegerField;
+    QryAcoesacaoAcessoId: TIntegerField;
+    QryAcoesdescricao: TStringField;
+    QryAcoesativo: TBooleanField;
+    btnFechar: TBitBtn;
+    procedure btnFecharClick(Sender: TObject);
+    procedure QryUsuarioAfterScroll(DataSet: TDataSet);
+    procedure FormShow(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+    procedure SelecionarAcoesAcessoPorUsuario;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmUsuarioVsAcoes: TfrmUsuarioVsAcoes;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmUsuarioVsAcoes.btnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmUsuarioVsAcoes.DBGrid1DblClick(Sender: TObject);
+var
+  Qry: TFDQuery;
+  vUsuarioId, vAcaoId: Integer;
+begin
+  try
+    vUsuarioId := QryAcoes.FieldByName('usuarioId').AsInteger;
+    vAcaoId    := QryAcoes.FieldByName('acaoAcessoId').AsInteger;
+
+    Qry := TFDQuery.Create(nil);
+    Qry.Connection := dtmConexao.dtmPrincipal;
+
+    Qry.SQL.Text :=
+      'UPDATE usuariosAcaoAcesso '+
+      'SET ativo = :ativo '+
+      'WHERE usuarioId = :usuarioId '+
+      'AND acaoAcessoId = :acaoAcessoId';
+
+    Qry.ParamByName('usuarioId').AsInteger := vUsuarioId;
+    Qry.ParamByName('acaoAcessoId').AsInteger := vAcaoId;
+    Qry.ParamByName('ativo').AsBoolean :=
+      not QryAcoes.FieldByName('ativo').AsBoolean;
+
+    dtmConexao.dtmPrincipal.StartTransaction;
+    try
+      Qry.ExecSQL;
+      dtmConexao.dtmPrincipal.Commit;
+    except
+      dtmConexao.dtmPrincipal.Rollback;
+      raise;
+    end;
+
+  finally
+    SelecionarAcoesAcessoPorUsuario;
+
+    QryAcoes.Locate('usuarioId;acaoAcessoId',
+                    VarArrayOf([vUsuarioId, vAcaoId]), []);
+
+    FreeAndNil(Qry);
+  end;
+end;
+
+
+procedure TfrmUsuarioVsAcoes.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+  var linha: Integer;
+begin
+
+
+  if (gdFixed in State) then
+  begin
+    DBGrid1.Canvas.Brush.Color := clGray;
+    DBGrid1.Canvas.FillRect(Rect);
+
+    Exit;
+  end;
+
+
+  Linha := DBGrid1.DataSource.DataSet.RecNo;
+
+  if not (gdSelected in State) then
+  begin
+    if (Linha mod 2) = 0 then
+      DBGrid1.Canvas.Brush.Color := clWebLightgrey
+    else
+      DBGrid1.Canvas.Brush.Color := clWhite;
+  end
+  else
+  begin
+    DBGrid1.Canvas.Brush.Color := $00D8A76F;
+    DBGrid1.Canvas.Font.Color := clWhite;
+  end;
+
+  DBGrid1.Canvas.FillRect(Rect);
+  DBGrid1.Canvas.TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
+
+   If not QryAcoes.FieldByName('ativo').AsBoolean  then
+  begin
+    TDBGrid(Sender).Canvas.Font.Color:= clWhite;
+    TDBGrid(Sender).Canvas.Brush.Color:=clRed
+  end;
+  TDBGrid(Sender).DefaultDrawDataCell(Rect, TDBGrid(Sender).columns[datacol].field, State);
+end;
+
+procedure TfrmUsuarioVsAcoes.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var
+  Linha: Integer;
+begin
+  if (gdFixed in State) then
+  begin
+    DBGrid2.Canvas.Brush.Color := clGray;
+    DBGrid2.Canvas.FillRect(Rect);
+
+    Exit;
+  end;
+
+
+  Linha := DBGrid2.DataSource.DataSet.RecNo;
+
+  if not (gdSelected in State) then
+  begin
+    if (Linha mod 2) = 0 then
+      DBGrid2.Canvas.Brush.Color := clWebLightgrey
+    else
+      DBGrid2.Canvas.Brush.Color := clWhite;
+  end
+  else
+  begin
+    DBGrid2.Canvas.Brush.Color := $00D8A76F;
+    DBGrid2.Canvas.Font.Color := clWhite;
+  end;
+
+  DBGrid2.Canvas.FillRect(Rect);
+  DBGrid2.Canvas.TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
+end;
+
+procedure TfrmUsuarioVsAcoes.FormCreate(Sender: TObject);
+var i:Integer;
+begin
+     DBGrid1.TitleFont.Color:=clWhite;
+
+  // Centraliza os titulos
+    for i := 0 to DBGrid1.Columns.Count - 1 do
+    DBGrid1.Columns[i].Title.Alignment := taCenter;
+
+     DBGrid2.TitleFont.Color:=clWhite;
+
+  // Centraliza os titulos
+    for i := 0 to DBGrid2.Columns.Count - 1 do
+    DBGrid2.Columns[i].Title.Alignment := taCenter;
+end;
+
+procedure TfrmUsuarioVsAcoes.FormShow(Sender: TObject);
+begin
+ try
+   QryUsuario.DisableControls;
+   QryUsuario.Open;
+   SelecionarAcoesAcessoPorUsuario;
+ finally
+   QryUsuario.EnableControls;
+ end;
+end;
+
+procedure TfrmUsuarioVsAcoes.QryUsuarioAfterScroll(DataSet: TDataSet);
+begin
+  SelecionarAcoesAcessoPorUsuario;
+end;
+
+procedure TfrmUsuarioVsAcoes.SelecionarAcoesAcessoPorUsuario;
+begin
+  QryAcoes.Close;
+  QryAcoes.ParamByName('usuarioId').AsInteger := QryUsuario.FieldByName('usuarioID').AsInteger;
+  QryAcoes.Open;
+end;
+
+
+end.

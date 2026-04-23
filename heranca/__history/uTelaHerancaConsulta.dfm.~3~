@@ -1,0 +1,118 @@
+object frmTelaHerancaConsulta: TfrmTelaHerancaConsulta
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Digite o Titulo Aqui'
+  ClientHeight = 444
+  ClientWidth = 796
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 796
+    Height = 41
+    Align = alTop
+    TabOrder = 0
+    ExplicitLeft = 280
+    ExplicitTop = 48
+    ExplicitWidth = 185
+    object lblIndice: TLabel
+      Left = 16
+      Top = 3
+      Width = 53
+      Height = 16
+      Caption = 'lblIndice'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object mskPesquisa: TMaskEdit
+      Left = 1
+      Top = 19
+      Width = 794
+      Height = 21
+      Align = alBottom
+      TabOrder = 0
+      Text = ''
+      TextHint = 'Digite sua Pesquisa'
+      ExplicitLeft = 16
+      ExplicitTop = 14
+      ExplicitWidth = 121
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 403
+    Width = 796
+    Height = 41
+    Align = alBottom
+    TabOrder = 1
+    ExplicitTop = 394
+    DesignSize = (
+      796
+      41)
+    object btnFechar: TBitBtn
+      Left = 720
+      Top = 5
+      Width = 64
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'Fechar'
+      TabOrder = 0
+      OnClick = btnFecharClick
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 41
+    Width = 796
+    Height = 362
+    Align = alClient
+    TabOrder = 2
+    ExplicitLeft = -32
+    ExplicitTop = 35
+    ExplicitHeight = 347
+    object grdPesquisa: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 794
+      Height = 360
+      Align = alClient
+      DataSource = dtsListagem
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnKeyDown = grdPesquisaKeyDown
+    end
+  end
+  object QryListagem: TFDQuery
+    Connection = dtmConexao.dtmPrincipal
+    SQL.Strings = (
+      'select categoriaId, descricao from categorias;')
+    Left = 548
+    Top = 88
+  end
+  object dtsListagem: TDataSource
+    DataSet = QryListagem
+    Left = 612
+    Top = 88
+  end
+end
