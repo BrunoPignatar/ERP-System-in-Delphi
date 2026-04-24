@@ -87,6 +87,7 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       Width = 85
       Height = 25
       Anchors = [akTop, akRight]
+      Cancel = True
       Caption = 'Fechar'
       TabOrder = 0
       OnClick = btnFecharClick

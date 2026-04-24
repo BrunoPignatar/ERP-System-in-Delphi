@@ -461,7 +461,7 @@ object frmRelProVenda: TfrmRelProVenda
       FieldName = 'totalVenda'
       Origin = 'totalVenda'
       ReadOnly = True
-      DisplayFormat = '##,##0.000'
+      DisplayFormat = 'R$ #,##0.00'
       Precision = 18
       Size = 3
     end
@@ -529,12 +529,14 @@ object frmRelProVenda: TfrmRelProVenda
     object QryVendasItensvalorUnitario: TFMTBCDField
       FieldName = 'valorUnitario'
       Origin = 'valorUnitario'
+      DisplayFormat = 'R$ #,##0.00'
       Precision = 18
       Size = 5
     end
     object QryVendasItenstotalProduto: TFMTBCDField
       FieldName = 'totalProduto'
       Origin = 'totalProduto'
+      DisplayFormat = 'R$ #,##0.00'
       Precision = 18
       Size = 5
     end

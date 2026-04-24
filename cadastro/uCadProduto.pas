@@ -74,9 +74,14 @@ type
     procedure btnPesquisarFornecedorClick(Sender: TObject);
     procedure QryListagemvalorGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure imgImagemMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnPesquisarClick(Sender: TObject);
+    procedure dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
   private
     { Private declarations }
     oProduto:TProduto;
+    SelectOriginal: string;
     function Excluir:Boolean; override;
     function Gravar(EstadoDoCadastro:TEstadoDoCadastro): Boolean; override;
     function GetDesc: string; override;
@@ -127,6 +132,17 @@ begin
       frmPrincipal.AtualizarDashBoard;
 end;
 
+
+procedure TfrmCadProduto.imgImagemMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  P: TPoint;
+begin
+  if Button = mbLeft then
+  begin
+    P := imgImagem.ClientToScreen(Point(X, Y));
+    ppmImagem.Popup(P.X, P.Y);
+  end;
+end;
 
 procedure TfrmCadProduto.LimparImagem1Click(Sender: TObject);
 begin
@@ -225,6 +241,83 @@ begin
 
 end;
 
+procedure TfrmCadProduto.btnPesquisarClick(Sender: TObject);
+var I:Integer;
+    TipoCampo:TFieldType;
+    NomeCampo: string;
+    WhereOrAnd: string;
+    CondicaoSQL: string;
+begin
+
+  if mskEdit.Text='' then
+  begin
+    QryListagem.Close;
+    QryListagem.SQL.Clear;
+    QryListagem.SQL.Add(SelectOriginal);
+    QryListagem.Open;
+    Abort;
+  end;
+
+  for I := 0 to QryListagem.FieldCount-1 do
+  begin
+    if QryListagem.Fields[i].FieldName=IndiceAtual then
+    begin
+      TipoCampo := QryListagem.Fields[i].DataType;
+      if QryListagem.Fields[i].Origin<>'' then
+      begin
+        if Pos('.',QryListagem.Fields[i].Origin) > 1 then
+        NomeCampo := QryListagem.Fields[i].Origin
+        else
+        NomeCampo := QryListagem.Fields[i].Origin+'.'+QryListagem.Fields[i].FieldName
+      end
+      else
+      NomeCampo := QryListagem.Fields[i].FieldName;
+      Break;
+    end;
+  end;
+
+  if Pos('where', LowerCase(SelectOriginal)) > 0 then
+  begin
+    WhereOrAnd := ' and '
+  end
+  else
+  begin
+    WhereOrAnd := ' where ';
+  end;
+
+  if (TipoCampo=ftString) or (TipoCampo=ftWideString) then
+  begin
+    CondicaoSQL := WhereOrAnd+' '+ NomeCampo + ' LIKE '+QuotedStr('%'+mskEdit.Text+'%');
+  end
+  else if (TipoCampo in [ftInteger, ftSmallint, ftAutoInc]) then
+  begin
+    CondicaoSQL := WhereOrAnd+''+NomeCampo + '='+mskEdit.Text
+  end
+
+
+  else if (TipoCampo in [ftDate, ftDateTime, ftdate, ftTimeStamp]) then
+  begin
+      CondicaoSQL := WhereOrAnd+' '+' CAST '+'('+NomeCampo +' as date)' + '='+QuotedStr(mskEdit.Text)
+  end
+
+
+ else if (TipoCampo in [ftFloat, ftCurrency, ftFMTBcd]) then
+ begin
+    CondicaoSQl := WhereOrAnd+''+NomeCampo + '='+StringReplace(mskEdit.Text,',','.',[rfReplaceAll]);
+ end;
+
+
+  QryListagem.Close;
+  QryListagem.SQL.Clear;
+  QryListagem.SQL.Add(SelectOriginal);
+  QryListagem.SQL.Add(CondicaoSQL);
+  QryListagem.Open;
+
+  mskEdit.Text:='';
+  mskEdit.SetFocus;
+
+end;
+
 procedure TfrmCadProduto.btnPesquisarFornecedorClick(Sender: TObject);
 begin
   inherited;
@@ -253,6 +346,22 @@ end;
 
 
 
+
+procedure TfrmCadProduto.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  inherited;
+  if Column.FieldName = 'valor' then
+  begin
+    dbgrdListagem.Canvas.FillRect(Rect);
+
+    dbgrdListagem.Canvas.TextOut(
+      Rect.Left + 2,
+      Rect.Top + 2,
+      FormatFloat('R$ #,##0.00', Column.Field.AsFloat)
+    );
+  end;
+end;
 
 procedure TfrmCadProduto.dtsListagemDataChange(Sender: TObject; Field: TField);
 var
@@ -289,6 +398,7 @@ begin
       Stream.Free;
     end;
   end;
+
 end;
 
 procedure TfrmCadProduto.btnAlterarClick(Sender: TObject);
@@ -335,7 +445,9 @@ end;
 procedure TfrmCadProduto.FormShow(Sender: TObject);
 begin
   inherited;
+  SelectOriginal:=QryListagem.SQL.Text;
   QryCategoria.Open;
   QryFornecedor.Open;
+  QryListagem.Open();
 end;
 end.

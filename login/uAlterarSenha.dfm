@@ -99,6 +99,7 @@ object frmAlterarSenha: TfrmAlterarSenha
     Top = 183
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'FECHAR'
     TabOrder = 3
     OnClick = btnFecharClick

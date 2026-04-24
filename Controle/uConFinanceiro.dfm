@@ -23,9 +23,6 @@ object frmConFinanca: TfrmConFinanca
     Height = 41
     Align = alTop
     TabOrder = 0
-    ExplicitLeft = 232
-    ExplicitTop = 80
-    ExplicitWidth = 185
     object Label2: TLabel
       Left = 315
       Top = 2
@@ -47,9 +44,6 @@ object frmConFinanca: TfrmConFinanca
     Height = 398
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 43
-    ExplicitWidth = 728
-    ExplicitHeight = 340
     object Splitter1: TSplitter
       Left = 399
       Top = 1
@@ -211,9 +205,9 @@ object frmConFinanca: TfrmConFinanca
       object Label11: TLabel
         Left = 12
         Top = 43
-        Width = 40
+        Width = 50
         Height = 18
-        Caption = 'Lucro:'
+        Caption = 'Balan'#231'o'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -15
@@ -255,7 +249,6 @@ object frmConFinanca: TfrmConFinanca
       Height = 396
       Align = alRight
       TabOrder = 3
-      ExplicitHeight = 400
       object GraficoVendas: TDBChart
         Left = 1
         Top = 1
@@ -23955,10 +23948,6 @@ object frmConFinanca: TfrmConFinanca
         Zoom.MouseButton = mbRight
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 33
-        ExplicitTop = -20
-        ExplicitWidth = 317
-        ExplicitHeight = 336
         DefaultCanvas = 'TGDIPlusCanvas'
         ColorPaletteIndex = 13
         object Series1: TFastLineSeries

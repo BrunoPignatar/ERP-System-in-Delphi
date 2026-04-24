@@ -22,6 +22,7 @@ type
     F_doc: string;
     F_situacao : Integer;
     F_obs : string;
+    F_NumeroCasa: string;
 
   public
     constructor Create(aConexao: TFDConnection);
@@ -44,6 +45,7 @@ type
     property doc: string read F_doc write F_doc;
     property IDSituacao: Integer read F_situacao write F_situacao;
     property observacao: string read F_obs write F_obs;
+    property NumeroCasa: string read F_NumeroCasa write F_NumeroCasa;
   end;
 
 
@@ -81,8 +83,8 @@ begin
     QryGravar.Connection:=ConexaoDB;
     QryGravar.SQL.Clear;
     QryGravar.SQL.Add('insert into clientes (nome, endereco, cidade, bairro, '+
-                      '  estado, cep, telefone, email, dataNascimento, doc, IDSituacao, observacao) '+
-                      '  values (:nome, :endereco, :cidade, :bairro, :estado, :cep, :telefone, :email, :dataNascimento, :doc, :IDSituacao, :observacao)');
+                      '  estado, cep, telefone, email, dataNascimento, doc, IDSituacao, observacao, NumeroCasa) '+
+                      '  values (:nome, :endereco, :cidade, :bairro, :estado, :cep, :telefone, :email, :dataNascimento, :doc, :IDSituacao, :observacao, :NumeroCasa)');
     QryGravar.ParamByName('nome').AsString:=Self.F_nome;
     QryGravar.ParamByName('endereco').AsString:=Self.F_endereco;
     QryGravar.ParamByName('cidade').AsString:=Self.F_cidade;
@@ -95,6 +97,7 @@ begin
     QryGravar.ParamByName('doc').AsString:=Self.F_doc;
     QryGravar.ParamByName('IDSituacao').AsInteger:=Self.F_situacao;
     QryGravar.ParamByName('observacao').AsString:=Self.F_obs;
+    QryGravar.ParamByName('NumeroCasa').AsString:=Self.F_NumeroCasa;
 
     try
       QryGravar.ExecSQL;
@@ -121,7 +124,7 @@ begin
     QrySeleciona.Connection:=ConexaoDB;
     QrySeleciona.SQL.Clear;
     QrySeleciona.SQL.Add(
-      'SELECT clienteId, nome, endereco, cidade, bairro, estado, cep, telefone, email, dataNascimento, doc, IDSituacao, observacao '+
+      'SELECT clienteId, nome, endereco, cidade, bairro, estado, cep, telefone, email, dataNascimento, doc, IDSituacao, observacao, NumeroCasa '+
       'FROM clientes '+
       'WHERE clienteId = :clienteId'
       );
@@ -142,6 +145,7 @@ begin
       Self.F_doc := QrySeleciona.FieldByName('doc').AsString;
       Self.F_situacao := QrySeleciona.FieldByName('IDSituacao').AsInteger;
       Self.F_obs:=QrySeleciona.FieldByName('observacao').AsString;
+      Self.F_NumeroCasa:=QrySeleciona.FieldByName('NumeroCasa').AsString;
 
     except
     Result:=false;
@@ -205,6 +209,7 @@ try
       '      ,doc               =:doc '+
       '      ,IDSituacao               =:IDSituacao '+
       '      ,observacao               =:observacao ' +
+      '      ,NumeroCasa               =:NumeroCasa ' +
       'WHERE clienteId=:clienteId ');
 
 
@@ -221,6 +226,7 @@ try
     QryAtualizar.ParamByName('doc').AsString:=Self.F_doc;
     QryAtualizar.ParamByName('IDSituacao').AsInteger:=Self.F_situacao;
     QryAtualizar.ParamByName('observacao').AsString:=Self.F_obs;
+    QryAtualizar.ParamByName('NumeroCasa').AsString:=Self.F_NumeroCasa;
 
     try
       QryAtualizar.ExecSQL;

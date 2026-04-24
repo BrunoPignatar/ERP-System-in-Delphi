@@ -7,6 +7,7 @@ inherited frmLog: TfrmLog
   TextHeight = 13
   inherited Panel1: TPanel
     Width = 932
+    ExplicitWidth = 932
     inherited mskPesquisa: TMaskEdit
       Width = 592
       Align = alNone
@@ -24,12 +25,16 @@ inherited frmLog: TfrmLog
   end
   inherited Panel2: TPanel
     Width = 932
+    ExplicitWidth = 932
     inherited btnFechar: TBitBtn
       Left = 856
+      Cancel = True
+      ExplicitLeft = 856
     end
   end
   inherited Panel3: TPanel
     Width = 932
+    ExplicitWidth = 932
     inherited grdPesquisa: TDBGrid
       Width = 930
       OnDblClick = nil

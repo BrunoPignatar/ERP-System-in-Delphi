@@ -375,7 +375,7 @@ object frmRelCadProdutoComGrupoCategoria: TfrmRelCadProdutoComGrupoCategoria
           ParentFont = False
         end
         object RLLabel13: TRLLabel
-          Left = 425
+          Left = 393
           Top = 28
           Width = 196
           Height = 16
@@ -447,7 +447,7 @@ object frmRelCadProdutoComGrupoCategoria: TfrmRelCadProdutoComGrupoCategoria
       FieldName = 'Valor'
       Origin = 'Valor'
       ReadOnly = True
-      DisplayFormat = '##,##0.000'
+      DisplayFormat = 'R$ #,##0.00'
       Precision = 18
       Size = 3
     end

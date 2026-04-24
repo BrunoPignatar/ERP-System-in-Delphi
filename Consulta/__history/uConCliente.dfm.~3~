@@ -1,5 +1,0 @@
-inherited frmConCliente: TfrmConCliente
-  Caption = 'Consulta de Cliente'
-  PixelsPerInch = 96
-  TextHeight = 13
-end

@@ -7,9 +7,9 @@
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     Width = 707
-    ActivePage = Manutenção
     ExplicitWidth = 707
     inherited Listagem: TTabSheet
+      ExplicitWidth = 699
       inherited pnlListagemTopo: TPanel
         Width = 699
         ExplicitWidth = 699
@@ -37,6 +37,7 @@
       end
     end
     inherited Manutenção: TTabSheet
+      ExplicitWidth = 699
       object edtAcaoAcessoId: TLabeledEdit
         Tag = 1
         Left = 23

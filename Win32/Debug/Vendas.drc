@@ -8,37 +8,45 @@
   resources were bound to the produced executable.
 */
 
-#define Datasnap_MidConst_SRecConstFail 64160
-#define Datasnap_MidConst_SFieldConstFail 64161
-#define Datasnap_MidConst_SDefExprFail 64162
-#define Datasnap_MidConst_SArrayElementError 64163
-#define Datasnap_MidConst_SNoTableName 64164
-#define Datasnap_MidConst_SNoEditsAllowed 64165
-#define Datasnap_MidConst_SNoDeletesAllowed 64166
-#define Datasnap_MidConst_SNoInsertsAllowed 64167
-#define Datasnap_MidConst_SCannotChangeCommandText 64168
-#define Datasnap_MidConst_SConnectionMissing 64169
-#define Datasnap_MidConst_SNoCircularConnection 64170
-#define Datasnap_MidConst_SClassNotAvailable 64171
-#define Datasnap_MidConst_SOutOfMemory 64172
-#define Datasnap_MidConst_SInvalidArg 64173
-#define Datasnap_MidConst_SUnableToLoadICU 64174
-#define Datasnap_MidConst_SRefreshError 64176
-#define Datasnap_MidConst_SAggsNoSuchLevel 64177
-#define Datasnap_MidConst_SNoCircularReference 64178
-#define Datasnap_MidConst_SErrorLoadingMidas 64179
-#define Datasnap_MidConst_SCannotCreateDataSet 64180
-#define Datasnap_MidConst_SNoConnectToBroker 64181
-#define Datasnap_MidConst_SNoParentConnection 64182
-#define Datasnap_MidConst_SInvalidResponse 64183
-#define Datasnap_MidConst_STooManyRecordsModified 64184
-#define Datasnap_MidConst_SInvalidOptParamType 64185
-#define Datasnap_MidConst_SMissingDataSet 64186
-#define Datasnap_MidConst_SConstraintFailed 64187
-#define Datasnap_MidConst_SField 64188
-#define Datasnap_MidConst_SReadOnlyProvider 64189
-#define Datasnap_MidConst_SNoKeySpecified 64190
-#define Datasnap_MidConst_SNoDataSets 64191
+#define Datasnap_MidConst_SCannotChangeCommandText 64144
+#define Datasnap_MidConst_SConnectionMissing 64145
+#define Datasnap_MidConst_SNoCircularConnection 64146
+#define Datasnap_MidConst_SClassNotAvailable 64147
+#define Datasnap_MidConst_SOutOfMemory 64148
+#define Datasnap_MidConst_SInvalidArg 64149
+#define Datasnap_MidConst_SUnableToLoadICU 64150
+#define Datasnap_MidConst_STooManyRecordsModified 64160
+#define Datasnap_MidConst_SInvalidOptParamType 64161
+#define Datasnap_MidConst_SMissingDataSet 64162
+#define Datasnap_MidConst_SConstraintFailed 64163
+#define Datasnap_MidConst_SField 64164
+#define Datasnap_MidConst_SReadOnlyProvider 64165
+#define Datasnap_MidConst_SNoKeySpecified 64166
+#define Datasnap_MidConst_SNoDataSets 64167
+#define Datasnap_MidConst_SRecConstFail 64168
+#define Datasnap_MidConst_SFieldConstFail 64169
+#define Datasnap_MidConst_SDefExprFail 64170
+#define Datasnap_MidConst_SArrayElementError 64171
+#define Datasnap_MidConst_SNoTableName 64172
+#define Datasnap_MidConst_SNoEditsAllowed 64173
+#define Datasnap_MidConst_SNoDeletesAllowed 64174
+#define Datasnap_MidConst_SNoInsertsAllowed 64175
+#define System_RegularExpressionsConsts_SRegExStudyError 64176
+#define System_RegularExpressionsConsts_SRegExMatchRequired 64177
+#define System_RegularExpressionsConsts_SRegExStringsRequired 64178
+#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64179
+#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64180
+#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64181
+#define Datasnap_MidConst_SNoDataProvider 64182
+#define Datasnap_MidConst_SInvalidDataPacket 64183
+#define Datasnap_MidConst_SRefreshError 64184
+#define Datasnap_MidConst_SAggsNoSuchLevel 64185
+#define Datasnap_MidConst_SNoCircularReference 64186
+#define Datasnap_MidConst_SErrorLoadingMidas 64187
+#define Datasnap_MidConst_SCannotCreateDataSet 64188
+#define Datasnap_MidConst_SNoConnectToBroker 64189
+#define Datasnap_MidConst_SNoParentConnection 64190
+#define Datasnap_MidConst_SInvalidResponse 64191
 #define IdResourceStringsSSPI_RSHTTPSSPIPolicyNTLMOnly 64192
 #define IdResourceStringsSSPI_RSHTTPSSPINoRenegotiation 64193
 #define IdResourceStringsSSPI_RSHTTPSSPINoContext 64194
@@ -53,8 +61,8 @@
 #define IdResourceStringsSSPI_RSHTTPSSPIUnknwonCredentialUse 64203
 #define IdResourceStringsSSPI_RSHTTPSSPIDoAuquireCredentialHandle 64204
 #define IdResourceStringsSSPI_RSHTTPSSPICompleteTokenNotSupported 64205
-#define Datasnap_MidConst_SNoDataProvider 64206
-#define Datasnap_MidConst_SInvalidDataPacket 64207
+#define System_RegularExpressionsConsts_SRegExMissingExpression 64206
+#define System_RegularExpressionsConsts_SRegExExpressionError 64207
 #define IdResourceStringsSSPI_RSHTTPSSPICertWrongUsage 64208
 #define IdResourceStringsSSPI_RSHTTPSSPIDowngradeDetected 64209
 #define IdResourceStringsSSPI_RSHTTPSSPISmartcardCertRevoked 64210
@@ -1385,14 +1393,6 @@
 #define System_SysConst_STooManyOpenFiles 65535
 STRINGTABLE
 BEGIN
-	Datasnap_MidConst_SRecConstFail,	L"Preparation of record constraint failed with error \"%s\""
-	Datasnap_MidConst_SFieldConstFail,	L"Preparation of field constraint failed with error \"%s\""
-	Datasnap_MidConst_SDefExprFail,	L"Preparation of default expression failed with error \"%s\""
-	Datasnap_MidConst_SArrayElementError,	L"Array elements of type %s are not supported"
-	Datasnap_MidConst_SNoTableName,	L"Unable to resolve records.  Table name not found."
-	Datasnap_MidConst_SNoEditsAllowed,	L"Modifications are not allowed"
-	Datasnap_MidConst_SNoDeletesAllowed,	L"Deletes are not allowed"
-	Datasnap_MidConst_SNoInsertsAllowed,	L"Inserts are not allowed"
 	Datasnap_MidConst_SCannotChangeCommandText,	L"CommandText changes are not allowed"
 	Datasnap_MidConst_SConnectionMissing,	L"Requires Connection before opening"
 	Datasnap_MidConst_SNoCircularConnection,	L"Circular reference to Connection not allowed"
@@ -1400,14 +1400,6 @@ BEGIN
 	Datasnap_MidConst_SOutOfMemory,	L"Out of memory"
 	Datasnap_MidConst_SInvalidArg,	L"Invalid argument"
 	Datasnap_MidConst_SUnableToLoadICU,	L"Unable to load Midas due to missing code page conversion library."
-	Datasnap_MidConst_SRefreshError,	L"Must apply updates before refreshing data"
-	Datasnap_MidConst_SAggsNoSuchLevel,	L"Grouping level not defined"
-	Datasnap_MidConst_SNoCircularReference,	L"Circular provider references not allowed"
-	Datasnap_MidConst_SErrorLoadingMidas,	L"Error loading MIDAS.DLL"
-	Datasnap_MidConst_SCannotCreateDataSet,	L"No fields defined.  Cannot create dataset"
-	Datasnap_MidConst_SNoConnectToBroker,	L"Connection not allowed to TConnectionBroker"
-	Datasnap_MidConst_SNoParentConnection,	L"ParentConnection is not assigned"
-	Datasnap_MidConst_SInvalidResponse,	L"Invalid response"
 	Datasnap_MidConst_STooManyRecordsModified,	L"Update affected more than 1 record."
 	Datasnap_MidConst_SInvalidOptParamType,	L"Value cannot be stored in an optional parameter"
 	Datasnap_MidConst_SMissingDataSet,	L"Missing DataSet property"
@@ -1416,6 +1408,30 @@ BEGIN
 	Datasnap_MidConst_SReadOnlyProvider,	L"Cannot apply updates to a ReadOnly provider"
 	Datasnap_MidConst_SNoKeySpecified,	L"Unable to find record.  No key specified"
 	Datasnap_MidConst_SNoDataSets,	L"Cannot resolve to dataset when using nested datasets or references"
+	Datasnap_MidConst_SRecConstFail,	L"Preparation of record constraint failed with error \"%s\""
+	Datasnap_MidConst_SFieldConstFail,	L"Preparation of field constraint failed with error \"%s\""
+	Datasnap_MidConst_SDefExprFail,	L"Preparation of default expression failed with error \"%s\""
+	Datasnap_MidConst_SArrayElementError,	L"Array elements of type %s are not supported"
+	Datasnap_MidConst_SNoTableName,	L"Unable to resolve records.  Table name not found."
+	Datasnap_MidConst_SNoEditsAllowed,	L"Modifications are not allowed"
+	Datasnap_MidConst_SNoDeletesAllowed,	L"Deletes are not allowed"
+	Datasnap_MidConst_SNoInsertsAllowed,	L"Inserts are not allowed"
+	System_RegularExpressionsConsts_SRegExStudyError,	L"Error studying the regex: %s"
+	System_RegularExpressionsConsts_SRegExMatchRequired,	L"Successful match required"
+	System_RegularExpressionsConsts_SRegExStringsRequired,	L"Strings parameter cannot be nil"
+	System_RegularExpressionsConsts_SRegExInvalidIndexType,	L"Invalid index type"
+	System_RegularExpressionsConsts_SRegExIndexOutOfBounds,	L"Index out of bounds (%d)"
+	System_RegularExpressionsConsts_SRegExInvalidGroupName,	L"Invalid group name (%s)"
+	Datasnap_MidConst_SNoDataProvider,	L"Missing data provider or data packet"
+	Datasnap_MidConst_SInvalidDataPacket,	L"Invalid data packet"
+	Datasnap_MidConst_SRefreshError,	L"Must apply updates before refreshing data"
+	Datasnap_MidConst_SAggsNoSuchLevel,	L"Grouping level not defined"
+	Datasnap_MidConst_SNoCircularReference,	L"Circular provider references not allowed"
+	Datasnap_MidConst_SErrorLoadingMidas,	L"Error loading MIDAS.DLL"
+	Datasnap_MidConst_SCannotCreateDataSet,	L"No fields defined.  Cannot create dataset"
+	Datasnap_MidConst_SNoConnectToBroker,	L"Connection not allowed to TConnectionBroker"
+	Datasnap_MidConst_SNoParentConnection,	L"ParentConnection is not assigned"
+	Datasnap_MidConst_SInvalidResponse,	L"Invalid response"
 	IdResourceStringsSSPI_RSHTTPSSPIPolicyNTLMOnly,	L"Client policy does not allow credential delegation to target server with NLTM only authentication."
 	IdResourceStringsSSPI_RSHTTPSSPINoRenegotiation,	L"The recipient rejected the renegotiation request."
 	IdResourceStringsSSPI_RSHTTPSSPINoContext,	L"The required security context does not exist."
@@ -1430,8 +1446,8 @@ BEGIN
 	IdResourceStringsSSPI_RSHTTPSSPIUnknwonCredentialUse,	L"Unknown credentials use"
 	IdResourceStringsSSPI_RSHTTPSSPIDoAuquireCredentialHandle,	L"Do AcquireCredentialsHandle first"
 	IdResourceStringsSSPI_RSHTTPSSPICompleteTokenNotSupported,	L"CompleteAuthToken is not supported"
-	Datasnap_MidConst_SNoDataProvider,	L"Missing data provider or data packet"
-	Datasnap_MidConst_SInvalidDataPacket,	L"Invalid data packet"
+	System_RegularExpressionsConsts_SRegExMissingExpression,	L"A regular expression specified in RegEx is required"
+	System_RegularExpressionsConsts_SRegExExpressionError,	L"Error in regular expression at offset %d: %s"
 	IdResourceStringsSSPI_RSHTTPSSPICertWrongUsage,	L"The certificate is not valid for the requested usage."
 	IdResourceStringsSSPI_RSHTTPSSPIDowngradeDetected,	L"The system detected a possible attempt to compromise security. Please ensure that you can contact the server that authenticated you."
 	IdResourceStringsSSPI_RSHTTPSSPISmartcardCertRevoked,	L"The smartcard certificate used for authentication has been revoked. Please contact your system administrator. There may be additional information in the event log."

@@ -16,7 +16,7 @@ object frmRelCadProduto: TfrmRelCadProduto
   PixelsPerInch = 96
   TextHeight = 13
   object Relatorio: TRLReport
-    Left = 0
+    Left = 8
     Top = 0
     Width = 794
     Height = 1123
@@ -180,6 +180,7 @@ object frmRelCadProduto: TfrmRelCadProduto
         Font.Style = []
         ParentFont = False
         Text = ''
+        AfterPrint = RLDBText4AfterPrint
       end
     end
     object RLBand2: TRLBand
@@ -290,7 +291,8 @@ object frmRelCadProduto: TfrmRelCadProduto
     object QryProdutosValor: TFMTBCDField
       FieldName = 'Valor'
       Origin = 'Valor'
-      DisplayFormat = '#0.00'
+      DisplayFormat = 'R$ #,##0.00'
+      currency = True
       Precision = 18
       Size = 5
     end

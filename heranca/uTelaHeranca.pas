@@ -1,4 +1,4 @@
-  unit uTelaHeranca;
+Ôªø  unit uTelaHeranca;
 
   interface
 
@@ -14,7 +14,7 @@
       pgcPrincipal: TPageControl;
       pnlRodape: TPanel;
       Listagem: TTabSheet;
-      ManutenÁ„o: TTabSheet;
+      Manuten√ß√£o: TTabSheet;
       pnlListagemTopo: TPanel;
       mskEdit: TMaskEdit;
     btnPesquisar: TBitBtn;
@@ -67,6 +67,7 @@
       procedure BloqueiaCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
       function GetDesc: string; virtual;
       procedure GravarAuditoria(Acao, Tela, Descricao: string);
+      function GetColumnByFieldName(Grid: TDBGrid; const AFieldName: string): TColumn;
 
     end;
 
@@ -98,6 +99,19 @@
     if(pgcPrincipal.Pages[Indice].TabVisible) then
     pgcPrincipal.TabIndex:=Indice;
   end;
+
+function TfrmTelaHeranca.GetColumnByFieldName(Grid: TDBGrid; const AFieldName: string): TColumn;
+var
+  I: Integer;
+begin
+  Result := nil;
+  for I := 0 to Grid.Columns.Count - 1 do
+  begin
+    if SameText(Grid.Columns[I].FieldName, AFieldName) then
+      Exit(Grid.Columns[I]);
+  end;
+
+end;
 
   function TfrmTelaHeranca.RetornarCampoTraduzido(Campo:String):String;
   var i:Integer;
@@ -134,33 +148,34 @@ begin
   begin
     dbgrdListagem.Canvas.Brush.Color := clGray;
     dbgrdListagem.Canvas.FillRect(Rect);
-
     Exit;
   end;
 
-
   Linha := dbgrdListagem.DataSource.DataSet.RecNo;
 
-  if not (gdSelected in State) then
+  if gdSelected in State then
+  begin
+    dbgrdListagem.Canvas.Brush.Color := $00D8A76F;
+    dbgrdListagem.Canvas.Font.Color := clWhite;
+  end
+  else
   begin
     if (Linha mod 2) = 0 then
       dbgrdListagem.Canvas.Brush.Color := clWebLightgrey
     else
       dbgrdListagem.Canvas.Brush.Color := clWhite;
-  end
-  else
-  begin
-    dbgrdListagem.Canvas.Brush.Color := $00D8A76F;
-    dbgrdListagem.Canvas.Font.Color := clWhite;
+
+    dbgrdListagem.Canvas.Font.Color := clBlack;
   end;
 
   dbgrdListagem.Canvas.FillRect(Rect);
-  dbgrdListagem.Canvas.TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
+
+  dbgrdListagem.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 procedure TfrmTelaHeranca.dbgrdListagemKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-    BloqueiaCTRL_DEL_DBGrid(Key,Shift);
+  BloqueiaCTRL_DEL_DBGrid(Key, Shift);
 end;
 
 procedure TfrmTelaHeranca.dbgrdListagemTitleClick(Column: TColumn);
@@ -194,12 +209,12 @@ procedure TfrmTelaHeranca.dbgrdListagemTitleClick(Column: TColumn);
    end;
   {$ENDREGION}
 
-  {$region 'BOT’ES'}
+  {$region 'BOT√ïES'}
   procedure TfrmTelaHeranca.btnNovoClick(Sender: TObject);
   begin
     if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo, Self.Name+'_'+TBitBtn(Sender).Name, dtmConexao.dtmPrincipal) then
     begin
-      MessageDlg('Usu·rio: '+oUsuarioLogado.nome +', n„o tem permiss„o de acesso', mtWarning,[mbOK],0);
+      MessageDlg('Usu√°rio: '+oUsuarioLogado.nome +', n√£o tem permiss√£o de acesso', mtWarning,[mbOK],0);
       Abort;
     end;
 
@@ -329,7 +344,7 @@ procedure TfrmTelaHeranca.btnAlterarClick(Sender: TObject);
   begin
     if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo, Self.Name+'_'+TBitBtn(Sender).Name, dtmConexao.dtmPrincipal) then
     begin
-      MessageDlg('Usu·rio: '+oUsuarioLogado.nome +', n„o tem permiss„o de acesso', mtWarning,[mbOK],0);
+      MessageDlg('Usu√°rio: '+oUsuarioLogado.nome +', n√£o tem permiss√£o de acesso', mtWarning,[mbOK],0);
       Abort;
     end;
 
@@ -344,7 +359,7 @@ procedure TfrmTelaHeranca.btnAlterarClick(Sender: TObject);
   begin
     if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo, Self.Name+'_'+TBitBtn(Sender).Name, dtmConexao.dtmPrincipal) then
     begin
-      MessageDlg('Usu·rio: '+oUsuarioLogado.nome +', n„o tem permiss„o de acesso', mtWarning,[mbOK],0);
+      MessageDlg('Usu√°rio: '+oUsuarioLogado.nome +', n√£o tem permiss√£o de acesso', mtWarning,[mbOK],0);
       Abort;
     end;
 
@@ -358,7 +373,7 @@ procedure TfrmTelaHeranca.btnAlterarClick(Sender: TObject);
             QryListagem.Refresh;
         end
         else begin
-          MessageDlg('Erro na Exclus„o', mtWarning, [mbOK] ,0);
+          MessageDlg('Erro na Exclus√£o', mtWarning, [mbOK] ,0);
         end;
     finally
        EstadoDoCadastro:=ecNenhum;
@@ -388,7 +403,7 @@ end;
   begin
     if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo, Self.Name+'_'+TBitBtn(Sender).Name, dtmConexao.dtmPrincipal) then
     begin
-      MessageDlg('Usu·rio: '+oUsuarioLogado.nome +', n„o tem permiss„o de acesso', mtWarning,[mbOK],0);
+      MessageDlg('Usu√°rio: '+oUsuarioLogado.nome +', n√£o tem permiss√£o de acesso', mtWarning,[mbOK],0);
       Abort;
     end;
 
@@ -413,7 +428,7 @@ end;
         QryListagem.Open;
       end
       else begin
-        MessageDlg('Erro na GravaÁ„o', mtError, [mbok], 0);
+        MessageDlg('Erro na Grava√ß√£o', mtError, [mbok], 0);
       end;
 
    finally
@@ -421,38 +436,37 @@ end;
   end;
   {$ENDREGION}
 
-  {$REGION 'OBSERVA«’ES'}
+  {$REGION 'OBSERVA√á√ïES'}
      //TAG1 = Chave Primaria
      //TAG2 = Campos Obrigatorios
   {$ENDREGION}
   procedure TfrmTelaHeranca.FormClose(Sender: TObject; var Action: TCloseAction);
-  var ArquivoINI:TIniFile; // Vari·vel para criar o arquivo INI para salvar preferÍncias de Grid por usu·rio.
+  var ArquivoINI:TIniFile; // Vari√°vel para criar o arquivo INI para salvar prefer√™ncias de Grid por usu√°rio.
     I: Integer; // Ponteiro para passar por todas as colunas (pastas)
 begin
-  ExtractFilePath(Application.ExeName); // Garante que o INI fique na mesma pasta do .exe
+ExtractFilePath(Application.ExeName); // Garante que o INI fique na mesma pasta do .exe
   ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini'); //Criamos o INI File na pasta do .exe
 
   try
-    for I := 0 to dbgrdListagem.Columns.Count - 1 do  // O laÁo percorre do 0 ‡ ultima coluna desenhada no Grid
+    for I := 0 to dbgrdListagem.Columns.Count - 1 do  // O la√ßo percorre do 0 √† ultima coluna desenhada no Grid
     begin
       ArquivoINI.WriteInteger(
-      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem È a preferÍncia.
-      'Coluna_' + IntToStr(I), // Nomeamos a pasta com o Indice da coluna.
+      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem √© a prefer√™ncia.
+      'Coluna' + IntToStr(I), // Nomeamos a pasta com o Indice da coluna.
       dbgrdListagem.Columns[I].Width); //A largura atual da coluna naquele exato segundo.
+      ArquivoINI.WriteString(
+      oUsuarioLogado.nome,
+      'Ordem' + IntToStr(I),
+      dbgrdListagem.Columns[I].FieldName);
     end;
   finally
-    ArquivoINI.Free;// Independentemente de dar erro ou n„o, sempre fechamos o caderninho para liberar a memÛria
+    ArquivoINI.Free;// Independentemente de dar erro ou n√£o, sempre fechamos o caderninho para liberar a mem√≥ria
   end;
-    QryListagem.Close;
   end;
 
   procedure TfrmTelaHeranca.FormCreate(Sender: TObject);
   var i: Integer;
   begin
-
-
-
-
    dbgrdListagem.TitleFont.Color:=clWhite;
 
   // Centraliza os titulos
@@ -465,40 +479,66 @@ begin
   dbgrdListagem.DataSource:=dtsListagem;
 
   dbgrdListagem.Options:=[dgTitles,dgIndicator,dgColumnResize,dgColLines,
-  dgRowLines,dgTabs,dgRowSelect,dgAlwaysShowSelection,dgCancelOnExit,
+  dgRowLines,dgTabs,dgAlwaysShowSelection,dgCancelOnExit,
   dgTitleClick,dgTitleHotTrack]
   end;
 
   procedure TfrmTelaHeranca.FormShow(Sender: TObject);
   var ArquivoINI: TIniFile ; //Referenciamos novamente nosso Arquivo
     I:Integer; //Passamos o ponteiro
+    NomeCampo: string;
+    Coluna: TColumn;
 begin
 
-  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGrid.ini');// Apontamos para o mesmo endereÁo que salvamos no FormClose
+   ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGrid.ini');
 
   try
-    for I := 0 to dbgrdListagem.Columns.Count - 1 do //Percorremos o grid recem desenhado
-    begin
-      dbgrdListagem.Columns[I].Width := ArquivoINI.ReadInteger //Redefinimos a largura do grid baseado no que est· desenhado
-      (oUsuarioLogado.nome, // Pegamos o UsuarioLogado
-      'Coluna_' + IntToStr(I),//Procuramos a anotaÁ„o correspondente ‡ coluna atual.
-      dbgrdListagem.Columns[I].Width); //Se for primeiro acesso, mantÈm o Width padr„o do Delphi.
+    dbgrdListagem.Columns.BeginUpdate;
+    try
+
+      for I := 0 to dbgrdListagem.Columns.Count - 1 do
+      begin
+        dbgrdListagem.Columns[I].Width :=
+          ArquivoINI.ReadInteger(oUsuarioLogado.nome,
+          'Coluna' + IntToStr(I),
+          dbgrdListagem.Columns[I].Width);
+      end;
+
+
+      for I := 0 to dbgrdListagem.Columns.Count - 1 do
+      begin
+        NomeCampo := ArquivoINI.ReadString(
+          oUsuarioLogado.nome,
+          'Ordem' + IntToStr(I),
+          ''
+        );
+
+        if NomeCampo <> '' then
+        begin
+          Coluna := GetColumnByFieldName(dbgrdListagem, NomeCampo);
+          if Assigned(Coluna) then
+            Coluna.Index := I;
+        end;
+      end;
+
+    finally
+      dbgrdListagem.Columns.EndUpdate;
     end;
+
   finally
-    ArquivoINI.Free; //Liberamos o INI da memÛria.
+    ArquivoINI.Free;
   end;
-   if (QryListagem.SQL.Text<>EmptyStr)then begin
-      QryListagem.IndexFieldNames:=IndiceAtual;
-      ExibirLabelIndice(IndiceAtual, lblIndice);
-      SelectOriginal:=QryListagem.SQL.Text;
-      QryListagem.Open;
-   end;
-   ControlarIndiceTab(pgcPrincipal, 0);
-   DesabilitarEditPK;
-   ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar,
-   btnNavigator, pgcPrincipal, True);
-
-
+  if (QryListagem.SQL.Text<>EmptyStr) then begin
+    QryListagem.IndexFieldNames:=IndiceAtual;
+    ExibirLabelIndice(IndiceAtual, lblIndice);
+    SelectOriginal:=QryListagem.SQL.Text;
+    QryListagem.Open;
+  end;
+  ControlarIndiceTab(pgcPrincipal, 0);
+  DesabilitarEditPK;
+  ControlarBotoes(btnNovo, btnAlterar, btnCancelar,
+                  btnGravar, btnApagar,
+                  btnNavigator, pgcPrincipal,True);
   end;
 
 
@@ -513,7 +553,7 @@ begin
       if (Components[i] is TLabeledEdit) then begin
         if (TLabeledEdit(Components[i]).Tag = 2) and (TLabeledEdit(Components[i]).Text=EmptyStr)
         then begin
-         MessageDlg(TLabeledEdit(Components[i]).EditLabel.Caption + ' È um campo obrigatÛrio',
+         MessageDlg(TLabeledEdit(Components[i]).EditLabel.Caption + ' √© um campo obrigat√≥rio',
          mtInformation,[mbOK],0);
          TLabeledEdit(Components[i]).SetFocus;
          result:=True;

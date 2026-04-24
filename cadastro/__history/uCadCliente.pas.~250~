@@ -1,0 +1,588 @@
+﻿unit uCadCliente;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit,cCadCliente, uEnum, Math, System.ImageList, Vcl.ImgList, Vcl.Imaging.pngimage,
+  System.Net.HttpClient, System.JSON, System.Net.URLClient,
+  IdHTTP, IdSSLOpenSSL, DateUtils;
+
+type
+  TfrmCadCliente = class(TfrmTelaHeranca)
+    edtNome: TLabeledEdit;
+    edtClienteId: TLabeledEdit;
+    edtCEP: TMaskEdit;
+    lblDoc: TLabel;
+    edtEndereco: TLabeledEdit;
+    edtBairro: TLabeledEdit;
+    edtCidade: TLabeledEdit;
+    lbl2: TLabel;
+    edtEmail: TLabeledEdit;
+    edtDataNascimento: TDateEdit;
+    lbl3: TLabel;
+    fdtncfldQryListagemclienteId: TFDAutoIncField;
+    strngfldQryListagemnome: TStringField;
+    strngfldQryListagemendereco: TStringField;
+    strngfldQryListagemcidade: TStringField;
+    strngfldQryListagembairro: TStringField;
+    strngfldQryListagemestado: TStringField;
+    strngfldQryListagemcep: TStringField;
+    strngfldQryListagemtelefone: TStringField;
+    strngfldQryListagememail: TStringField;
+    sqltmstmpfldQryListagemdataNascimento: TSQLTimeStampField;
+    edtDoc: TComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    edtDocumento: TEdit;
+    QryListagemdoc: TStringField;
+    edtTelefone: TEdit;
+    lbl1: TLabel;
+    lkpSituacao: TDBLookupComboBox;
+    QrySituacao: TFDQuery;
+    dtsSituacao: TDataSource;
+    QrySituacaoIDSituacao: TFDAutoIncField;
+    QrySituacaosituacaoCliente: TStringField;
+    QryListagemIDSituacao: TIntegerField;
+    ImageList1: TImageList;
+    Panel1: TPanel;
+    Label3: TLabel;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    edtEstado: TEdit;
+    Label9: TLabel;
+    Panel2: TPanel;
+    Label10: TLabel;
+    edtObservacao: TEdit;
+    QryListagemobservacao: TStringField;
+    QryLog: TFDQuery;
+    dtsLog: TDataSource;
+    QryLogidlog: TFDAutoIncField;
+    QryLogdescricao: TStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure edtDocChange(Sender: TObject);
+    procedure edtDocumentoChange(Sender: TObject);
+    procedure edtTelefoneChange(Sender: TObject);
+    procedure dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure btnGravarClick(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
+    procedure lkpSituacaoCloseUp(Sender: TObject);
+    procedure edtEmailExit(Sender: TObject);
+    procedure mskEditChange(Sender: TObject);
+    procedure edtDataNascimentoExit(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+
+  private
+    { Private declarations }
+    oCliente:TCliente;
+    function Excluir:Boolean; override;
+    function Gravar(EstadoDoCadastro:TEstadoDoCadastro): Boolean; override;
+    function ApenasNumeros(const S: string): string;
+    procedure LimparComponenteItem;
+    function BuscarCEP(const CEP: string): TJSONObject;
+    procedure PreencherEndereco(const CEP: string);
+    function GetDesc:string; override;
+
+  public
+    { Public declarations }
+
+  end;
+
+var
+  frmCadCliente: TfrmCadCliente;
+
+implementation
+
+uses
+  uDTMConexao, cValidacaoDocumento, cUsuarioLogado, uProVenda, uLogin, cFuncao, uCadUsuario, uPrincipal;
+
+
+
+{$R *.dfm}
+
+{ TfrmCadCliente }
+
+
+
+
+{$REGION 'BOTÕES'}
+  procedure TfrmCadCliente.btnAlterarClick(Sender: TObject);
+begin
+  if ((QryListagem.FieldByName('IDSituacao').AsInteger = 2) or (QryListagem.FieldByName('IDSituacao').AsInteger = 3) ) then
+  begin
+    Panel2.Visible:=True;
+    Label10.Visible:=True;
+  end
+  else
+  begin
+    Panel2.Visible:=False;
+    Label10.Visible:=False;
+  end;
+
+  if oCliente.Seleciona(QryListagem.FieldByName('clienteId').AsInteger) then begin
+     edtClienteId.Text:=IntToStr(oCliente.codigo);
+     edtNome.Text:=oCliente.nome;
+     edtCEP.Text:=oCliente.cep;
+     edtEndereco.Text:=oCliente.endereco;
+     edtBairro.Text:=oCliente.bairro;
+     edtCidade.Text:=oCliente.cidade;
+     edtTelefone.Text:=oCliente.telefone;
+     edtEmail.Text:=oCliente.email;
+     edtDataNascimento.Date:=oCliente.dataNascimento;
+     edtDocumento.Text:=oCliente.doc;
+     edtEstado.Text:=oCliente.estado;
+     lkpSituacao.KeyValue:=oCliente.IDSituacao;
+     edtObservacao.Text:=oCliente.observacao;
+  end
+  else begin
+    btnCancelar.Click;
+    Abort;
+  end;
+
+  inherited;
+
+end;
+
+
+
+
+procedure TfrmCadCliente.btnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  LimparComponenteItem;
+end;
+
+procedure TfrmCadCliente.btnGravarClick(Sender: TObject);
+var idade: Integer;
+begin
+
+  if edtDoc.Text = 'Fisica' then
+ begin
+  if not ValidarCPF(edtDocumento.Text) then
+  begin
+    ShowMessage('CPF Inválido');
+    edtDoc.SetFocus;
+    Exit;
+  end;
+ end;
+
+ if edtDoc.Text = 'Juridica' then
+begin
+  if not ValidarCNPJ(edtDocumento.Text) then
+  begin
+    ShowMessage('CNPJ Inválido');
+    edtDoc.SetFocus;
+    Exit;
+  end;
+end;
+
+
+  if edtDataNascimento.Date > Date then begin
+    ShowMessage('Data inválida');
+    edtDataNascimento.Date := date;
+    Exit;
+  end
+  else if YearsBetween(edtDataNascimento.Date, Date) < 18 then
+  begin
+    ShowMessage('O Cliente deve ter 18 anos ou mais');
+    edtDataNascimento.SetFocus;
+    edtDataNascimento.Date := date;
+    Exit;
+  end;
+
+  if edtDoc.Text = '' then begin
+    ShowMessage('Selecione um Tipo de Pessoa');
+    Exit;
+  end;
+
+  if lkpSituacao.Text = '' then begin
+    ShowMessage('Selecione uma Situação para o Cliente');
+    Exit;
+  end;
+inherited;
+end;
+
+procedure TfrmCadCliente.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  LimparComponenteItem;
+  edtDataNascimento.Date:=Date;
+  edtNome.SetFocus;
+end;
+
+
+
+
+procedure TfrmCadCliente.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var id: Integer;
+  imgIndex: Integer;
+begin
+  inherited;
+  if Column.FieldName = 'IDSituacao'    then
+  begin
+  dbgrdListagem.Canvas.FillRect(Rect);
+  id:=  QryListagem.FieldByName('idSituacao').AsInteger;
+
+  if id = 1 then
+    imgIndex := 3
+  else if id = 2 then
+    imgIndex := 4
+  else if id = 3 then
+    imgIndex := 0
+  else if id = 4 then
+    imgIndex := 1
+  else if id = 5 then
+    imgIndex := 2
+  else
+    Exit;
+
+    ImageList1.Draw(dbgrdListagem.Canvas, Rect.Left + (Rect.Width div 2) - 8, Rect.Top + (Rect.Height div 2) - 8, imgIndex);
+  end
+  else
+  begin
+    dbgrdListagem.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+  end;
+end;
+
+
+procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
+begin
+  if Trim(edtCEP.Text) <> '' then
+    PreencherEndereco(edtCEP.Text);
+  inherited;
+end;
+
+procedure TfrmCadCliente.edtDataNascimentoExit(Sender: TObject);
+var Idade: Integer;
+begin
+  inherited;
+  Idade := YearsBetween(Date, edtDataNascimento.Date);
+  if IncYear(edtDataNascimento.Date, Idade) > Date then
+    Dec(Idade);
+
+  if Idade < 18 then
+    ShowMessage('O cliente deve ser de maior');
+
+end;
+
+procedure TfrmCadCliente.edtDocChange(Sender: TObject);
+begin
+  inherited;
+  if edtDoc.Text = 'Fisica' then   begin
+    lblDoc.Caption := 'CPF';
+    edtDocumento.MaxLength :=14;
+  end
+  else if edtDoc.Text = 'Juridica' then begin
+    lblDoc.Caption := 'CNPJ';
+    edtDocumento.MaxLength:=18;
+  end;
+
+  edtDocumento.Clear;
+end;
+
+procedure TfrmCadCliente.LimparComponenteItem;
+begin
+  lkpSituacao.KeyValue  := null;
+  edtDoc.Text:= '';
+  edtDocumento.Text:='';
+end;
+
+procedure TfrmCadCliente.lkpSituacaoCloseUp(Sender: TObject);
+begin
+  inherited;
+  if (lkpSituacao.Text = 'BLOQUEADO') or (lkpSituacao.Text = 'ATENÇÃO') then
+  begin
+    Panel2.Visible:=True;
+    Label10.Visible:=True;
+  end
+  else
+  begin
+    Panel2.Visible:=false;
+    Label10.Visible:=false;
+  end;
+end;
+
+
+procedure TfrmCadCliente.mskEditChange(Sender: TObject);
+var
+  Texto, N: string;
+  PosCursor: Integer;
+begin
+  if IndiceAtual = 'doc' then begin
+  PosCursor := mskEdit.SelStart;
+  mskEdit.OnChange := nil;
+  try
+    N := ApenasNumeros(mskEdit.Text);
+    Texto := N;
+
+    if Length(N) <= 11 then
+    begin
+      if Length(N) > 3 then Texto := Copy(N,1,3) + '.' + Copy(N,4,Length(N)-3);
+      if Length(N) > 6 then Texto := Copy(N,1,3) + '.' + Copy(N,4,3) + '.' + Copy(N,7,Length(N)-6);
+      if Length(N) > 9 then Texto := Copy(N,1,3) + '.' + Copy(N,4,3) + '.' + Copy(N,7,3) + '-' + Copy(N,10,Length(N)-9);
+    end
+    else
+    begin
+      if Length(N) > 2 then Texto := Copy(N,1,2) + '.' + Copy(N,3,Length(N)-2);
+      if Length(N) > 5 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,Length(N)-5);
+      if Length(N) > 8 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,Length(N)-8);
+      if Length(N) > 12 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,4) + '-' + Copy(N,13,Length(N)-12);
+    end;
+
+    mskEdit.Text := Texto;
+    mskEdit.SelStart := Length(Texto);
+  finally
+    mskEdit.OnChange := mskEditChange;
+  end;
+  end;
+end;
+
+procedure TfrmCadCliente.edtDocumentoChange(Sender: TObject);
+var
+  Texto, N: string;
+  PosCursor: Integer;
+begin
+  PosCursor := edtDocumento.SelStart;
+
+  edtDocumento.OnChange := nil;
+  try
+    N := ApenasNumeros(edtDocumento.Text);
+    Texto := N;
+
+    if Length(N) <= 11 then
+    begin
+      if Length(N) > 3 then Texto := Copy(N,1,3) + '.' + Copy(N,4,Length(N)-3);
+      if Length(N) > 6 then Texto := Copy(N,1,3) + '.' + Copy(N,4,3) + '.' + Copy(N,7,Length(N)-6);
+      if Length(N) > 9 then Texto := Copy(N,1,3) + '.' + Copy(N,4,3) + '.' + Copy(N,7,3) + '-' + Copy(N,10,Length(N)-9);
+    end
+    else
+    begin
+      if Length(N) > 2 then Texto := Copy(N,1,2) + '.' + Copy(N,3,Length(N)-2);
+      if Length(N) > 5 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,Length(N)-5);
+      if Length(N) > 8 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,Length(N)-8);
+      if Length(N) > 12 then Texto := Copy(N,1,2) + '.' + Copy(N,3,3) + '.' + Copy(N,6,3) + '/' + Copy(N,9,4) + '-' + Copy(N,13,Length(N)-12);
+    end;
+
+    edtDocumento.Text := Texto;
+    edtDocumento.SelStart := Length(Texto);
+  finally
+    edtDocumento.OnChange := edtDocumentoChange;
+  end;
+end;
+
+
+
+
+
+procedure TfrmCadCliente.edtEmailExit(Sender: TObject);
+var
+  Email, Dominio: string;
+  PosArroba: Integer;
+begin
+  Email := edtEmail.Text;
+
+  if Pos('@', Email) = 0 then
+  begin
+    ShowMessage('O e-mail deve conter @ e domínio.');
+    edtEmail.SetFocus;
+    Exit;
+  end;
+
+  PosArroba := Pos('@', Email);
+  Dominio := Copy(Email, PosArroba + 1, Length(Email));
+
+  if (Dominio = '') or (Pos('.', Dominio) = 0) then
+  begin
+    ShowMessage('Informe um domínio válido (ex: gmail.com).');
+    edtEmail.SetFocus;
+    Exit;
+  end;
+end;
+
+
+procedure TfrmCadCliente.edtTelefoneChange(Sender: TObject);
+var Texto: string;
+begin
+  inherited;
+begin
+  Texto := edtTelefone.Text;
+
+
+  Texto := ApenasNumeros(edtTelefone.Text);
+
+  if Texto = '' then Exit;
+
+
+  if Texto[1] = '0' then
+  begin
+    if Length(Texto) <= 4 then
+      edtTelefone.Text := Copy(Texto, 1, Length(Texto))
+    else if Length(Texto) <= 7 then
+      edtTelefone.Text := Copy(Texto,1,4) + ' ' + Copy(Texto,5,3)
+    else
+      edtTelefone.Text := Copy(Texto,1,4) + ' ' + Copy(Texto,5,3) + ' ' + Copy(Texto,8,4);
+
+    edtTelefone.SelStart := Length(edtTelefone.Text);
+  end
+  else if Length(Texto) <= 10 then
+  begin
+    if Length(Texto) <= 2 then
+       edtTelefone.Text := '(' + Copy(Texto,1,Length(Texto))
+    else if Length(Texto) <= 6 then
+      edtTelefone.Text := '(' + Copy(Texto, 1,2) + ')' + Copy(Texto,3,Length(Texto)-2)
+    else
+      edtTelefone.Text := '(' + Copy(Texto,1,2) + ')' + Copy(Texto,3,4) + '-' + Copy(Texto,7,4);
+  end
+  else
+  begin
+     edtTelefone.MaxLength:= 14;
+     edtTelefone.Text := '(' + Copy(Texto,1,2) + ')' + Copy(Texto,3,5) + '-' + Copy(Texto,8,Length(Texto)-7);
+  end;
+
+    edtTelefone.SelStart := Length(edtTelefone.Text);
+end;
+end;
+
+{$ENDREGION}
+
+
+
+{$region 'OVERRIDED'}
+function TfrmCadCliente.Gravar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+begin
+  if edtClienteId.Text<>EmptyStr then
+     oCliente.codigo:=StrToInt(edtClienteId.Text)
+  else
+     oCliente.codigo:=0;
+
+  oCliente.nome                   :=edtNome.Text;
+  oCliente.cep                    :=edtCEP.Text;
+  oCliente.endereco               :=edtEndereco.Text;
+  oCliente.bairro                 :=edtBairro.Text;
+  oCliente.estado                 :=edtEstado.Text;
+  oCliente.cidade                 :=edtCidade.Text;
+  oCliente.telefone               :=edtTelefone.Text;
+  oCliente.email                  :=edtEmail.Text;
+  oCliente.dataNascimento         :=edtDataNascimento.Date;
+  oCliente.doc                    :=edtDocumento.Text;
+  oCliente.IDSituacao             :=lkpSituacao.KeyValue;
+  oCliente.observacao             :=edtObservacao.Text;
+
+  if (EstadoDoCadastro=ecInserir) then
+    result:=oCliente.Gravar
+  else if (EstadoDoCadastro=ecAlterar) then
+    result:=oCliente.Atualizar;
+    LimparComponenteItem;
+end;
+
+
+function TfrmCadCliente.Excluir: Boolean;
+begin
+  if oCliente.Seleciona(QryListagem.FieldByName('clienteId').AsInteger) then begin
+    result:=oCliente.Apagar;
+  end;
+end;
+{$ENDREGION}
+
+
+function TfrmCadCliente.GetDesc:string;
+begin
+  Result := oCliente.nome;
+end;
+
+procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  if Assigned(oCliente) then
+     FreeAndNil(oCliente);
+
+end;
+
+procedure TfrmCadCliente.FormCreate(Sender: TObject);
+begin
+  inherited;
+    QrySituacao.Open;
+    oCliente:=TCliente.create(dtmConexao.dtmPrincipal);
+    IndiceAtual:='nome';
+    edtDoc.Items.Add('Fisica');
+    edtDoc.Items.Add('Juridica');
+
+end;
+
+
+
+function TfrmCadCliente.ApenasNumeros(const S: string): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 1 to Length(S) do
+    if CharInSet(S[i], ['0'..'9']) then
+      Result := Result + S[i];
+end;
+
+
+function TfrmCadCliente.BuscarCEP(const CEP: string): TJSONObject;
+var IdHTTP: TIdHTTP; SSL: TIdSSLIOHandlerSocketOpenSSL; Response: string; CEPLimpo: string;
+begin
+  Result := nil;
+  CEPLimpo := ApenasNumeros(CEP);
+  if Length(CEPLimpo) <> 8 then
+    Exit;
+
+  IdHTTP := TIdHTTP.Create(nil);
+  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  try
+    SSL.SSLOptions.Method := sslvTLSv1_2;
+    SSL.SSLOptions.Mode := sslmClient;
+
+    IdHTTP.IOHandler := SSL;
+
+    Response := IdHTTP.Get('https://viacep.com.br/ws/' + CEPLimpo + '/json/');
+    Result := TJSONObject.ParseJSONValue(Response) as TJSONObject;
+  finally
+    SSL.Free;
+    IdHTTP.Free;
+  end;
+end;
+
+procedure TfrmCadCliente.PreencherEndereco(const CEP: string);
+var JSON: TJSONObject;
+begin
+  JSON := BuscarCEP(CEP);
+  if Assigned(JSON) then
+  try
+    if JSON.GetValue('erro') <> nil then
+    begin
+      ShowMessage('CEP inválido!');
+      Exit;
+    end;
+
+    edtEndereco.Text := JSON.GetValue('logradouro').Value;
+    edtBairro.Text   := JSON.GetValue('bairro').Value;
+    edtCidade.Text   := JSON.GetValue('localidade').Value;
+    edtEstado.Text   := JSON.GetValue('uf').Value;
+  finally
+    JSON.Free;
+  end
+  else
+    ShowMessage('Não foi possível consultar o CEP.');
+end;
+
+end.

@@ -46,6 +46,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure GraficoVendasClickLegend(Sender: TCustomChart; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnFecharClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -61,6 +62,11 @@ uses
   uDTMConexao, uDTMGrafico;
 
 {$R *.dfm}
+
+procedure TfrmConFinanca.btnFecharClick(Sender: TObject);
+begin
+ close;
+end;
 
 procedure TfrmConFinanca.FormCreate(Sender: TObject);
 var  Tlucro:Double;

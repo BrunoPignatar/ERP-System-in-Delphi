@@ -9,7 +9,7 @@ uses
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit,cCadCliente, uEnum, Math, System.ImageList, Vcl.ImgList, Vcl.Imaging.pngimage,
   System.Net.HttpClient, System.JSON, System.Net.URLClient,
-  IdHTTP, IdSSLOpenSSL, DateUtils;
+  IdHTTP, IdSSLOpenSSL, DateUtils, System.RegularExpressions;
 
 type
   TfrmCadCliente = class(TfrmTelaHeranca)
@@ -70,6 +70,9 @@ type
     dtsLog: TDataSource;
     QryLogidlog: TFDAutoIncField;
     QryLogdescricao: TStringField;
+    Label11: TLabel;
+    Label12: TLabel;
+    edtNumeroCasa: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);
@@ -85,6 +88,7 @@ type
     procedure edtEmailExit(Sender: TObject);
     procedure mskEditChange(Sender: TObject);
     procedure edtDataNascimentoExit(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -147,6 +151,7 @@ begin
      edtEstado.Text:=oCliente.estado;
      lkpSituacao.KeyValue:=oCliente.IDSituacao;
      edtObservacao.Text:=oCliente.observacao;
+     edtNumeroCasa.Text:=oCliente.NumeroCasa;
   end
   else begin
     btnCancelar.Click;
@@ -159,6 +164,12 @@ end;
 
 
 
+
+procedure TfrmCadCliente.btnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  LimparComponenteItem;
+end;
 
 procedure TfrmCadCliente.btnGravarClick(Sender: TObject);
 var idade: Integer;
@@ -195,6 +206,16 @@ end;
     ShowMessage('O Cliente deve ter 18 anos ou mais');
     edtDataNascimento.SetFocus;
     edtDataNascimento.Date := date;
+    Exit;
+  end;
+
+  if edtDoc.Text = '' then begin
+    ShowMessage('Selecione um Tipo de Pessoa');
+    Exit;
+  end;
+
+  if lkpSituacao.Text = '' then begin
+    ShowMessage('Selecione uma Situação para o Cliente');
     Exit;
   end;
 inherited;
@@ -283,6 +304,7 @@ procedure TfrmCadCliente.LimparComponenteItem;
 begin
   lkpSituacao.KeyValue  := null;
   edtDoc.Text:= '';
+  edtDocumento.Text:='';
 end;
 
 procedure TfrmCadCliente.lkpSituacaoCloseUp(Sender: TObject);
@@ -374,29 +396,17 @@ end;
 
 procedure TfrmCadCliente.edtEmailExit(Sender: TObject);
 var
-  Email, Dominio: string;
-  PosArroba: Integer;
+  Email: string;
 begin
-  Email := edtEmail.Text;
+  Email := Trim(edtEmail.Text);
 
-  if Pos('@', Email) = 0 then
+  if not TRegEx.IsMatch(Email, '^[^@\s]{2,}@[^@\s]{5,}\.[^@\s]{2,}$') then
   begin
-    ShowMessage('O e-mail deve conter @ e domínio.');
-    edtEmail.SetFocus;
-    Exit;
-  end;
-
-  PosArroba := Pos('@', Email);
-  Dominio := Copy(Email, PosArroba + 1, Length(Email));
-
-  if (Dominio = '') or (Pos('.', Dominio) = 0) then
-  begin
-    ShowMessage('Informe um domínio válido (ex: gmail.com).');
+    ShowMessage('Informe um e-mail válido');
     edtEmail.SetFocus;
     Exit;
   end;
 end;
-
 
 procedure TfrmCadCliente.edtTelefoneChange(Sender: TObject);
 var Texto: string;
@@ -411,7 +421,7 @@ begin
   if Texto = '' then Exit;
 
 
-  if Texto[1] = '0' then
+  if (Texto[1] = '0') and (texto[3] = '0') and (Texto[4] = '0') then
   begin
     if Length(Texto) <= 4 then
       edtTelefone.Text := Copy(Texto, 1, Length(Texto))
@@ -465,6 +475,7 @@ begin
   oCliente.doc                    :=edtDocumento.Text;
   oCliente.IDSituacao             :=lkpSituacao.KeyValue;
   oCliente.observacao             :=edtObservacao.Text;
+  oCliente.NumeroCasa             :=edtNumeroCasa.Text;
 
   if (EstadoDoCadastro=ecInserir) then
     result:=oCliente.Gravar

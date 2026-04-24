@@ -310,7 +310,7 @@ object frmRelVendaPorData: TfrmRelVendaPorData
           Pen.Width = 2
         end
         object RLLabel12: TRLLabel
-          Left = 487
+          Left = 472
           Top = 6
           Width = 94
           Height = 16
@@ -415,7 +415,7 @@ object frmRelVendaPorData: TfrmRelVendaPorData
       FieldName = 'totalVenda'
       Origin = 'totalVenda'
       ReadOnly = True
-      DisplayFormat = '##,##0.000'
+      DisplayFormat = 'R$ #,##0.00'
       Precision = 18
       Size = 3
     end
