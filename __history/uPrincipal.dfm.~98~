@@ -1,7 +1,6 @@
 object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
-  BorderIcons = [biMinimize, biMaximize]
   Caption = 'Menu Principal'
   ClientHeight = 444
   ClientWidth = 1024
@@ -62,6 +61,7 @@ object frmPrincipal: TfrmPrincipal
       Align = alRight
       Caption = 'FECHAR'
       TabOrder = 0
+      Visible = False
       OnClick = Button1Click
     end
   end
@@ -155,7 +155,7 @@ object frmPrincipal: TfrmPrincipal
           Marks.RoundSize = 14
           Marks.Visible = False
           DataSource = DTMGrafico.QryProdutoEstoque
-          SeriesColor = 722402
+          SeriesColor = 8404992
           Title = 'ProdutoEstoque'
           XLabelsSource = 'label'
           Sides = 17
@@ -190,32 +190,15 @@ object frmPrincipal: TfrmPrincipal
         Align = alClient
         TabOrder = 0
         DefaultCanvas = 'TGDIPlusCanvas'
-        ColorPaletteIndex = 14
+        ColorPaletteIndex = 15
         object Series2: TPieSeries
-          Marks.Brush.Gradient.Colors = <
-            item
-              Color = clRed
-            end
-            item
-              Color = 819443
-              Offset = 0.067915690866510540
-            end
-            item
-              Color = clYellow
-              Offset = 1.000000000000000000
-            end>
-          Marks.Brush.Gradient.Direction = gdTopBottom
-          Marks.Brush.Gradient.EndColor = clYellow
-          Marks.Brush.Gradient.MidColor = 819443
-          Marks.Brush.Gradient.StartColor = clRed
-          Marks.Brush.Gradient.Visible = True
-          Marks.Font.Color = 159
-          Marks.Font.Name = 'Tahoma'
-          Marks.Font.Style = [fsBold, fsItalic]
-          Marks.Frame.Color = 33023
-          Marks.RoundSize = 14
-          Marks.Style = smsLabelPercent
+          Marks.Font.Color = clWhite
+          Marks.Font.Height = -13
+          Marks.Frame.Color = clWhite
+          Marks.Frame.Width = 2
+          Marks.BackColor = clNavy
           Marks.Callout.Length = 20
+          Marks.Color = clNavy
           DataSource = DTMGrafico.QryValorVendaPorCliente
           Title = 'ValorDeVendaPorClienteNaSemana'
           XLabelsSource = 'Label'
@@ -297,32 +280,15 @@ object frmPrincipal: TfrmPrincipal
         Align = alClient
         TabOrder = 0
         DefaultCanvas = 'TGDIPlusCanvas'
-        ColorPaletteIndex = 13
+        ColorPaletteIndex = 15
         object PieSeries1: TPieSeries
-          Marks.Brush.Gradient.Colors = <
-            item
-              Color = clRed
-            end
-            item
-              Color = 819443
-              Offset = 0.067915690866510540
-            end
-            item
-              Color = clYellow
-              Offset = 1.000000000000000000
-            end>
-          Marks.Brush.Gradient.Direction = gdTopBottom
-          Marks.Brush.Gradient.EndColor = clYellow
-          Marks.Brush.Gradient.MidColor = 819443
-          Marks.Brush.Gradient.StartColor = clRed
-          Marks.Brush.Gradient.Visible = True
-          Marks.Font.Color = 159
-          Marks.Font.Name = 'Tahoma'
-          Marks.Font.Style = [fsBold, fsItalic]
-          Marks.Frame.Color = 33023
-          Marks.RoundSize = 14
-          Marks.Style = smsLabelPercent
+          Marks.Font.Color = clWhite
+          Marks.Font.Height = -13
+          Marks.Frame.Color = clWhite
+          Marks.Frame.Width = 2
+          Marks.BackColor = clNavy
           Marks.Callout.Length = 20
+          Marks.Color = clNavy
           DataSource = DTMGrafico.Qry10ProdutosMaisVendidos
           Title = 'Os10ProdutosMaisVendidos'
           XLabelsSource = 'Label'
@@ -471,6 +437,10 @@ object frmPrincipal: TfrmPrincipal
       object Auditoria1: TMenuItem
         Caption = 'Auditoria'
         OnClick = Auditoria1Click
+      end
+      object Financeiro1: TMenuItem
+        Caption = 'Financeiro'
+        OnClick = Financeiro1Click
       end
     end
   end

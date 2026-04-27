@@ -40,8 +40,8 @@ object frmPrincipal: TfrmPrincipal
     ParentBackground = False
     TabOrder = 1
     object Label1: TLabel
-      Left = 2
-      Top = -10
+      Left = 8
+      Top = -4
       Width = 157
       Height = 35
       Caption = 'Dashboard'

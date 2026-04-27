@@ -21,6 +21,8 @@
     ExplicitWidth = 1036
     ExplicitHeight = 395
     inherited Listagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       inherited pnlListagemTopo: TPanel
@@ -398,6 +400,8 @@
       end
     end
     inherited Manutenção: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       object lblDoc: TLabel
@@ -450,7 +454,7 @@
         Caption = 'UF'
       end
       object Label10: TLabel
-        Left = 180
+        Left = 107
         Top = 235
         Width = 58
         Height = 13

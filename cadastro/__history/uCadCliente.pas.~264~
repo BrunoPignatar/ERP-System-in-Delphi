@@ -70,6 +70,9 @@ type
     dtsLog: TDataSource;
     QryLogidlog: TFDAutoIncField;
     QryLogdescricao: TStringField;
+    Label11: TLabel;
+    Label12: TLabel;
+    edtNumeroCasa: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);
@@ -97,6 +100,7 @@ type
     function BuscarCEP(const CEP: string): TJSONObject;
     procedure PreencherEndereco(const CEP: string);
     function GetDesc:string; override;
+    procedure DefinirTipoPessoaPeloDocumento(const ADoc: string);
 
   public
     { Public declarations }
@@ -148,11 +152,14 @@ begin
      edtEstado.Text:=oCliente.estado;
      lkpSituacao.KeyValue:=oCliente.IDSituacao;
      edtObservacao.Text:=oCliente.observacao;
+     edtNumeroCasa.Text:=oCliente.NumeroCasa;
+     DefinirTipoPessoaPeloDocumento(edtDoc.Text);
   end
   else begin
     btnCancelar.Click;
     Abort;
   end;
+
 
   inherited;
 
@@ -260,6 +267,18 @@ begin
   end;
 end;
 
+
+procedure TfrmCadCliente.DefinirTipoPessoaPeloDocumento(const ADoc: string);
+var
+  DocLimpo: string;
+begin
+  DocLimpo := ApenasNumeros(ADoc);
+
+  if Length(DocLimpo) > 11 then
+    edtDoc.ItemIndex := edtDoc.Items.IndexOf('Jurídica')
+  else if Length(DocLimpo) > 0 then
+    edtDoc.ItemIndex := edtDoc.Items.IndexOf('Física');
+end;
 
 procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
 begin
@@ -471,6 +490,7 @@ begin
   oCliente.doc                    :=edtDocumento.Text;
   oCliente.IDSituacao             :=lkpSituacao.KeyValue;
   oCliente.observacao             :=edtObservacao.Text;
+  oCliente.NumeroCasa             :=edtNumeroCasa.Text;
 
   if (EstadoDoCadastro=ecInserir) then
     result:=oCliente.Gravar

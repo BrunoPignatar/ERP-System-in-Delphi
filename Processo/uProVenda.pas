@@ -192,7 +192,7 @@ begin
   inherited;
   if TDBLookupComboBox(Sender).KeyValue<>Null then begin
      edtValorUnitario.Value:=dtmVendas.QryProdutos.FieldByName('valor').AsFloat;
-     edtValorUnitario.value:= Ceil(edtValorUnitario.Value / 0.45);
+     //edtValorUnitario.value:= Ceil(edtValorUnitario.Value / 0.45);
      edtQuantidade.Value:=1;
      edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
   end;

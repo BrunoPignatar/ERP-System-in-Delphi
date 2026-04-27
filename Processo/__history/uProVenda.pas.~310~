@@ -33,7 +33,6 @@ type
     Label2: TLabel;
     Label4: TLabel;
     Label5: TLabel;
-    btnNovoProduto: TSpeedButton;
     btnPesquisarProduto: TSpeedButton;
     lkpProduto: TDBLookupComboBox;
     edtValorUnitario: TCurrencyEdit;
@@ -64,6 +63,8 @@ type
       State: TGridDrawState);
     procedure lkpProdutoExit(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
 
 
   private
@@ -182,28 +183,6 @@ begin
     lkpCliente.KeyValue:='';
   end;
 
-  if (dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 5)then
-  begin
-    if MessageDlg('Deseja tornar o cliente ativo?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-
-      with dtmVendas.QryClienteUpdate do
-      begin
-        SQL.Text := 'UPDATE clientes SET IDSituacao = :IDSituacao WHERE clienteId = :id';
-        ParamByName('IDSituacao').AsInteger := 1;
-        ParamByName('id').AsInteger := dtmVendas.QryCliente.FieldByName('clienteId').AsInteger;
-        ExecSQL;
-      end;
-
-      ShowMessage('Cliente atualizado para ATIVO!');
-
-
-      dtmVendas.QryCliente.Close;
-      dtmVendas.QryCliente.Open;
-    end
-    else
-      lkpCliente.KeyValue:='';
-  end;
 end;
 
 
@@ -353,6 +332,31 @@ end;
 
 procedure TfrmProVenda.btnGravarClick(Sender: TObject);
 begin
+
+  if (dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 5)then
+  begin
+    if MessageDlg('Deseja tornar o cliente ativo?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+
+      with dtmVendas.QryClienteUpdate do
+      begin
+        SQL.Text := 'UPDATE clientes SET IDSituacao = :IDSituacao WHERE clienteId = :id';
+        ParamByName('IDSituacao').AsInteger := 1;
+        ParamByName('id').AsInteger := dtmVendas.QryCliente.FieldByName('clienteId').AsInteger;
+        ExecSQL;
+      end;
+
+      ShowMessage('Cliente atualizado para ATIVO!');
+
+
+      dtmVendas.QryCliente.Close;
+      dtmVendas.QryCliente.Open;
+    end
+    else
+      lkpCliente.KeyValue:='';
+      Abort;
+  end;
+
   if dtmVendas.cdsItensVenda.IsEmpty then
   begin
     MessageDlg('Adicione pelo menos um item à venda', mtInformation, [mbOK], 0);
@@ -430,6 +434,22 @@ begin
   end;
 end;
 
+procedure TfrmProVenda.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  inherited;
+  if Column.FieldName = 'totalVenda' then
+  begin
+    dbgrdListagem.Canvas.FillRect(Rect);
+
+    dbgrdListagem.Canvas.TextOut(
+      Rect.Left + 2,
+      Rect.Top + 2,
+      FormatFloat('R$ #,##0.00', Column.Field.AsFloat)
+    );
+  end;
+end;
+
 procedure TfrmProVenda.dbGridItensVendaDblClick(Sender: TObject);
 begin
   inherited;
@@ -467,6 +487,28 @@ begin
 
   dbGridItensVenda.Canvas.FillRect(Rect);
   dbGridItensVenda.Canvas.TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.AsString);
+
+  if Column.FieldName = 'valorUnitario' then
+  begin
+    dbGridItensVenda.Canvas.FillRect(Rect);
+
+    dbGridItensVenda.Canvas.TextOut(
+      Rect.Left + 2,
+      Rect.Top + 2,
+      FormatFloat('R$ #,##0.00', Column.Field.AsFloat)
+    );
+  end;
+
+  if Column.FieldName = 'valorTotalProduto' then
+  begin
+    dbGridItensVenda.Canvas.FillRect(Rect);
+
+    dbGridItensVenda.Canvas.TextOut(
+      Rect.Left + 2,
+      Rect.Top + 2,
+      FormatFloat('R$ #,##0.00', Column.Field.AsFloat)
+    );
+  end;
 end;
 
 procedure TfrmProVenda.dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

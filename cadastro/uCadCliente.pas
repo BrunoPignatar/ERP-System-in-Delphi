@@ -100,6 +100,7 @@ type
     function BuscarCEP(const CEP: string): TJSONObject;
     procedure PreencherEndereco(const CEP: string);
     function GetDesc:string; override;
+    procedure DefinirTipoPessoaPeloDocumento(const ADoc: string);
 
   public
     { Public declarations }
@@ -124,7 +125,7 @@ uses
 
 
 {$REGION 'BOTÕES'}
-  procedure TfrmCadCliente.btnAlterarClick(Sender: TObject);
+procedure TfrmCadCliente.btnAlterarClick(Sender: TObject);
 begin
   if ((QryListagem.FieldByName('IDSituacao').AsInteger = 2) or (QryListagem.FieldByName('IDSituacao').AsInteger = 3) ) then
   begin
@@ -152,11 +153,13 @@ begin
      lkpSituacao.KeyValue:=oCliente.IDSituacao;
      edtObservacao.Text:=oCliente.observacao;
      edtNumeroCasa.Text:=oCliente.NumeroCasa;
+     DefinirTipoPessoaPeloDocumento(oCliente.doc);
   end
   else begin
     btnCancelar.Click;
     Abort;
   end;
+
 
   inherited;
 
@@ -265,6 +268,18 @@ begin
 end;
 
 
+procedure TfrmCadCliente.DefinirTipoPessoaPeloDocumento(const ADoc: string);
+var
+  DocLimpo: string;
+begin
+  DocLimpo := ApenasNumeros(ADoc);
+
+  if Length(DocLimpo) > 11 then
+    edtDoc.ItemIndex := edtDoc.Items.IndexOf('Jurídica')
+  else if Length(DocLimpo) > 0 then
+    edtDoc.ItemIndex := edtDoc.Items.IndexOf('Física');
+end;
+
 procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
 begin
   if Trim(edtCEP.Text) <> '' then
@@ -288,11 +303,11 @@ end;
 procedure TfrmCadCliente.edtDocChange(Sender: TObject);
 begin
   inherited;
-  if edtDoc.Text = 'Fisica' then   begin
+  if edtDoc.Text = 'Física' then   begin
     lblDoc.Caption := 'CPF';
     edtDocumento.MaxLength :=14;
   end
-  else if edtDoc.Text = 'Juridica' then begin
+  else if edtDoc.Text = 'Jurídica' then begin
     lblDoc.Caption := 'CNPJ';
     edtDocumento.MaxLength:=18;
   end;
@@ -513,8 +528,8 @@ begin
     QrySituacao.Open;
     oCliente:=TCliente.create(dtmConexao.dtmPrincipal);
     IndiceAtual:='nome';
-    edtDoc.Items.Add('Fisica');
-    edtDoc.Items.Add('Juridica');
+    edtDoc.Items.Add('Física');
+    edtDoc.Items.Add('Jurídica');
 
 end;
 

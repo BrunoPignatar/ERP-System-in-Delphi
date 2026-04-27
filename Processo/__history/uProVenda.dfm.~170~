@@ -14,8 +14,6 @@
     ExplicitWidth = 1037
     ExplicitHeight = 410
     inherited Listagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
       ExplicitWidth = 1029
       ExplicitHeight = 382
       inherited pnlListagemTopo: TPanel
@@ -59,8 +57,8 @@
       end
     end
     inherited Manutenção: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
+      ExplicitLeft = 6
+      ExplicitTop = 22
       ExplicitWidth = 1029
       ExplicitHeight = 382
       object lbl4: TLabel
@@ -219,31 +217,26 @@
               item
                 Expanded = False
                 FieldName = 'produtoId'
-                Title.Caption = 'C'#243'digo'
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'NomeProduto'
-                Title.Caption = 'Nome do Produto'
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'quantidade'
-                Title.Caption = 'Quantidade'
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'valorUnitario'
-                Title.Caption = 'Valor Unitario'
-                Visible = False
+                Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'valorTotalProduto'
-                Title.Caption = 'Valor Total'
                 Visible = True
               end>
           end
@@ -371,6 +364,7 @@
             Width = 83
             Height = 21
             DisplayFormat = ' ,0.00;- ,0.00'
+            ReadOnly = True
             TabOrder = 1
           end
           object edtQuantidade: TCurrencyEdit
@@ -390,6 +384,7 @@
             Height = 21
             TabStop = False
             DisplayFormat = ' ,0.00;- ,0.00'
+            ReadOnly = True
             TabOrder = 3
           end
           object btnAdicionarItem: TBitBtn

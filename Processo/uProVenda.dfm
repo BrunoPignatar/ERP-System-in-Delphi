@@ -364,7 +364,6 @@
             Width = 83
             Height = 21
             DisplayFormat = ' ,0.00;- ,0.00'
-            ReadOnly = True
             TabOrder = 1
           end
           object edtQuantidade: TCurrencyEdit
