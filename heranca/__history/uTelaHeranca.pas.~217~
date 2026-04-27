@@ -67,6 +67,7 @@
       procedure BloqueiaCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
       function GetDesc: string; virtual;
       procedure GravarAuditoria(Acao, Tela, Descricao: string);
+      function GetColumnByFieldName(Grid: TDBGrid; const AFieldName: string): TColumn;
 
     end;
 
@@ -98,6 +99,19 @@
     if(pgcPrincipal.Pages[Indice].TabVisible) then
     pgcPrincipal.TabIndex:=Indice;
   end;
+
+function TfrmTelaHeranca.GetColumnByFieldName(Grid: TDBGrid; const AFieldName: string): TColumn;
+var
+  I: Integer;
+begin
+  Result := nil;
+  for I := 0 to Grid.Columns.Count - 1 do
+  begin
+    if SameText(Grid.Columns[I].FieldName, AFieldName) then
+      Exit(Grid.Columns[I]);
+  end;
+
+end;
 
   function TfrmTelaHeranca.RetornarCampoTraduzido(Campo:String):String;
   var i:Integer;
@@ -426,34 +440,142 @@ end;
      //TAG1 = Chave Primaria
      //TAG2 = Campos Obrigatorios
   {$ENDREGION}
-  procedure TfrmTelaHeranca.FormClose(Sender: TObject; var Action: TCloseAction);
-  var ArquivoINI:TIniFile; // Variável para criar o arquivo INI para salvar preferências de Grid por usuário.
-    I: Integer; // Ponteiro para passar por todas as colunas (pastas)
+procedure TfrmTelaHeranca.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  ArquivoINI: TIniFile;
+  I: Integer;
+  Secao: string;
 begin
-  ExtractFilePath(Application.ExeName); // Garante que o INI fique na mesma pasta do .exe
-  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini'); //Criamos o INI File na pasta do .exe
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini');
+
+  Secao := oUsuarioLogado.nome + '_' + Self.ClassName;
 
   try
-    for I := 0 to dbgrdListagem.Columns.Count - 1 do  // O laço percorre do 0 à ultima coluna desenhada no Grid
+    ArquivoINI.WriteInteger(Secao, 'QtdColunas', dbgrdListagem.Columns.Count);
+
+    for I := 0 to dbgrdListagem.Columns.Count - 1 do
     begin
       ArquivoINI.WriteInteger(
-      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem é a preferência.
-      'Coluna_' + IntToStr(I), // Nomeamos a pasta com o Indice da coluna.
-      dbgrdListagem.Columns[I].Width); //A largura atual da coluna naquele exato segundo.
+        Secao,
+        'Coluna' + IntToStr(I),
+        dbgrdListagem.Columns[I].Width
+      );
+
+      ArquivoINI.WriteString(
+        Secao,
+        'Ordem' + IntToStr(I),
+        dbgrdListagem.Columns[I].FieldName
+      );
     end;
+
   finally
-    ArquivoINI.Free;// Independentemente de dar erro ou não, sempre fechamos o caderninho para liberar a memória
+    ArquivoINI.Free;
   end;
-    QryListagem.Close;
+end;
+
+procedure TfrmTelaHeranca.FormShow(Sender: TObject);
+var
+  ArquivoINI: TIniFile;
+  I: Integer;
+  NomeCampo: string;
+  Coluna: TColumn;
+  Secao: string;
+  QtdColunasSalvas: Integer;
+  OrdemAtual, OrdemSalva: string;
+begin
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini');
+
+  Secao := oUsuarioLogado.nome + '_' + Self.ClassName;
+
+  try
+    dbgrdListagem.Columns.BeginUpdate;
+    try
+      QtdColunasSalvas := ArquivoINI.ReadInteger(Secao, 'QtdColunas', -1);
+
+      if QtdColunasSalvas = dbgrdListagem.Columns.Count then
+      begin
+        // =====================
+        // LARGURA DAS COLUNAS
+        // =====================
+        for I := 0 to dbgrdListagem.Columns.Count - 1 do
+        begin
+          dbgrdListagem.Columns[I].Width :=
+            ArquivoINI.ReadInteger(
+              Secao,
+              'Coluna' + IntToStr(I),
+              dbgrdListagem.Columns[I].Width
+            );
+        end;
+
+        // =====================
+        // VALIDA ORDEM
+        // =====================
+        OrdemAtual := '';
+        OrdemSalva := '';
+
+        for I := 0 to dbgrdListagem.Columns.Count - 1 do
+        begin
+          OrdemAtual := OrdemAtual + dbgrdListagem.Columns[I].FieldName + '|';
+
+          OrdemSalva := OrdemSalva +
+            ArquivoINI.ReadString(Secao, 'Ordem' + IntToStr(I), '') + '|';
+        end;
+
+        // =====================
+        // APLICA ORDEM SOMENTE SE NECESSÁRIO
+        // =====================
+        if (OrdemSalva <> '') and (OrdemSalva <> OrdemAtual) then
+        begin
+          for I := dbgrdListagem.Columns.Count - 1 downto 0 do
+          begin
+            NomeCampo := ArquivoINI.ReadString(
+              Secao,
+              'Ordem' + IntToStr(I),
+              ''
+            );
+
+            if NomeCampo <> '' then
+            begin
+              Coluna := GetColumnByFieldName(dbgrdListagem, NomeCampo);
+              if Assigned(Coluna) then
+                Coluna.Index := I;
+            end;
+          end;
+        end;
+      end;
+
+    finally
+      dbgrdListagem.Columns.EndUpdate;
+    end;
+
+  finally
+    ArquivoINI.Free;
   end;
+
+  // =====================
+  // RESTANTE DO SEU CÓDIGO
+  // =====================
+  if (QryListagem.SQL.Text <> EmptyStr) then
+  begin
+    QryListagem.IndexFieldNames := IndiceAtual;
+    ExibirLabelIndice(IndiceAtual, lblIndice);
+    SelectOriginal := QryListagem.SQL.Text;
+    QryListagem.Open;
+  end;
+
+  ControlarIndiceTab(pgcPrincipal, 0);
+  DesabilitarEditPK;
+
+  ControlarBotoes(
+    btnNovo, btnAlterar, btnCancelar,
+    btnGravar, btnApagar,
+    btnNavigator, pgcPrincipal, True
+  );
+end;
 
   procedure TfrmTelaHeranca.FormCreate(Sender: TObject);
   var i: Integer;
   begin
-
-
-
-
    dbgrdListagem.TitleFont.Color:=clWhite;
 
   // Centraliza os titulos
@@ -466,41 +588,11 @@ begin
   dbgrdListagem.DataSource:=dtsListagem;
 
   dbgrdListagem.Options:=[dgTitles,dgIndicator,dgColumnResize,dgColLines,
-  dgRowLines,dgTabs,dgRowSelect,dgAlwaysShowSelection,dgCancelOnExit,
+  dgRowLines,dgTabs,dgAlwaysShowSelection,dgCancelOnExit,
   dgTitleClick,dgTitleHotTrack]
   end;
 
-  procedure TfrmTelaHeranca.FormShow(Sender: TObject);
-  var ArquivoINI: TIniFile ; //Referenciamos novamente nosso Arquivo
-    I:Integer; //Passamos o ponteiro
-begin
 
-  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGrid.ini');// Apontamos para o mesmo endereço que salvamos no FormClose
-
-  try
-    for I := 0 to dbgrdListagem.Columns.Count - 1 do //Percorremos o grid recem desenhado
-    begin
-      dbgrdListagem.Columns[I].Width := ArquivoINI.ReadInteger //Redefinimos a largura do grid baseado no que está desenhado
-      (oUsuarioLogado.nome, // Pegamos o UsuarioLogado
-      'Coluna_' + IntToStr(I),//Procuramos a anotação correspondente à coluna atual.
-      dbgrdListagem.Columns[I].Width); //Se for primeiro acesso, mantém o Width padrão do Delphi.
-    end;
-  finally
-    ArquivoINI.Free; //Liberamos o INI da memória.
-  end;
-   if (QryListagem.SQL.Text<>EmptyStr)then begin
-      QryListagem.IndexFieldNames:=IndiceAtual;
-      ExibirLabelIndice(IndiceAtual, lblIndice);
-      SelectOriginal:=QryListagem.SQL.Text;
-      QryListagem.Open;
-   end;
-   ControlarIndiceTab(pgcPrincipal, 0);
-   DesabilitarEditPK;
-   ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar,
-   btnNavigator, pgcPrincipal, True);
-
-
-  end;
 
 
 

@@ -17,12 +17,9 @@
   inherited pgcPrincipal: TPageControl
     Width = 1036
     Height = 395
-    ActivePage = Manutenção
     ExplicitWidth = 1036
     ExplicitHeight = 395
     inherited Listagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       inherited pnlListagemTopo: TPanel
@@ -400,8 +397,6 @@
       end
     end
     inherited Manutenção: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       object lblDoc: TLabel

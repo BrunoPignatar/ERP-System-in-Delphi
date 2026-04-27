@@ -11,6 +11,7 @@
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
   OnClose = FormClose
@@ -77,16 +78,10 @@
         DrawingStyle = gdsClassic
         FixedColor = clAppWorkSpace
         GradientEndColor = clBlack
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-        ParentFont = False
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgCancelOnExit]
         TabOrder = 1
-        TitleFont.Charset = EASTEUROPE_CHARSET
-        TitleFont.Color = clBlack
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
         TitleFont.Height = -11
         TitleFont.Name = 'Tahoma'
         TitleFont.Style = []
@@ -175,6 +170,7 @@
       Width = 53
       Height = 25
       Anchors = [akTop, akRight]
+      Cancel = True
       Caption = 'Fechar'
       TabOrder = 6
       OnClick = btnFecharClick

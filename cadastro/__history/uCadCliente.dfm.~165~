@@ -7,12 +7,22 @@
   ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
+  object Label11: TLabel [0]
+    Left = 787
+    Top = 116
+    Width = 13
+    Height = 13
+    Caption = 'UF'
+  end
   inherited pgcPrincipal: TPageControl
     Width = 1036
     Height = 395
+    ActivePage = Manutenção
     ExplicitWidth = 1036
     ExplicitHeight = 395
     inherited Listagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       inherited pnlListagemTopo: TPanel
@@ -202,24 +212,33 @@
             Height = 19
             ParentShowHint = False
             Picture.Data = {
-              0954506E67496D61676589504E470D0A1A0A0000000D49484452000000100000
-              001008060000001FF3FF6100000006624B474400FF00FF00FFA0BDA793000001
-              D04944415478DA6364A0103062139CD423A1F59F91D91F28A906E2FF6760B8F5
-              8FE9DF86C2C2E7D7F11A30B34389FF17FBCF99FFFF3184B1B230FEE1E3616402
-              69FFF495E1DFEFDFFF591899FEAFF8CFFC23232FEFDD270C03C09AD97E9E006A
-              54D6546466151164666084CAFE073AE1F5FB7F0C37EEFFF9FDE7EFFF3BFF98BF
-              5BC00C811B30B95F7A052B336390B92E2B2B3B1B569F31FCF8F59FE1D4E5DFBF
-              7FFFF9B73AB7E85934DC00909F191899AFE8ABB1308A0A31E30DB457EFFE315C
-              BAF5FB3FE3FFFF5AB925CF6E400D90AE626363ACB73502928C78F583BD73E8EC
-              AFDF7F7E33D4E5963CE98018D02B3D5F488031D648830DBFF55070EEFAAFBFEF
-              3E322CCC2B7E920C3660628FF43C1101C638434D220DB8F6FBCFDB4FFF17E617
-              3F4941788195B1C1D6184892E385FE7E494DE67F4C57F5D45819C584980806E2
-              E5DBBFFF33FC430A4448344A2D6365660A3103462307AE68FCF99FE1E415602C
-              FEF9BF32B7E8692C4A3A983449888FE92FE709166646150D4516565141268C84
-              741D9490FE30DCFEF6FB874579F99BCF2806200CE198F6EF1F63143829733380
-              FD034ACAC014C802642EFDF6FB67164C33860170EFF44869FC6764F207DAAD01
-              56F4FF3F28136D02F9195D2D8130270C00CD8DD311174DAE4A0000000049454E
-              44AE426082}
+              07544269746D617036030000424D360300000000000036000000280000001000
+              0000100000000100180000000000000300001017000010170000000000000000
+              0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFABF2
+              FF36DBFF01CCFF01CCFF01CCFF01CCFF35DAFFABF2FFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFF51E0FF01CCFF16D3FF41E2FF5FECFF59EAFF3ADFFF
+              18D4FF01CCFF4FDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF4FDFFF08CFFF40E1
+              FF5EEBFF5BEAFF58E9FF57E9FF58E9FF57E9FF36DEFF06CEFF4CDFFFFFFFFFFF
+              FFFFFFFFFFA7F0FF02CDFF3ADFFF54E8FF4DE6FF47E4FF44E3FF43E2FF44E3FF
+              47E4FF4DE6FF31DCFF01CCFFA4EFFFFFFFFFFFFFFF2FD8FF15D3FF4AE4FF42E2
+              FF3ADFFF34DDFF31DCFF2FDCFF31DCFF34DDFF3ADFFF40E1FF0ED1FF2CD7FFFF
+              FFFFFFFFFF00CCFF2CDBFF3BE0FF31DCFF28D9FF21D7FF1DD6FF1BD5FF1DD6FF
+              21D7FF28D9FF31DCFF20D7FF00CCFFFFFFFFFFFFFF00CCFF33DDFF2BDAFF1FD6
+              FF16D3FF0ED1FF09CFFF07CEFF09CFFF0ED1FF16D3FF1FD6FF26D8FF00CCFFFF
+              FFFFFFFFFF00CCFF28D9FF1DD6FF0FD1FF04CDFF0BCEFF18D1FF1DD2FF18D1FF
+              0BCEFF04CDFF0FD1FF19D5FF00CCFFFFFFFFFFFFFF00CCFF14D2FF0FD1FF00CC
+              FF1DD2FF35D7FF45DAFF4ADBFF45DAFF35D7FF1DD2FF00CCFF09CFFF00CCFFFF
+              FFFFFFFFFF22D4FF05CEFF04CDFF1DD2FF3FD9FF5CDEFF70E2FF77E4FF70E2FF
+              5CDEFF3FD9FF1CD2FF01CCFF1ED3FFFFFFFFFFFFFF96EBFF00CCFF07CDFF35D7
+              FF5CDEFF7FE5FF9AEBFFA5EDFF9AEBFF7FE5FF5CDEFF20D3FF00CCFF94EAFFFF
+              FFFFFFFFFFFFFFFF33D7FF02CDFF2ED5FF6EE2FF9AEBFFBFF2FFD2F6FFBFF2FF
+              96EAFF48DAFF05CDFF37D7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF38D7FF01CC
+              FF21D3FF6FE2FFC2F3FFEFFCFF85E7FF26D4FF01CCFF44DAFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFF9DEBFF31D6FF01CCFF01CCFF01CCFF01CCFF
+              3AD7FFA5EDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFF}
             Proportional = True
             ShowHint = False
             Stretch = True
@@ -381,8 +400,8 @@
       end
     end
     inherited Manutenção: TTabSheet
-      ExplicitLeft = 6
-      ExplicitTop = 22
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       object lblDoc: TLabel
@@ -400,7 +419,7 @@
         Caption = 'Telefone'
       end
       object lbl3: TLabel
-        Left = 182
+        Left = 106
         Top = 198
         Width = 81
         Height = 13
@@ -414,7 +433,7 @@
         Caption = 'Tipo Pessoa'
       end
       object Label2: TLabel
-        Left = 182
+        Left = 106
         Top = 91
         Width = 19
         Height = 13
@@ -428,23 +447,30 @@
         Caption = 'Status'
       end
       object Label9: TLabel
-        Left = 783
-        Top = 92
+        Left = 394
+        Top = 129
         Width = 13
         Height = 13
         Caption = 'UF'
       end
       object Label10: TLabel
-        Left = 180
+        Left = 107
         Top = 235
         Width = 58
         Height = 13
         Caption = 'Observa'#231#227'o'
         Visible = False
       end
+      object Label12: TLabel
+        Left = 780
+        Top = 91
+        Width = 55
+        Height = 13
+        Caption = 'N'#186' Da Casa'
+      end
       object edtNome: TLabeledEdit
         Tag = 2
-        Left = 179
+        Left = 103
         Top = 66
         Width = 282
         Height = 21
@@ -456,7 +482,7 @@
       end
       object edtClienteId: TLabeledEdit
         Tag = 1
-        Left = 179
+        Left = 103
         Top = 26
         Width = 121
         Height = 21
@@ -465,10 +491,10 @@
         EditLabel.Caption = 'Codigo'
         MaxLength = 10
         NumbersOnly = True
-        TabOrder = 12
+        TabOrder = 13
       end
       object edtCEP: TMaskEdit
-        Left = 179
+        Left = 103
         Top = 104
         Width = 282
         Height = 21
@@ -500,11 +526,11 @@
         EditLabel.Height = 13
         EditLabel.Caption = 'Bairro'
         MaxLength = 40
-        TabOrder = 7
+        TabOrder = 8
       end
       object edtCidade: TLabeledEdit
         Tag = 2
-        Left = 179
+        Left = 103
         Top = 141
         Width = 282
         Height = 21
@@ -516,7 +542,7 @@
       end
       object edtEmail: TLabeledEdit
         Tag = 2
-        Left = 179
+        Left = 103
         Top = 176
         Width = 282
         Height = 21
@@ -524,18 +550,18 @@
         EditLabel.Height = 13
         EditLabel.Caption = 'Email'
         MaxLength = 100
-        TabOrder = 8
+        TabOrder = 9
         OnExit = edtEmailExit
       end
       object edtDataNascimento: TDateEdit
-        Left = 179
+        Left = 103
         Top = 211
         Width = 121
         Height = 21
         ClickKey = 114
         DialogTitle = 'Selecione a Data'
         NumGlyphs = 2
-        TabOrder = 10
+        TabOrder = 11
         OnExit = edtDataNascimentoExit
       end
       object edtDoc: TComboBox
@@ -561,7 +587,7 @@
         Top = 176
         Width = 185
         Height = 21
-        TabOrder = 9
+        TabOrder = 10
         OnChange = edtTelefoneChange
       end
       object lkpSituacao: TDBLookupComboBox
@@ -574,33 +600,40 @@
         KeyField = 'IDSituacao'
         ListField = 'situacaoCliente'
         ListSource = dtsSituacao
-        TabOrder = 11
+        TabOrder = 12
         OnCloseUp = lkpSituacaoCloseUp
       end
       object edtEstado: TEdit
-        Left = 783
-        Top = 104
+        Left = 391
+        Top = 141
         Width = 41
         Height = 21
-        TabOrder = 5
+        TabOrder = 7
       end
       object Panel2: TPanel
-        Left = 179
+        Left = 106
         Top = 248
-        Width = 774
+        Width = 847
         Height = 89
-        TabOrder = 13
+        TabOrder = 14
         Visible = False
         object edtObservacao: TEdit
           Left = 1
           Top = 1
-          Width = 772
+          Width = 845
           Height = 87
           Align = alClient
           MaxLength = 500
           TabOrder = 0
           ExplicitHeight = 21
         end
+      end
+      object edtNumeroCasa: TEdit
+        Left = 780
+        Top = 104
+        Width = 58
+        Height = 21
+        TabOrder = 5
       end
     end
   end
@@ -625,8 +658,8 @@
         #9'   email, dataNascimento, doc, IDSituacao, observacao from clie' +
         'ntes'
       '          ')
-    Left = 580
-    Top = 16
+    Left = 876
+    Top = 24
     object fdtncfldQryListagemclienteId: TFDAutoIncField
       DisplayLabel = 'Codigo'
       FieldName = 'clienteId'
@@ -694,15 +727,15 @@
     end
   end
   inherited dtsListagem: TDataSource
-    Left = 436
-    Top = 16
+    Left = 876
+    Top = 80
   end
   object QrySituacao: TFDQuery
     Connection = dtmConexao.dtmPrincipal
     SQL.Strings = (
       'select * from situacao')
-    Left = 644
-    Top = 24
+    Left = 956
+    Top = 32
     object QrySituacaoIDSituacao: TFDAutoIncField
       FieldName = 'IDSituacao'
       Origin = 'IDSituacao'
@@ -716,8 +749,8 @@
   end
   object dtsSituacao: TDataSource
     DataSet = QrySituacao
-    Left = 484
-    Top = 32
+    Left = 972
+    Top = 152
   end
   object ImageList1: TImageList
     Left = 948

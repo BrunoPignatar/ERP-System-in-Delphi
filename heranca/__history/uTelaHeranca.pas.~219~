@@ -440,37 +440,116 @@ end;
      //TAG1 = Chave Primaria
      //TAG2 = Campos Obrigatorios
   {$ENDREGION}
-  procedure TfrmTelaHeranca.FormClose(Sender: TObject; var Action: TCloseAction);
-  var ArquivoINI:TIniFile; // Variável para criar o arquivo INI para salvar preferências de Grid por usuário.
-    I: Integer; // Ponteiro para passar por todas as colunas (pastas)
+procedure TfrmTelaHeranca.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  ArquivoINI: TIniFile;
+  I: Integer;
+  Secao: string;
 begin
-ExtractFilePath(Application.ExeName); // Garante que o INI fique na mesma pasta do .exe
-  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini'); //Criamos o INI File na pasta do .exe
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini');
+
+  Secao := oUsuarioLogado.nome + '_' + Self.ClassName;
 
   try
-    for I := 0 to dbgrdListagem.Columns.Count - 1 do  // O laço percorre do 0 à ultima coluna desenhada no Grid
-    begin
-      ArquivoINI.WriteInteger(
-      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem é a preferência.
-      'Coluna' + IntToStr(I), // Nomeamos a pasta com o Indice da coluna.
-      dbgrdListagem.Columns[I].Width); //A largura atual da coluna naquele exato segundo.
-      ArquivoINI.WriteString(
-      oUsuarioLogado.nome,
-      'Ordem' + IntToStr(I),
-      dbgrdListagem.Columns[I].FieldName);
-    end;
+    ArquivoINI.WriteInteger(Secao, 'QtdColunas', dbgrdListagem.Columns.Count);
+
+    for I := 0 to dbgrdListagem.Columns.Count - 1 do
+   begin
+  ArquivoINI.WriteInteger(
+    Secao,
+    dbgrdListagem.Columns[I].FieldName + '_Width',
+    dbgrdListagem.Columns[I].Width
+  );
+
+  ArquivoINI.WriteInteger(
+    Secao,
+    dbgrdListagem.Columns[I].FieldName + '_Index',
+    dbgrdListagem.Columns[I].Index
+  );
+end;
+
   finally
-    ArquivoINI.Free;// Independentemente de dar erro ou não, sempre fechamos o caderninho para liberar a memória
+    ArquivoINI.Free;
   end;
+end;
+
+procedure TfrmTelaHeranca.FormShow(Sender: TObject);
+var
+  ArquivoINI: TIniFile;
+  I, Posicao: Integer;
+  NomeCampo: string;
+  Coluna: TColumn;
+  Secao: string;
+  QtdColunasSalvas: Integer;
+  Ordem: TStringList;
+begin
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGrid.ini');
+
+  Secao := oUsuarioLogado.nome + '_' + Self.ClassName;
+
+  Ordem := TStringList.Create;
+  try
+    dbgrdListagem.Columns.BeginUpdate;
+    try
+      QtdColunasSalvas := ArquivoINI.ReadInteger(Secao, 'QtdColunas', -1);
+
+      if QtdColunasSalvas = dbgrdListagem.Columns.Count then
+      begin
+        // largura
+        for I := 0 to dbgrdListagem.Columns.Count - 1 do
+        begin
+          dbgrdListagem.Columns[I].Width :=
+            ArquivoINI.ReadInteger(Secao, 'Coluna' + IntToStr(I),
+              dbgrdListagem.Columns[I].Width);
+        end;
+
+        // monta lista de ordem salva
+        for I := 0 to dbgrdListagem.Columns.Count - 1 do
+        begin
+          NomeCampo := ArquivoINI.ReadString(Secao, 'Ordem' + IntToStr(I), '');
+          if NomeCampo <> '' then
+            Ordem.Add(NomeCampo);
+        end;
+
+        // aplica ordem de forma estável
+        for Posicao := 0 to Ordem.Count - 1 do
+        begin
+          Coluna := GetColumnByFieldName(dbgrdListagem, Ordem[Posicao]);
+          if Assigned(Coluna) then
+            Coluna.Index := Posicao;
+        end;
+      end;
+
+    finally
+      dbgrdListagem.Columns.EndUpdate;
+    end;
+
+  finally
+    Ordem.Free;
+    ArquivoINI.Free;
   end;
+
+  if (QryListagem.SQL.Text <> EmptyStr) then
+  begin
+    QryListagem.IndexFieldNames := IndiceAtual;
+    ExibirLabelIndice(IndiceAtual, lblIndice);
+    SelectOriginal := QryListagem.SQL.Text;
+    QryListagem.Open;
+  end;
+
+  ControlarIndiceTab(pgcPrincipal, 0);
+  DesabilitarEditPK;
+
+  ControlarBotoes(
+    btnNovo, btnAlterar, btnCancelar,
+    btnGravar, btnApagar,
+    btnNavigator, pgcPrincipal, True
+  );
+end;
 
   procedure TfrmTelaHeranca.FormCreate(Sender: TObject);
   var i: Integer;
   begin
-
-
-
-
    dbgrdListagem.TitleFont.Color:=clWhite;
 
   // Centraliza os titulos
@@ -483,67 +562,11 @@ ExtractFilePath(Application.ExeName); // Garante que o INI fique na mesma pasta 
   dbgrdListagem.DataSource:=dtsListagem;
 
   dbgrdListagem.Options:=[dgTitles,dgIndicator,dgColumnResize,dgColLines,
-  dgRowLines,dgTabs,dgRowSelect,dgAlwaysShowSelection,dgCancelOnExit,
+  dgRowLines,dgTabs,dgAlwaysShowSelection,dgCancelOnExit,
   dgTitleClick,dgTitleHotTrack]
   end;
 
-  procedure TfrmTelaHeranca.FormShow(Sender: TObject);
-  var ArquivoINI: TIniFile ; //Referenciamos novamente nosso Arquivo
-    I:Integer; //Passamos o ponteiro
-    NomeCampo: string;
-    Coluna: TColumn;
-begin
 
-   ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGrid.ini');
-
-  try
-    dbgrdListagem.Columns.BeginUpdate;
-    try
-
-      for I := 0 to dbgrdListagem.Columns.Count - 1 do
-      begin
-        dbgrdListagem.Columns[I].Width :=
-          ArquivoINI.ReadInteger(oUsuarioLogado.nome,
-          'Coluna' + IntToStr(I),
-          dbgrdListagem.Columns[I].Width);
-      end;
-
-
-      for I := 0 to dbgrdListagem.Columns.Count - 1 do
-      begin
-        NomeCampo := ArquivoINI.ReadString(
-          oUsuarioLogado.nome,
-          'Ordem' + IntToStr(I),
-          ''
-        );
-
-        if NomeCampo <> '' then
-        begin
-          Coluna := GetColumnByFieldName(dbgrdListagem, NomeCampo);
-          if Assigned(Coluna) then
-            Coluna.Index := I;
-        end;
-      end;
-
-    finally
-      dbgrdListagem.Columns.EndUpdate;
-    end;
-
-  finally
-    ArquivoINI.Free;
-  end;
-  if (QryListagem.SQL.Text<>EmptyStr) then begin
-    QryListagem.IndexFieldNames:=IndiceAtual;
-    ExibirLabelIndice(IndiceAtual, lblIndice);
-    SelectOriginal:=QryListagem.SQL.Text;
-    QryListagem.Open;
-  end;
-  ControlarIndiceTab(pgcPrincipal, 0);
-  DesabilitarEditPK;
-  ControlarBotoes(btnNovo, btnAlterar, btnCancelar,
-                  btnGravar, btnApagar,
-                  btnNavigator, pgcPrincipal,True);
-  end;
 
 
 
