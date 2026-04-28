@@ -53,17 +53,6 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       OnClick = Label1Click
     end
-    object Button1: TButton
-      Left = 948
-      Top = 1
-      Width = 75
-      Height = 27
-      Align = alRight
-      Caption = 'FECHAR'
-      TabOrder = 0
-      Visible = False
-      OnClick = Button1Click
-    end
   end
   object GridPanel1: TGridPanel
     Left = 0
@@ -119,17 +108,28 @@ object frmPrincipal: TfrmPrincipal
         Top = 1
         Width = 509
         Height = 195
+        Border.Color = 251658240
+        Gradient.EndColor = 8404992
+        Gradient.StartColor = 4194304
+        ScrollMouseButton = mbLeft
+        Title.Color = clNavy
+        Title.Font.Color = clNavy
         Title.Text.Strings = (
           'Produto em Estoque')
+        Zoom.MouseButton = mbRight
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -3
+        ExplicitTop = -3
         DefaultCanvas = 'TGDIPlusCanvas'
         PrintMargins = (
           15
           27
           15
           27)
-        ColorPaletteIndex = 13
+        ColorPaletteIndex = -2
+        ColorPalette = (
+          10708548)
         object Series1: TBarSeries
           Marks.Brush.Gradient.Colors = <
             item
@@ -155,7 +155,7 @@ object frmPrincipal: TfrmPrincipal
           Marks.RoundSize = 14
           Marks.Visible = False
           DataSource = DTMGrafico.QryProdutoEstoque
-          SeriesColor = 8404992
+          SeriesColor = clNavy
           Title = 'ProdutoEstoque'
           XLabelsSource = 'label'
           Sides = 17
@@ -179,6 +179,9 @@ object frmPrincipal: TfrmPrincipal
         Top = 1
         Width = 509
         Height = 195
+        Gradient.EndColor = 4194304
+        Gradient.StartColor = 8404992
+        Title.Font.Color = clNavy
         Title.Text.Strings = (
           'Valor de Venda por Cliente na '#218'ltima Semana')
         Legend.TextStyle = ltsPercent
@@ -238,6 +241,7 @@ object frmPrincipal: TfrmPrincipal
         Top = 1
         Width = 509
         Height = 195
+        Title.Font.Color = clNavy
         Title.Text.Strings = (
           'Vendas da '#250'ltima Semana')
         Align = alClient
@@ -269,6 +273,7 @@ object frmPrincipal: TfrmPrincipal
         Top = 1
         Width = 509
         Height = 195
+        Title.Font.Color = clNavy
         Title.Text.Strings = (
           'Os 10 Produtos Mais Vendidos')
         Legend.TextStyle = ltsPercent

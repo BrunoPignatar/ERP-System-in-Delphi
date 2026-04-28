@@ -52,6 +52,7 @@ uses
   uConLog in 'Controle\uConLog.pas' {frmLog},
   uConFinanceiro in 'Controle\uConFinanceiro.pas' {frmConFinanca};
 
+
 {$R *.res}
 
 begin

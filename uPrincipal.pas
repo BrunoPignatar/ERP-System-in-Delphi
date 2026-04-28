@@ -8,7 +8,7 @@ uses
   uFrmAtualizaDB, cUsuarioLogado, Vcl.ComCtrls, RLReport, Vcl.ExtCtrls, Vcl.StdCtrls, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, VclTee.TeeGDIPlus, VCLTee.TeEngine,
-  VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VCLTee.DBChart, cFuncao;
+  VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VCLTee.DBChart, cFuncao, Vcl.GraphUtil;
 
 type
   TfrmPrincipal = class(TForm)
@@ -57,7 +57,6 @@ type
     PieSeries1: TPieSeries;
     DBChart4: TDBChart;
     Series3: TFastLineSeries;
-    Button1: TButton;
     rocarUsuario1: TMenuItem;
     Fornecedores1: TMenuItem;
     Controle1: TMenuItem;
@@ -277,6 +276,7 @@ begin
   Application.Terminate;
 end;
 
+
 procedure TfrmPrincipal.Produto1Click(Sender: TObject);
 begin
  TFuncao.CriarForm(TfrmCadProduto, oUsuarioLogado, dtmConexao.dtmPrincipal);
@@ -298,6 +298,7 @@ procedure TfrmPrincipal.rocarUsuario1Click(Sender: TObject);
 begin
   TrocarUsuario;
 end;
+
 
 procedure TfrmPrincipal.TrocarUsuario;
 var

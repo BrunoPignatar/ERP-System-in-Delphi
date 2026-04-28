@@ -111,11 +111,6 @@ end;
 function TVenda.Apagar: Boolean;
 var Qry:TFDQuery;
 begin
-  if MessageDlg('Apagar o Registro: '+#13+#13+
-                'Venda Nro: '+IntToStr(VendaId), mtConfirmation, [mbYes, mbNo],0)<>mrYes then begin
-       Result:=False;
-       Abort;
-  end;
 
   try
       Result:=True;
@@ -478,7 +473,5 @@ begin
          FreeAndNil(oControleEstoque);
     End;
 end;
-
-
 
 end.

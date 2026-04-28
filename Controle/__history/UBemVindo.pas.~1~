@@ -1,0 +1,41 @@
+unit UBemVindo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,   Vcl.GraphUtil;
+
+type
+  TForm1 = class(TForm)
+    Panel1: TPanel;
+    Label1: TLabel;
+    Splitter1: TSplitter;
+    Panel2: TPanel;
+    PaintBox1: TPaintBox;
+    procedure PaintBox1Paint(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.PaintBox1Paint(Sender: TObject);
+begin
+  GradientFillCanvas(
+    PaintBox1.Canvas,
+    clBlue,
+    clNavy,
+    PaintBox1.ClientRect,
+    gdVertical
+  );
+end;
+
+end.

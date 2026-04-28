@@ -230,6 +230,7 @@ object frmRelProVenda: TfrmRelProVenda
           Top = 12
           Width = 105
           Height = 16
+          Alignment = taRightJustify
           DataField = 'totalVenda'
           DataSource = dtsVenda
           Info = riSum
@@ -399,6 +400,7 @@ object frmRelProVenda: TfrmRelProVenda
             Top = 1
             Width = 60
             Height = 14
+            Alignment = taRightJustify
             DataField = 'totalProduto'
             DataSource = dtsVendasItens
             Font.Charset = DEFAULT_CHARSET

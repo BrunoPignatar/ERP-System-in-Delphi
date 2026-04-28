@@ -17,9 +17,12 @@
   inherited pgcPrincipal: TPageControl
     Width = 1014
     Height = 365
+    ActivePage = Manutenção
     ExplicitWidth = 1014
     ExplicitHeight = 365
     inherited Listagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1006
       ExplicitHeight = 337
       inherited pnlListagemTopo: TPanel
@@ -116,6 +119,8 @@
       end
     end
     inherited Manutenção: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1006
       ExplicitHeight = 337
       object lbl1: TLabel
@@ -328,14 +333,14 @@
         Height = 89
         Color = clBtnFace
         MaxLength = 255
-        TabOrder = 3
+        TabOrder = 4
       end
       object edtValor: TCurrencyEdit
         Left = 23
         Top = 248
         Width = 121
         Height = 21
-        TabOrder = 4
+        TabOrder = 5
       end
       object edtQuantidade: TCurrencyEdit
         Left = 167
@@ -343,7 +348,7 @@
         Width = 121
         Height = 21
         DisplayFormat = ' ,0.00;- ,0.00'
-        TabOrder = 5
+        TabOrder = 6
       end
       object lkpCategoria: TDBLookupComboBox
         Left = 236
@@ -361,7 +366,7 @@
         Width = 137
         Height = 119
         BorderStyle = bsSingle
-        TabOrder = 6
+        TabOrder = 8
         object imgImagem: TImage
           Left = 1
           Top = 1
@@ -383,7 +388,7 @@
         KeyField = 'fornId'
         ListField = 'nome'
         ListSource = dtsFornecedor
-        TabOrder = 7
+        TabOrder = 3
       end
       object edtQntMinima: TCurrencyEdit
         Left = 315
@@ -391,7 +396,7 @@
         Width = 148
         Height = 21
         DisplayFormat = ' ,0.00;- ,0.00'
-        TabOrder = 8
+        TabOrder = 7
       end
     end
   end

@@ -121,7 +121,7 @@ begin
     if (Linha mod 2) = 0 then
       DBGrid1.Canvas.Brush.Color := clWebLightgrey
     else
-      DBGrid1.Canvas.Brush.Color := clWhite;
+      DBGrid1.Canvas.Brush.Color := $00FFFAF0;
   end
   else
   begin
@@ -161,7 +161,7 @@ begin
     if (Linha mod 2) = 0 then
       DBGrid2.Canvas.Brush.Color := clWebLightgrey
     else
-      DBGrid2.Canvas.Brush.Color := clWhite;
+      DBGrid2.Canvas.Brush.Color := $00FFFAF0;
   end
   else
   begin

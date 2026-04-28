@@ -10,9 +10,12 @@
   inherited pgcPrincipal: TPageControl
     Width = 1254
     Height = 462
+    ActivePage = Manutenção
     ExplicitWidth = 1254
     ExplicitHeight = 462
     inherited Listagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1246
       ExplicitHeight = 434
       inherited pnlListagemTopo: TPanel
@@ -54,10 +57,10 @@
       end
     end
     inherited Manutenção: TTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 1246
+      ExplicitHeight = 434
       object lblDoc: TLabel
         Left = 303
         Top = 90
@@ -85,7 +88,7 @@
         Width = 282
         Height = 21
         MaxLength = 18
-        TabOrder = 0
+        TabOrder = 1
         OnChange = edtDocumentoChange
       end
       object edtNome: TLabeledEdit
@@ -98,7 +101,7 @@
         EditLabel.Height = 13
         EditLabel.Caption = 'Nome'
         MaxLength = 50
-        TabOrder = 1
+        TabOrder = 0
       end
       object edtTelefone: TEdit
         Left = 654
@@ -118,7 +121,7 @@
         EditLabel.Height = 13
         EditLabel.Caption = 'Email'
         MaxLength = 50
-        TabOrder = 3
+        TabOrder = 4
       end
       object edtEndereco: TLabeledEdit
         Tag = 2
@@ -130,7 +133,7 @@
         EditLabel.Height = 13
         EditLabel.Caption = 'Endere'#231'o'
         MaxLength = 60
-        TabOrder = 4
+        TabOrder = 3
       end
       object Panel2: TPanel
         Left = 302
@@ -146,7 +149,7 @@
           Align = alClient
           MaxLength = 500
           TabOrder = 0
-          ExplicitHeight = 40
+          ExplicitHeight = 21
         end
       end
       object edtFornId: TLabeledEdit

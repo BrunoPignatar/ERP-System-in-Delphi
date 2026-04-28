@@ -156,14 +156,14 @@ begin
   if gdSelected in State then
   begin
     dbgrdListagem.Canvas.Brush.Color := $00D8A76F;
-    dbgrdListagem.Canvas.Font.Color := clWhite;
+    dbgrdListagem.Canvas.Font.Color := clwhite;
   end
   else
   begin
     if (Linha mod 2) = 0 then
       dbgrdListagem.Canvas.Brush.Color := clWebLightgrey
     else
-      dbgrdListagem.Canvas.Brush.Color := clWhite;
+      dbgrdListagem.Canvas.Brush.Color := $00FFFAF0;
 
     dbgrdListagem.Canvas.Font.Color := clBlack;
   end;
@@ -482,7 +482,7 @@ begin
 
     dbgrdListagem.Columns.BeginUpdate;
     try
-      // 🔹 1. restaurar ordem (Index)
+      // 1. restaurar ordem (Index)
       for I := 0 to dbgrdListagem.Columns.Count - 1 do
       begin
         Col := dbgrdListagem.Columns[I];
@@ -496,7 +496,7 @@ begin
         Col.Index := NewIndex;
       end;
 
-      // 🔹 2. restaurar largura (após ordem estabilizada)
+      // 2. restaurar largura (após ordem estabilizada)
       for I := 0 to dbgrdListagem.Columns.Count - 1 do
       begin
         Col := dbgrdListagem.Columns[I];
@@ -516,16 +516,15 @@ begin
     ArquivoINI.Free;
   end;
 
-  // resto do seu código continua igual...
   if (QryListagem.SQL.Text <> EmptyStr) then begin
-   QryListagem.IndexFieldNames := IndiceAtual;
-  ExibirLabelIndice(IndiceAtual, lblIndice);
-  SelectOriginal := QryListagem.SQL.Text;
-  QryListagem.Open;
+    QryListagem.IndexFieldNames := IndiceAtual;
+    ExibirLabelIndice(IndiceAtual, lblIndice);
+    SelectOriginal := QryListagem.SQL.Text;
+    QryListagem.Open;
   end;
-  ControlarIndiceTab(pgcPrincipal, 0);
-  DesabilitarEditPK; ControlarBotoes(
-   btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar, btnNavigator, pgcPrincipal, True );
+    ControlarIndiceTab(pgcPrincipal, 0);
+    DesabilitarEditPK; ControlarBotoes(
+    btnNovo, btnAlterar, btnCancelar, btnGravar, btnApagar, btnNavigator, pgcPrincipal, True );
 end;
 
 
@@ -635,5 +634,6 @@ end;
    end;
   end;
   {$ENDREGION}
+
 
   end.

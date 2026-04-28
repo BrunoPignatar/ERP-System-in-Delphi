@@ -154,7 +154,7 @@ begin
     if (Linha mod 2) = 0 then
       grdPesquisa.Canvas.Brush.Color := clWebLightgrey
     else
-      grdPesquisa.Canvas.Brush.Color := clWhite;
+      grdPesquisa.Canvas.Brush.Color := $00FFFAF0;
   end
   else
   begin

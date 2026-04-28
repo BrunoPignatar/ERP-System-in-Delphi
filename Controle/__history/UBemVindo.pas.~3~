@@ -1,0 +1,53 @@
+unit UBemVindo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,   Vcl.GraphUtil;
+
+type
+  TfrmBemVindo = class(TForm)
+    Panel1: TPanel;
+    Splitter1: TSplitter;
+    Panel2: TPanel;
+    PaintBox1: TPaintBox;
+    PaintBox2: TPaintBox;
+    procedure PaintBox1Paint(Sender: TObject);
+    procedure PaintBox2Paint(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmBemVindo: TfrmBemVindo;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmBemVindo.PaintBox1Paint(Sender: TObject);
+begin
+  GradientFillCanvas(
+    PaintBox1.Canvas,
+    clBlue,
+    clNavy,
+    PaintBox1.ClientRect,
+    gdVertical
+  );
+end;
+
+procedure TfrmBemVindo.PaintBox2Paint(Sender: TObject);
+begin
+  GradientFillCanvas(
+    PaintBox1.Canvas,
+    clBlue,
+    clNavy,
+    PaintBox1.ClientRect,
+    gdVertical
+  );
+end;
+
+end.

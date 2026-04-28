@@ -8,7 +8,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ExtCtrls, Vcl.ComCtrls, uDTMConexao, uDTMVenda, RxToolEdit,
-   RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto, math;
+  RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto, math, System.IOUtils,System.JSON;
 
 type
   TfrmProVenda = class(TfrmTelaHeranca)
@@ -42,6 +42,16 @@ type
     btnApagarItem: TBitBtn;
     dbGridItensVenda: TDBGrid;
     Label3: TLabel;
+    QryCSV: TFDQuery;
+    QryCSVvendaId: TFDAutoIncField;
+    QryCSVnomeCliente: TStringField;
+    QryCSVnomeProduto: TStringField;
+    QryCSVquantidade: TFMTBCDField;
+    QryCSVcodProduto: TFDAutoIncField;
+    btnCSV: TSpeedButton;
+    btnTxt: TSpeedButton;
+    btnJson: TSpeedButton;
+    btnHTML: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -65,6 +75,11 @@ type
     procedure FormShow(Sender: TObject);
     procedure dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
+    procedure btnApagarClick(Sender: TObject);
+    procedure btnCSVClick(Sender: TObject);
+    procedure btnTxtClick(Sender: TObject);
+    procedure btnJsonClick(Sender: TObject);
+    procedure btnHTMLClick(Sender: TObject);
 
 
   private
@@ -77,6 +92,10 @@ type
     procedure CarregarRegistroSelecionado;
     function TotalizarVenda: Double;
     function GetDesc: string; override;
+    procedure ExportarCSV(ADataset: TDataSet);
+    procedure ExportarTXT(ADataset: TDataSet);
+    procedure ExportarJSON(ADataset: TDataSet);
+    procedure ExportarHTML(ADataset: TDataSet);
 
   public
     { Public declarations }
@@ -192,7 +211,7 @@ begin
   inherited;
   if TDBLookupComboBox(Sender).KeyValue<>Null then begin
      edtValorUnitario.Value:=dtmVendas.QryProdutos.FieldByName('valor').AsFloat;
-     //edtValorUnitario.value:= Ceil(edtValorUnitario.Value / 0.45);
+     edtValorUnitario.value:= Ceil(edtValorUnitario.Value / 0.45);
      edtQuantidade.Value:=1;
      edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
   end;
@@ -205,6 +224,10 @@ var estoque: Integer;
 begin
   inherited;
 
+  if lkpProduto.Text = '' then begin
+     ShowMessage('Precisa ter um produto selecionado');
+  end
+  else begin
   estoque := dtmVendas.QryProdutos.FieldByName('quantidade').AsInteger;
   qntDigitada:= StrToInt(edtQuantidade.Text);
   qntmini:= dtmVendas.QryProdutos.FieldByName('qntmini').AsFloat;
@@ -267,6 +290,7 @@ begin
   LimparComponenteItem;
   lkpProduto.SetFocus;
 
+  end;
 
 end;
 
@@ -308,6 +332,64 @@ begin
   inherited;
 end;
 
+procedure TfrmProVenda.btnApagarClick(Sender: TObject);
+var
+  QrySelect, QryUpdate: TFDQuery;
+begin
+  if MessageDlg('Apagar o Registro?', mtConfirmation,[mbYes, mbNo],0) = mrYes then
+  begin
+  if MessageDlg('Deseja retornar os produtos ao estoque?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    QrySelect := TFDQuery.Create(nil);
+    QryUpdate := TFDQuery.Create(nil);
+    try
+      QrySelect.Connection := dtmConexao.dtmPrincipal;
+      QryUpdate.Connection := dtmConexao.dtmPrincipal;
+
+      dtmConexao.dtmPrincipal.StartTransaction;
+      try
+        QrySelect.SQL.Text :=
+          'SELECT produtoId, quantidade ' +
+          'FROM vendasItens ' +
+          'WHERE vendaId = :vendaId';
+
+        QrySelect.ParamByName('vendaId').AsInteger := QryListagem.FieldByName('vendaId').AsInteger;
+        QrySelect.Open;
+
+        while not QrySelect.Eof do
+        begin
+          QryUpdate.SQL.Text :=
+            'UPDATE produtos ' +
+            'SET quantidade = quantidade + :qtde ' +
+            'WHERE produtoId = :produtoId';
+
+          QryUpdate.ParamByName('produtoId').AsInteger :=
+            QrySelect.FieldByName('produtoId').AsInteger;
+
+          QryUpdate.ParamByName('qtde').AsFloat :=
+            QrySelect.FieldByName('quantidade').AsFloat;
+
+          QryUpdate.ExecSQL;
+
+          QrySelect.Next;
+        end;
+
+        dtmConexao.dtmPrincipal.Commit;
+      except
+        dtmConexao.dtmPrincipal.Rollback;
+        raise;
+      end;
+
+    finally
+      QrySelect.Free;
+      QryUpdate.Free;
+    end;
+  end;
+
+  inherited;
+  end;
+end;
+
 procedure TfrmProVenda.btnApagarItemClick(Sender: TObject);
 begin
   inherited;
@@ -328,6 +410,14 @@ procedure TfrmProVenda.btnCancelarClick(Sender: TObject);
 begin
   inherited;
   LimparCds;
+end;
+
+procedure TfrmProVenda.btnCSVClick(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarCSV(QryCSV);
+  QryCSV.Close;
 end;
 
 procedure TfrmProVenda.btnGravarClick(Sender: TObject);
@@ -368,6 +458,22 @@ begin
 
   inherited;
   LimparCds;
+end;
+
+procedure TfrmProVenda.btnHTMLClick(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarHTML(QryCSV);
+  QryCSV.Close;
+end;
+
+procedure TfrmProVenda.btnJsonClick(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarJSON(QryCSV);
+  QryCSV.Close;
 end;
 
 procedure TfrmProVenda.btnNovoClick(Sender: TObject);
@@ -434,6 +540,14 @@ begin
   end;
 end;
 
+procedure TfrmProVenda.btnTxtClick(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarTXT(QryCSV);
+  QryCSV.Close;
+end;
+
 procedure TfrmProVenda.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
@@ -477,7 +591,7 @@ begin
     if (Linha mod 2) = 0 then
       dbGridItensVenda.Canvas.Brush.Color := clWebLightgrey
     else
-      dbGridItensVenda.Canvas.Brush.Color := clWhite;
+      dbGridItensVenda.Canvas.Brush.Color := $00FFFAF0;
   end
   else
   begin
@@ -614,6 +728,170 @@ begin
   while not dtmVendas.cdsItensVenda.Eof do begin
     result := result + dtmVendas.cdsItensVenda.FieldByName('valorTotalProduto').AsFloat;
     dtmVendas.cdsItensVenda.Next;
+  end;
+end;
+
+
+
+procedure TfrmProVenda.ExportarCSV(ADataset: TDataSet);
+var
+  Lista: TStringList;
+  UltimaVenda: string;
+begin
+  Lista := TStringList.Create;
+  try
+    Lista.Add('CodVenda;NomeCliente;NomeProduto;CodProduto;Quantidade');
+    UltimaVenda := '';
+
+    ADataset.First;
+    while not ADataset.Eof do
+    begin
+
+      if (UltimaVenda <> '') and
+         (UltimaVenda <> ADataset.FieldByName('vendaId').AsString) then
+      begin
+        Lista.Add('');
+      end;
+      Lista.Add(
+        ADataset.FieldByName('vendaId').AsString + ';' +
+        ADataset.FieldByName('nomeCliente').AsString + ';' +
+        ADataset.FieldByName('nomeProduto').AsString + ';' +
+        ADataset.FieldByName('codProduto').AsString + ';' +
+        ADataset.FieldByName('quantidade').AsString );
+
+      UltimaVenda := ADataset.FieldByName('vendaId').AsString;
+
+      ADataset.Next;
+    end;
+     try
+      Lista.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.csv');
+    except
+      on E: EFCreateError do
+        ShowMessage('Para exportar CSV é preciso fechar o arquivo já aberto.');
+      on E: Exception do
+        ShowMessage('Erro ao exportar CSV: ' + E.Message);
+    end;
+  finally
+    Lista.Free;
+  end;
+end;
+
+
+procedure TfrmProVenda.ExportarTXT(ADataset: TDataSet);
+var
+  Lista: TStringList;
+begin
+  Lista := TStringList.Create;
+  try
+    Lista.Add('CodVenda | NomeCliente | NomeProduto | CodProduto | Quantidade');
+
+    ADataset.First;
+    while not ADataset.Eof do
+    begin
+      Lista.Add(
+        ADataset.FieldByName('vendaId').AsString + ' | ' +
+        ADataset.FieldByName('nomeCliente').AsString + ' | ' +
+        ADataset.FieldByName('nomeProduto').AsString + ' | ' +
+        ADataset.FieldByName('codProduto').AsString + ' | ' +
+        ADataset.FieldByName('quantidade').AsString
+      );
+
+      ADataset.Next;
+    end;
+
+    Lista.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.txt');
+  finally
+    Lista.Free;
+  end;
+end;
+
+
+
+procedure TfrmProVenda.ExportarJSON(ADataset: TDataSet);
+var
+  JSONArray: TJSONArray;
+  JSONObject: TJSONObject;
+begin
+  JSONArray := TJSONArray.Create;
+  try
+    ADataset.First;
+
+    while not ADataset.Eof do
+    begin
+      JSONObject := TJSONObject.Create;
+
+      JSONObject.AddPair('vendaId', ADataset.FieldByName('vendaId').AsString);
+      JSONObject.AddPair('nomeCliente', ADataset.FieldByName('nomeCliente').AsString);
+      JSONObject.AddPair('nomeProduto', ADataset.FieldByName('nomeProduto').AsString);
+      JSONObject.AddPair('codProduto', ADataset.FieldByName('codProduto').AsString);
+      JSONObject.AddPair('quantidade', ADataset.FieldByName('quantidade').AsString);
+
+      JSONArray.AddElement(JSONObject);
+
+      ADataset.Next;
+    end;
+
+    TFile.WriteAllText('C:\Users\devmv\Desktop\Conversao\Vendas.json',
+      JSONArray.ToString
+    );
+
+  finally
+    JSONArray.Free;
+  end;
+end;
+
+
+
+procedure TfrmProVenda.ExportarHTML(ADataset: TDataSet);
+var
+  SL: TStringList;
+begin
+  SL := TStringList.Create;
+  try
+    SL.Add('<html>');
+    SL.Add('<head>');
+    SL.Add('<meta charset="UTF-8">');
+    SL.Add('<title>Relatorio de Vendas</title>');
+    SL.Add('<style>');
+    SL.Add('table { border-collapse: collapse; width: 100%; }');
+    SL.Add('th, td { border: 1px solid #000; padding: 5px; text-align: center; }');
+    SL.Add('th { background-color: #f2f2f2; }');
+    SL.Add('</style>');
+    SL.Add('</head>');
+    SL.Add('<body>');
+    SL.Add('<h2>Relatorio de Vendas</h2>');
+
+    SL.Add('<table>');
+    SL.Add('<tr>');
+    SL.Add('<th>Cod. Venda</th>');
+    SL.Add('<th>Nome Cliente</th>');
+    SL.Add('<th>Nome Produto</th>');
+    SL.Add('<th>Cod. Produto</th>');
+    SL.Add('<th>Quantidade</th>');
+    SL.Add('</tr>');
+
+    ADataset.First;
+
+    while not ADataset.Eof do
+    begin
+      SL.Add('<tr>');
+      SL.Add('<td>' + ADataset.FieldByName('vendaId').AsString + '</td>');
+      SL.Add('<td>' + ADataset.FieldByName('nomeCliente').AsString + '</td>');
+      SL.Add('<td>' + ADataset.FieldByName('nomeProduto').AsString + '</td>');
+      SL.Add('<td>' + ADataset.FieldByName('codProduto').AsString + '</td>');
+      SL.Add('<td>' + ADataset.FieldByName('quantidade').AsString + '</td>');
+      SL.Add('</tr>');
+
+      ADataset.Next;
+    end;
+
+    SL.Add('</table>');
+    SL.Add('</body>');
+    SL.Add('</html>');
+
+    SL.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.html');
+  finally
+    SL.Free;
   end;
 end;
 

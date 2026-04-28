@@ -2,10 +2,10 @@ object frmLogin: TfrmLogin
   Left = 0
   Top = 0
   BorderIcons = []
-  BorderStyle = bsDialog
+  BorderStyle = bsNone
   Caption = 'LOGIN '#55357#56594
-  ClientHeight = 397
-  ClientWidth = 919
+  ClientHeight = 426
+  ClientWidth = 925
   Color = 16776176
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,11 +18,18 @@ object frmLogin: TfrmLogin
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object PaintBox1: TPaintBox
+    Left = 424
+    Top = 0
+    Width = 501
+    Height = 426
+    OnPaint = PaintBox1Paint
+  end
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 919
-    Height = 397
+    Width = 925
+    Height = 426
     Align = alClient
     Picture.Data = {
       0A544A504547496D6167655A7F0000FFD8FFE000104A46494600010100000100
@@ -1049,8 +1056,7 @@ object frmLogin: TfrmLogin
     Stretch = True
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
-    ExplicitLeft = -24
-    ExplicitTop = 16
+    ExplicitWidth = 926
   end
   object Label1: TLabel
     Left = 604
@@ -1059,7 +1065,7 @@ object frmLogin: TfrmLogin
     Height = 33
     Caption = 'USU'#193'RIO'#55357#56420
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
+    Font.Color = clWhite
     Font.Height = -27
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
@@ -1072,7 +1078,7 @@ object frmLogin: TfrmLogin
     Height = 33
     Caption = 'SENHA '#55357#56593
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
+    Font.Color = clWhite
     Font.Height = -27
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]

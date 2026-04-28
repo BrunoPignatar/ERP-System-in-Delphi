@@ -17,6 +17,7 @@
   inherited pgcPrincipal: TPageControl
     Width = 1036
     Height = 395
+    ActivePage = Manutenção
     ExplicitWidth = 1036
     ExplicitHeight = 395
     inherited Listagem: TTabSheet
