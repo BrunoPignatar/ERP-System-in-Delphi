@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Vcl.GraphUtil,
-  Vcl.Imaging.pngimage;
+  Vcl.Imaging.pngimage, System.IOUtils,Winapi.ShellAPI;
 
 type
   TfrmLogin = class(TForm)
@@ -34,6 +34,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnEntrarClick(Sender: TObject);
     procedure btnSairClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     bFechar:Boolean;
@@ -96,9 +97,23 @@ begin
  CanClose:=bFechar;
 end;
 
+procedure TfrmLogin.FormCreate(Sender: TObject);
+begin
+  ShellExecute(0, 'open', 'C:\Users\devmv\Desktop\ERP-System-in-Delphi\ContagemGit.bat', nil, nil, SW_HIDE);
+end;
+
 procedure TfrmLogin.FormShow(Sender: TObject);
+var versao: string;
 begin
   bFechar:=False;
+  if FileExists('C:\Users\devmv\Desktop\ERP-System-in-Delphi\versao.txt') then
+  begin
+    Versao := Trim(TFile.ReadAllText('C:\Users\devmv\Desktop\ERP-System-in-Delphi\versao.txt'));
+    Label6.Caption := 'Versão 1.0.' + Versao;
+  end
+  else
+    Label6.Caption := '1.0.0';
 end;
+
 
 end.

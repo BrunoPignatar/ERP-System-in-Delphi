@@ -1,6 +1,10 @@
 @echo off
+
 cd /d "%~dp0"
 
-git rev-list --count HEAD > versao.txt
+if not exist ".git" (
+  echo NAO EH REPOSITORIO GIT > versao.txt
+  exit
+)
 
-exit
+git rev-list --count HEAD > versao.txt

@@ -100,6 +100,7 @@ end;
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
   ShellExecute(0, 'open', 'C:\Users\devmv\Desktop\ERP-System-in-Delphi\ContagemGit.bat', nil, nil, SW_HIDE);
+   Sleep(500);
 end;
 
 procedure TfrmLogin.FormShow(Sender: TObject);
