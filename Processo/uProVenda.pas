@@ -8,7 +8,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ExtCtrls, Vcl.ComCtrls, uDTMConexao, uDTMVenda, RxToolEdit,
-  RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto, math, System.IOUtils,System.JSON;
+  RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto, math, System.IOUtils,System.JSON, PngBitBtn;
 
 type
   TfrmProVenda = class(TfrmTelaHeranca)
@@ -48,10 +48,10 @@ type
     QryCSVnomeProduto: TStringField;
     QryCSVquantidade: TFMTBCDField;
     QryCSVcodProduto: TFDAutoIncField;
-    btnCSV: TSpeedButton;
-    btnTxt: TSpeedButton;
-    btnJson: TSpeedButton;
-    btnHTML: TSpeedButton;
+    PngBitBtn1: TPngBitBtn;
+    PngBitBtn2: TPngBitBtn;
+    PngBitBtn3: TPngBitBtn;
+    PngBitBtn4: TPngBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -80,6 +80,10 @@ type
     procedure btnTxtClick(Sender: TObject);
     procedure btnJsonClick(Sender: TObject);
     procedure btnHTMLClick(Sender: TObject);
+    procedure PngBitBtn1Click(Sender: TObject);
+    procedure PngBitBtn2Click(Sender: TObject);
+    procedure PngBitBtn3Click(Sender: TObject);
+    procedure PngBitBtn4Click(Sender: TObject);
 
 
   private
@@ -215,6 +219,38 @@ begin
      edtQuantidade.Value:=1;
      edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
   end;
+end;
+
+procedure TfrmProVenda.PngBitBtn1Click(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarCSV(QryCSV);
+  QryCSV.Close;
+end;
+
+procedure TfrmProVenda.PngBitBtn2Click(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarTXT(QryCSV);
+  QryCSV.Close;
+end;
+
+procedure TfrmProVenda.PngBitBtn3Click(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarJSON(QryCSV);
+  QryCSV.Close;
+end;
+
+procedure TfrmProVenda.PngBitBtn4Click(Sender: TObject);
+begin
+  inherited;
+  QryCSV.Open();
+  ExportarHTML(QryCSV);
+  QryCSV.Close;
 end;
 
 procedure TfrmProVenda.btnAdicionarItemClick(Sender: TObject);
@@ -780,14 +816,23 @@ end;
 procedure TfrmProVenda.ExportarTXT(ADataset: TDataSet);
 var
   Lista: TStringList;
+  UltimaVenda: string;
 begin
   Lista := TStringList.Create;
   try
     Lista.Add('CodVenda | NomeCliente | NomeProduto | CodProduto | Quantidade');
 
+     UltimaVenda := '';
+
     ADataset.First;
     while not ADataset.Eof do
     begin
+
+      if (UltimaVenda <> '') and
+         (UltimaVenda <> ADataset.FieldByName('vendaId').AsString) then
+      begin
+        Lista.Add('');
+      end;
       Lista.Add(
         ADataset.FieldByName('vendaId').AsString + ' | ' +
         ADataset.FieldByName('nomeCliente').AsString + ' | ' +
@@ -811,13 +856,23 @@ procedure TfrmProVenda.ExportarJSON(ADataset: TDataSet);
 var
   JSONArray: TJSONArray;
   JSONObject: TJSONObject;
+  ultimavenda: string;
 begin
   JSONArray := TJSONArray.Create;
+  ultimavenda := '';
   try
     ADataset.First;
 
     while not ADataset.Eof do
     begin
+
+      if (UltimaVenda <> '') and
+       (UltimaVenda <> ADataset.FieldByName('vendaId').AsString) then
+      begin
+        JSONArray.AddElement(TJSONObject.Create.AddPair('separador', ''));
+      end;
+
+
       JSONObject := TJSONObject.Create;
 
       JSONObject.AddPair('vendaId', ADataset.FieldByName('vendaId').AsString);
@@ -827,6 +882,8 @@ begin
       JSONObject.AddPair('quantidade', ADataset.FieldByName('quantidade').AsString);
 
       JSONArray.AddElement(JSONObject);
+
+      UltimaVenda := ADataset.FieldByName('vendaId').AsString;
 
       ADataset.Next;
     end;
@@ -845,8 +902,10 @@ end;
 procedure TfrmProVenda.ExportarHTML(ADataset: TDataSet);
 var
   SL: TStringList;
+  ultimavenda:string;
 begin
   SL := TStringList.Create;
+  ultimavenda:='';
   try
     SL.Add('<html>');
     SL.Add('<head>');
@@ -874,6 +933,14 @@ begin
 
     while not ADataset.Eof do
     begin
+
+      if (UltimaVenda <> '') and
+        (UltimaVenda <> ADataset.FieldByName('vendaId').AsString) then
+      begin
+        SL.Add('<tr><td colspan="5">&nbsp;</td></tr>');
+      end;
+
+
       SL.Add('<tr>');
       SL.Add('<td>' + ADataset.FieldByName('vendaId').AsString + '</td>');
       SL.Add('<td>' + ADataset.FieldByName('nomeCliente').AsString + '</td>');
@@ -881,6 +948,8 @@ begin
       SL.Add('<td>' + ADataset.FieldByName('codProduto').AsString + '</td>');
       SL.Add('<td>' + ADataset.FieldByName('quantidade').AsString + '</td>');
       SL.Add('</tr>');
+
+      UltimaVenda := ADataset.FieldByName('vendaId').AsString;
 
       ADataset.Next;
     end;

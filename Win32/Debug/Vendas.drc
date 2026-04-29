@@ -2784,7 +2784,7 @@ END
 /* c:\program files (x86)\embarcadero\studio\19.0\lib\Win32\release\Vcl.DBPWDlg.dfm */
 /* c:\program files (x86)\embarcadero\studio\19.0\lib\Win32\release\dbctrls.res */
 /* c:\program files (x86)\embarcadero\studio\19.0\lib\Win32\release\dbgrids.res */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMConexao.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uDTMConexao.dfm */
 /* C:\Users\devmv\Desktop\componentes\unrxlib_275_u_1_0_23\units\RxConst.res */
 /* c:\program files (x86)\embarcadero\studio\19.0\lib\Win32\release\filectrl.res */
 /* C:\Users\devmv\Desktop\componentes\unrxlib_275_u_1_0_23\units\RxCtrls.res */
@@ -2793,38 +2793,38 @@ END
 /* C:\Users\devmv\Desktop\componentes\unrxlib_275_u_1_0_23\units\RxToolEdit.res */
 /* C:\Users\devmv\Desktop\componentes\unrxlib_275_u_1_0_23\units\RxCalc.res */
 /* C:\Users\devmv\Desktop\componentes\unrxlib_275_u_1_0_23\units\RxCurrEdit.res */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uFrmAtualizaDB.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uFrmAtualizaDB.dfm */
 /* C:\Componentes\fortesreport-ce-master\Binary\LibD25\RLReport.res */
 /* c:\program files (x86)\embarcadero\studio\19.0\lib\Win32\release\TeeFonts.res */
 /* c:\program files (x86)\embarcadero\studio\19.0\lib\Win32\release\TeeResou.res */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCategorias.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMVenda.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\heranca\uTelaHerancaConsulta.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Consulta\uConCategoria.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadFornecedor.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Consulta\uConFornecedor.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadProduto.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Consulta\uConCliente.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Consulta\uConProdutos.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Processo\uProVenda.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\login\uLogin.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadUsuario.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCategoria.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCadCliente.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCadClienteFicha.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCadProduto.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCadProdutoComGrupoCategoria.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uSelecionarData.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelVendaPorData.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\login\uAlterarSenha.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadAcaoAcesso.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\login\uUsuarioVsAcoes.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMGrafico.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Controle\uConLog.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Controle\uConFinanceiro.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\uPrincipal.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\heranca\uTelaHeranca.dfm */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Vendas.res */
-/* C:\Users\devmv\Desktop\ProjetoDelphi\Vendas.drf */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadCategorias.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uDTMVenda.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\heranca\uTelaHerancaConsulta.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Consulta\uConCategoria.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadFornecedor.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Consulta\uConFornecedor.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadProduto.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelProVenda.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Consulta\uConCliente.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Consulta\uConProdutos.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Processo\uProVenda.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\login\uLogin.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadCliente.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelCategoria.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelCadCliente.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelCadClienteFicha.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelCadProduto.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelCadProdutoComGrupoCategoria.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uSelecionarData.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelVendaPorData.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\login\uAlterarSenha.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadAcaoAcesso.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\login\uUsuarioVsAcoes.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uDTMGrafico.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Controle\uConLog.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Controle\uConFinanceiro.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\uPrincipal.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\heranca\uTelaHeranca.dfm */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Vendas.res */
+/* C:\Users\devmv\Desktop\ERP-System-in-Delphi\Vendas.drf */
