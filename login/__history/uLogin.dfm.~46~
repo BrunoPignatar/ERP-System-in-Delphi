@@ -1,0 +1,217 @@
+object frmLogin: TfrmLogin
+  Left = 0
+  Top = 0
+  BorderIcons = []
+  BorderStyle = bsNone
+  Caption = 'LOGIN '#55357#56594
+  ClientHeight = 451
+  ClientWidth = 874
+  Color = 16776176
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCloseQuery = FormCloseQuery
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 874
+    Height = 451
+    Align = alClient
+    Color = 16776176
+    ParentBackground = False
+    TabOrder = 0
+    ExplicitLeft = 8
+    ExplicitTop = -8
+    object Label2: TLabel
+      Left = 536
+      Top = 80
+      Width = 233
+      Height = 23
+      Caption = 'Digite seu Usu'#225'rio e Senha:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -19
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Panel2: TPanel
+      Left = 1
+      Top = 1
+      Width = 408
+      Height = 449
+      Align = alLeft
+      Color = clAppWorkSpace
+      ParentBackground = False
+      TabOrder = 0
+    end
+    object Panel3: TPanel
+      Left = 503
+      Top = 137
+      Width = 313
+      Height = 50
+      TabOrder = 1
+      object Label1: TLabel
+        Left = 1
+        Top = 1
+        Width = 311
+        Height = 16
+        Align = alTop
+        Caption = 'NOME DO USU'#193'RIO:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 123
+      end
+      object edtUsuario: TEdit
+        Left = 1
+        Top = 17
+        Width = 311
+        Height = 31
+        Align = alTop
+        BorderStyle = bsNone
+        Color = 16776176
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 14
+      end
+      object Panel4: TPanel
+        Left = 1
+        Top = 48
+        Width = 311
+        Height = 1
+        Align = alBottom
+        Color = clActiveBorder
+        ParentBackground = False
+        TabOrder = 1
+        ExplicitTop = 70
+        ExplicitWidth = 303
+      end
+    end
+    object Panel7: TPanel
+      Left = 504
+      Top = 211
+      Width = 313
+      Height = 59
+      TabOrder = 2
+      object Label3: TLabel
+        Left = 1
+        Top = 1
+        Width = 311
+        Height = 16
+        Align = alTop
+        Caption = 'SENHA DO USU'#193'RIO'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 17
+        ExplicitTop = -7
+      end
+      object Panel8: TPanel
+        Left = 1
+        Top = 57
+        Width = 311
+        Height = 1
+        Align = alBottom
+        Color = clActiveBorder
+        ParentBackground = False
+        TabOrder = 0
+        ExplicitTop = 81
+      end
+      object edtSenha: TEdit
+        Left = 1
+        Top = 17
+        Width = 311
+        Height = 40
+        Align = alTop
+        BorderStyle = bsNone
+        Color = 16776176
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        PasswordChar = '*'
+        TabOrder = 1
+        ExplicitLeft = 65
+        ExplicitTop = 1
+      end
+    end
+    object Panel5: TPanel
+      Left = 563
+      Top = 283
+      Width = 185
+      Height = 41
+      BevelOuter = bvNone
+      Color = 8404992
+      ParentBackground = False
+      TabOrder = 3
+      object btnEntrar: TSpeedButton
+        Left = 0
+        Top = 0
+        Width = 185
+        Height = 41
+        Align = alClient
+        Caption = 'Confirmar'
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        OnClick = btnEntrarClick
+        ExplicitLeft = 1
+        ExplicitTop = 2
+        ExplicitWidth = 183
+        ExplicitHeight = 39
+      end
+    end
+    object Panel6: TPanel
+      Left = 563
+      Top = 330
+      Width = 185
+      Height = 39
+      BevelOuter = bvNone
+      Color = 8404992
+      ParentBackground = False
+      TabOrder = 4
+      object btnSair: TSpeedButton
+        Left = 0
+        Top = 0
+        Width = 185
+        Height = 39
+        Align = alClient
+        Caption = 'Sair'
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        OnClick = btnSairClick
+        ExplicitHeight = 40
+      end
+    end
+  end
+end

@@ -4,23 +4,37 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Vcl.GraphUtil;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Vcl.GraphUtil,
+  Vcl.Imaging.pngimage, System.IOUtils,Winapi.ShellAPI;
 
 type
   TfrmLogin = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
     Label1: TLabel;
-    Label2: TLabel;
     edtUsuario: TEdit;
+    Panel4: TPanel;
+    Panel7: TPanel;
+    Label3: TLabel;
+    Panel8: TPanel;
     edtSenha: TEdit;
-    btnFechar: TBitBtn;
-    btnAcessar: TBitBtn;
+    Label2: TLabel;
+    Panel5: TPanel;
+    btnEntrar: TSpeedButton;
+    Panel6: TPanel;
+    btnSair: TSpeedButton;
     Image1: TImage;
-    PaintBox1: TPaintBox;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormShow(Sender: TObject);
-    procedure btnFecharClick(Sender: TObject);
-    procedure btnAcessarClick(Sender: TObject);
-    procedure PaintBox1Paint(Sender: TObject);
+    procedure btnEntrarClick(Sender: TObject);
+    procedure btnSairClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     bFechar:Boolean;
@@ -40,7 +54,9 @@ uses
 
 {$R *.dfm}
 
-procedure TfrmLogin.btnAcessarClick(Sender: TObject);
+
+
+procedure TfrmLogin.btnEntrarClick(Sender: TObject);
 var oUsuario:TUsuario;
 begin
   try
@@ -55,7 +71,7 @@ begin
     end
     else begin
       MessageDlg('Usuário Inválido', mtInformation,[mbOK],0);
-      edtUsuario.SetFocus;
+
     end;
   finally
     if Assigned(oUsuario) then
@@ -63,8 +79,9 @@ begin
   end;
 end;
 
-procedure TfrmLogin.btnFecharClick(Sender: TObject);
 
+
+procedure TfrmLogin.btnSairClick(Sender: TObject);
 begin
    if TrocaUsuario then
    begin
@@ -77,23 +94,26 @@ end;
 
 procedure TfrmLogin.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-    CanClose:=bFechar;
+ CanClose:=bFechar;
+end;
+
+procedure TfrmLogin.FormCreate(Sender: TObject);
+begin
+  ShellExecute(0, 'open', 'C:\Users\devmv\Desktop\ERP-System-in-Delphi\ContagemGit.bat', nil, nil, SW_HIDE);
 end;
 
 procedure TfrmLogin.FormShow(Sender: TObject);
+var versao: string;
 begin
   bFechar:=False;
+  if FileExists('C:\Users\devmv\Desktop\ERP-System-in-Delphi\versao.txt') then
+  begin
+    Versao := Trim(TFile.ReadAllText('C:\Users\devmv\Desktop\ERP-System-in-Delphi\versao.txt'));
+    Label6.Caption := 'Versão 1.0.' + Versao;
+  end
+  else
+    Label6.Caption := '1.0.0';
 end;
 
-procedure TfrmLogin.PaintBox1Paint(Sender: TObject);
-begin
-  GradientFillCanvas(
-    PaintBox1.Canvas,
-    clBlack,      // início (topo)
-    $00FFB347,    // azul claro
-    PaintBox1.ClientRect,
-    gdHorizontal
-  );
-end;
 
 end.
