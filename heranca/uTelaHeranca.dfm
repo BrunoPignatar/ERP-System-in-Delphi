@@ -179,7 +179,7 @@
   object QryListagem: TFDQuery
     Connection = dtmConexao.dtmPrincipal
     SQL.Strings = (
-      'select categoriaId, descricao from categorias;')
+      'select categoriaId, descricao from categorias')
     Left = 460
     Top = 48
   end

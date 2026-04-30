@@ -1,4 +1,4 @@
-unit uProVenda;
+Ôªøunit uProVenda;
 
 interface
 
@@ -8,7 +8,14 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ExtCtrls, Vcl.ComCtrls, uDTMConexao, uDTMVenda, RxToolEdit,
-  RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto, math, System.IOUtils,System.JSON, PngBitBtn;
+  RxCurrEdit, uEnum, cProVenda, System.IniFiles, uCadProduto, math, System.IOUtils,System.JSON, PngBitBtn,
+  IdSMTP,
+  IdMessage,
+  IdSSLOpenSSL,
+  IdExplicitTLSClientServerBase,
+  IdAttachmentFile, IdTCPConnection, IdTCPClient, IdMessageClient, IdSMTPBase, IdBaseComponent, IdComponent, IdIOHandler,
+  IdIOHandlerSocket, IdIOHandlerStack, IdSSL,
+  Vcl.Printers;
 
 type
   TfrmProVenda = class(TfrmTelaHeranca)
@@ -52,6 +59,12 @@ type
     PngBitBtn2: TPngBitBtn;
     PngBitBtn3: TPngBitBtn;
     PngBitBtn4: TPngBitBtn;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    IdSMTP1: TIdSMTP;
+    IdMessage1: TIdMessage;
+    QryEmail: TFDQuery;
+    QryEmailclienteId: TFDAutoIncField;
+    QryEmailemail: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -84,6 +97,7 @@ type
     procedure PngBitBtn2Click(Sender: TObject);
     procedure PngBitBtn3Click(Sender: TObject);
     procedure PngBitBtn4Click(Sender: TObject);
+    procedure btnEmailClick(Sender: TObject);
 
 
   private
@@ -100,6 +114,7 @@ type
     procedure ExportarTXT(ADataset: TDataSet);
     procedure ExportarJSON(ADataset: TDataSet);
     procedure ExportarHTML(ADataset: TDataSet);
+    procedure EnviarEmail;
 
   public
     { Public declarations }
@@ -113,7 +128,7 @@ var
 implementation
 
 uses
-  uRelProVenda, cFuncao, uCadCliente, uConCliente, cUsuarioLogado, uPrincipal, uConProdutos;
+  uRelProVenda, cFuncao, uCadCliente, uConCliente, cUsuarioLogado, uPrincipal, uConProdutos, cCadCategoria, cCadCliente;
 
 {$R *.dfm}
 
@@ -182,9 +197,9 @@ begin
   if(dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 3) then
   begin
     if obs <> '' then
-      ShowMessage('Cliente com a seguinte observaÁ„o: ' + sLineBreak + obs)
+      ShowMessage('Cliente com a seguinte observa√ß√£o: ' + sLineBreak + obs)
     else
-      ShowMessage('Cliente em AtenÁ„o!!' + sLineBreak+ 'Sem ObservaÁıes');
+      ShowMessage('Cliente em Aten√ß√£o!!' + sLineBreak+ 'Sem Observa√ß√µes');
   end;
 
   if(dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 2) then
@@ -195,7 +210,7 @@ begin
       lkpCliente.KeyValue:='';
     end
     else  begin
-      ShowMessage('Cliente BLOQUEADO!!' + sLineBreak+ 'Sem ObservaÁıes');
+      ShowMessage('Cliente BLOQUEADO!!' + sLineBreak+ 'Sem Observa√ß√µes');
       lkpCliente.KeyValue:='';
     end;
   end;
@@ -271,7 +286,7 @@ begin
 
   if qntDigitada = estoque then
   begin
-   MessageDlg('ApÛs est· venda o estoque ser· zerado!!',  mtWarning,[mbOK],0);
+   MessageDlg('Ap√≥s est√° venda o estoque ser√° zerado!!',  mtWarning,[mbOK],0);
   end
   else if estoque <  qntmini then    begin
    MessageDlg('Estoque Baixo!!'  +
@@ -456,6 +471,12 @@ begin
   QryCSV.Close;
 end;
 
+procedure TfrmProVenda.btnEmailClick(Sender: TObject);
+begin
+  inherited;
+  EnviarEmail;
+end;
+
 procedure TfrmProVenda.btnGravarClick(Sender: TObject);
 begin
 
@@ -485,12 +506,18 @@ begin
 
   if dtmVendas.cdsItensVenda.IsEmpty then
   begin
-    MessageDlg('Adicione pelo menos um item ‡ venda', mtInformation, [mbOK], 0);
+    MessageDlg('Adicione pelo menos um item √† venda', mtInformation, [mbOK], 0);
     lkpProduto.SetFocus;
     Abort;
   end;
 
-  ShowMessage('Deseja Finalizar a venda?');
+  if MessageDlg('Deseja Realizar a venda?', mtInformation, [mbYes, mbNo], 0) <> mrYes then
+    Abort;
+
+  QryCSV.Open();
+  ExportarCSV(QryCSV);
+  QryCSV.Close;
+  EnviarEmail;   // tentar usar esse enviarEmail para outras coisas mais uteis
 
   inherited;
   LimparCds;
@@ -680,7 +707,7 @@ begin
 end;
 
 procedure TfrmProVenda.FormClose(Sender: TObject; var Action: TCloseAction);
-var ArquivoINI:TIniFile; // Vari·vel para criar o arquivo INI para salvar preferÍncias de Grid por usu·rio.
+var ArquivoINI:TIniFile; // Vari√°vel para criar o arquivo INI para salvar prefer√™ncias de Grid por usu√°rio.
     I: Integer; // Ponteiro para passar por todas as colunas (pastas)
 begin
   inherited;
@@ -692,15 +719,15 @@ begin
   ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'PreferenciasGridVendas.ini'); //Criamos o INI File na pasta do .exe
 
   try
-    for I := 0 to dbgridItensVenda.Columns.Count - 1 do  // O laÁo percorre do 0 ‡ ultima coluna desenhada no Grid
+    for I := 0 to dbgridItensVenda.Columns.Count - 1 do  // O la√ßo percorre do 0 √† ultima coluna desenhada no Grid
     begin
       ArquivoINI.WriteInteger(
-      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem È a preferÍncia.
+      oUsuarioLogado.nome, // Usamos o UsuarioLogado para separar de quem √© a prefer√™ncia.
       'Coluna_' + IntToStr(I), // Nomeamos a pasta com o Indice da coluna.
       dbgridItensVenda.Columns[I].Width); //A largura atual da coluna naquele exato segundo.
     end;
   finally
-    ArquivoINI.Free;// Independentemente de dar erro ou n„o, sempre fechamos o caderninho para liberar a memÛria
+    ArquivoINI.Free;// Independentemente de dar erro ou n√£o, sempre fechamos o caderninho para liberar a mem√≥ria
   end;
 
   QryListagem.Close;
@@ -732,18 +759,18 @@ var ArquivoINI: TIniFile ; //Referenciamos novamente nosso Arquivo
     I:Integer; //Passamos o ponteiro
 begin
   inherited;
-  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGridVendas.ini');// Apontamos para o mesmo endereÁo que salvamos no FormClose
+  ArquivoINI := TIniFile.Create(ExtractFilePath(Application.ExeName)+ 'PreferenciasGridVendas.ini');// Apontamos para o mesmo endere√ßo que salvamos no FormClose
 
   try
     for I := 0 to dbgridItensVenda.Columns.Count - 1 do //Percorremos o grid recem desenhado
     begin
-      dbgridItensVenda.Columns[I].Width := ArquivoINI.ReadInteger //Redefinimos a largura do grid baseado no que est· desenhado
+      dbgridItensVenda.Columns[I].Width := ArquivoINI.ReadInteger //Redefinimos a largura do grid baseado no que est√° desenhado
       (oUsuarioLogado.nome, // Pegamos o UsuarioLogado
-      'Coluna_' + IntToStr(I),//Procuramos a anotaÁ„o correspondente ‡ coluna atual.
-      dbgridItensVenda.Columns[I].Width); //Se for primeiro acesso, mantÈm o Width padr„o do Delphi.
+      'Coluna_' + IntToStr(I),//Procuramos a anota√ß√£o correspondente √† coluna atual.
+      dbgridItensVenda.Columns[I].Width); //Se for primeiro acesso, mant√©m o Width padr√£o do Delphi.
     end;
   finally
-    ArquivoINI.Free; //Liberamos o INI da memÛria.
+    ArquivoINI.Free; //Liberamos o INI da mem√≥ria.
   end;
 
 end;
@@ -800,10 +827,10 @@ begin
       ADataset.Next;
     end;
      try
-      Lista.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.csv');
+      Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.csv');
     except
       on E: EFCreateError do
-        ShowMessage('Para exportar CSV È preciso fechar o arquivo j· aberto.');
+        ShowMessage('Para exportar CSV √© preciso fechar o arquivo j√° aberto.');
       on E: Exception do
         ShowMessage('Erro ao exportar CSV: ' + E.Message);
     end;
@@ -844,7 +871,7 @@ begin
       ADataset.Next;
     end;
 
-    Lista.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.txt');
+    Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.txt');
   finally
     Lista.Free;
   end;
@@ -888,7 +915,7 @@ begin
       ADataset.Next;
     end;
 
-    TFile.WriteAllText('C:\Users\devmv\Desktop\Conversao\Vendas.json',
+    TFile.WriteAllText('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.json',
       JSONArray.ToString
     );
 
@@ -958,10 +985,69 @@ begin
     SL.Add('</body>');
     SL.Add('</html>');
 
-    SL.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.html');
+    SL.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.html');
   finally
     SL.Free;
   end;
 end;
+
+
+procedure TfrmProVenda.EnviarEmail;
+var
+  SMTP: TIdSMTP;
+  Msg: TIdMessage;
+  SSL: TIdSSLIOHandlerSocketOpenSSL;
+  Attachment: TIdAttachmentFile;
+  EmailCliente: string;
+begin
+  QryEmail.Close;
+  QryEmail.SQL.Add('SELECT email from clientes where clienteId = :clienteId');
+  QryEmail.ParamByName('clienteId').AsInteger := lkpCliente.KeyValue;
+  QryEmail.Open();
+
+  EmailCliente:= QryEmail.FieldByName('email').AsString;
+
+  SMTP := TIdSMTP.Create(nil);
+  Msg := TIdMessage.Create(nil);
+  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+
+  try
+    // Configura√ß√£o do servidor (exemplo Gmail)
+    SMTP.Host := 'smtp.gmail.com';
+    SMTP.Port := 587;
+    SMTP.Username := 'bmpignatari@gmail.com';
+    SMTP.Password := 'dcux beak sukc mdjg';
+
+    SMTP.IOHandler := SSL;
+    SMTP.UseTLS := utUseExplicitTLS;
+
+    // Configura√ß√£o do SSL
+    SSL.SSLOptions.Method := sslvTLSv1_2;
+
+    // Montando o e-mail
+    Msg.From.Address := 'bmpignatari@gmail.com';
+    Msg.Recipients.EmailAddresses := EmailCliente;
+    Msg.Subject := 'Relat√≥rio de venda';
+    Msg.Body.Text := 'receba esse doce';
+    Attachment := TIdAttachmentFile.Create(Msg.MessageParts,
+    'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas\Vendas.csv');
+
+    // Envio
+    SMTP.Connect;
+    try
+      SMTP.Send(Msg);
+    finally
+      SMTP.Disconnect;
+    end;
+
+    ShowMessage('Email enviado com sucesso!');
+  finally
+    SMTP.Free;
+    Msg.Free;
+    SSL.Free;
+  end;
+end;
+
+
 
 end.

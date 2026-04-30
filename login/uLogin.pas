@@ -5,7 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Vcl.GraphUtil,
-  Vcl.Imaging.pngimage, System.IOUtils,Winapi.ShellAPI;
+  Vcl.Imaging.pngimage, System.IOUtils,Winapi.ShellAPI
+  ,IdSMTP,
+  IdMessage,
+  IdSSLOpenSSL,
+  IdExplicitTLSClientServerBase,
+  IdAttachmentFile, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient, IdMessageClient, IdSMTPBase;
 
 type
   TfrmLogin = class(TForm)
@@ -16,25 +22,22 @@ type
     edtUsuario: TEdit;
     Panel4: TPanel;
     Panel7: TPanel;
-    Label3: TLabel;
     Panel8: TPanel;
     edtSenha: TEdit;
     Label2: TLabel;
-    Panel5: TPanel;
-    btnEntrar: TSpeedButton;
-    Panel6: TPanel;
-    btnSair: TSpeedButton;
     Image1: TImage;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    btnAcessar: TBitBtn;
+    btnfechar: TBitBtn;
+    Label3: TLabel;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormShow(Sender: TObject);
-    procedure btnEntrarClick(Sender: TObject);
-    procedure btnSairClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure btnAcessarClick(Sender: TObject);
+    procedure btnfecharClick(Sender: TObject);
   private
     { Private declarations }
     bFechar:Boolean;
@@ -56,7 +59,7 @@ uses
 
 
 
-procedure TfrmLogin.btnEntrarClick(Sender: TObject);
+procedure TfrmLogin.btnAcessarClick(Sender: TObject);
 var oUsuario:TUsuario;
 begin
   try
@@ -80,8 +83,7 @@ begin
 end;
 
 
-
-procedure TfrmLogin.btnSairClick(Sender: TObject);
+procedure TfrmLogin.btnfecharClick(Sender: TObject);
 begin
    if TrocaUsuario then
    begin
@@ -97,12 +99,6 @@ begin
  CanClose:=bFechar;
 end;
 
-procedure TfrmLogin.FormCreate(Sender: TObject);
-begin
-  ShellExecute(0, 'open', 'C:\Users\devmv\Desktop\ERP-System-in-Delphi\ContagemGit.bat', nil, nil, SW_HIDE);
-   Sleep(500);
-end;
-
 procedure TfrmLogin.FormShow(Sender: TObject);
 var versao: string;
 begin
@@ -115,6 +111,9 @@ begin
   else
     Label6.Caption := '1.0.0';
 end;
+
+
+
 
 
 end.

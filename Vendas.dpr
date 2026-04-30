@@ -50,8 +50,8 @@ uses
   cCadFornecedor in 'Classes\cCadFornecedor.pas',
   uConFornecedor in 'Consulta\uConFornecedor.pas' {frmConFornecedor},
   uConLog in 'Controle\uConLog.pas' {frmLog},
-  uConFinanceiro in 'Controle\uConFinanceiro.pas' {frmConFinanca};
-
+  uConFinanceiro in 'Controle\uConFinanceiro.pas' {frmConFinanca},
+  cEmail in 'cEmail.pas';
 
 {$R *.res}
 

@@ -225,7 +225,7 @@ procedure TfrmTelaHeranca.dbgrdListagemTitleClick(Column: TColumn);
     ControlarIndiceTab(pgcPrincipal, 1);
   end;
 
-  procedure TfrmTelaHeranca.btnPesquisarClick(Sender: TObject);
+procedure TfrmTelaHeranca.btnPesquisarClick(Sender: TObject);
 var I:Integer;
     TipoCampo:TFieldType;
     NomeCampo: string;
@@ -303,7 +303,7 @@ begin
 end;
 
 
- procedure TfrmTelaHeranca.mskEditChange(Sender: TObject);
+procedure TfrmTelaHeranca.mskEditChange(Sender: TObject);
 var Date:TDateTime;
 begin
 

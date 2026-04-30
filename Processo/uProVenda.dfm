@@ -10,15 +10,16 @@
   inherited pgcPrincipal: TPageControl
     Width = 1037
     Height = 410
+    ActivePage = Manutenção
     ExplicitWidth = 1037
     ExplicitHeight = 410
     inherited Listagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1029
       ExplicitHeight = 382
       inherited pnlListagemTopo: TPanel
         Width = 1029
-        ExplicitLeft = 3
-        ExplicitTop = -6
         ExplicitWidth = 1029
         object PngBitBtn1: TPngBitBtn
           Left = 378
@@ -590,6 +591,53 @@
       FieldName = 'codProduto'
       Origin = 'codProduto'
       ReadOnly = True
+    end
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 848
+    Top = 248
+  end
+  object IdSMTP1: TIdSMTP
+    SASLMechanisms = <>
+    Left = 896
+    Top = 168
+  end
+  object IdMessage1: TIdMessage
+    AttachmentEncoding = 'UUE'
+    BccList = <>
+    CCList = <>
+    Encoding = meDefault
+    FromList = <
+      item
+      end>
+    Recipients = <>
+    ReplyTo = <>
+    ConvertPreamble = True
+    Left = 960
+    Top = 168
+  end
+  object QryEmail: TFDQuery
+    Connection = dtmConexao.dtmPrincipal
+    SQL.Strings = (
+      'select clienteId, email from clientes')
+    Left = 468
+    Top = 8
+    object QryEmailclienteId: TFDAutoIncField
+      FieldName = 'clienteId'
+      Origin = 'clienteId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryEmailemail: TStringField
+      FieldName = 'email'
+      Origin = 'email'
+      Size = 100
     end
   end
 end

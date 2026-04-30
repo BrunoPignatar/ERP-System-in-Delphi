@@ -1,4 +1,4 @@
-unit uRelProVenda;
+﻿unit uRelProVenda;
 
 interface
 
@@ -7,7 +7,6 @@ uses
   Vcl.Controls, Vcl.Forms, uDTMConexao, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, RLReport, RLFilters, RLPDFFilter;
-
 type
   TfrmRelProVenda = class(TForm)
     QryVendas: TFDQuery;
@@ -66,6 +65,7 @@ type
     QryVendastotalVenda: TBCDField;
     procedure FormDestroy(Sender: TObject);
   private
+
     { Private declarations }
   public
     { Public declarations }
@@ -85,3 +85,4 @@ begin
 end;
 
 end.
+

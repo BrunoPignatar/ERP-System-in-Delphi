@@ -1,0 +1,639 @@
+﻿inherited frmProVenda: TfrmProVenda
+  Caption = 'Vendas'
+  ClientHeight = 451
+  ClientWidth = 1037
+  Position = poScreenCenter
+  ExplicitWidth = 1043
+  ExplicitHeight = 480
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    Width = 1037
+    Height = 410
+    ActivePage = Manutenção
+    ExplicitWidth = 1037
+    ExplicitHeight = 410
+    inherited Listagem: TTabSheet
+      ExplicitWidth = 1029
+      ExplicitHeight = 382
+      inherited pnlListagemTopo: TPanel
+        Width = 1029
+        ExplicitWidth = 1029
+        object PngBitBtn1: TPngBitBtn
+          Left = 378
+          Top = 23
+          Width = 113
+          Height = 24
+          Caption = 'Exportar CSV'
+          TabOrder = 2
+          OnClick = PngBitBtn1Click
+          PngImage.Data = {
+            89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+            61000000097048597300000B1300000B1301009A9C18000000E14944415478DA
+            ADD1BF0B01611CC771B79864C7BF20062BD92C7EAC52CCCAC06022E222651125
+            FF80D9C26610F907E47F603098184CBC9FFAAA739D74E7BEF5EA9EBE3DF779EE
+            7B8FE6F9B334B70306A8C36BEADF91C1F657C003015C4DFD272EC89B43348B8D
+            5663A97E020B14B07112601CC76737E0EB1ED7036C970A505757C5182D8C50C6
+            044D9C91C21A41AB0075756114D1C10D711C64CF0A474490955E12BB7780796E
+            757A0F5DCCE459C25CD65D3948576BE317A4650C5551ECE1975397C821262FBF
+            4B57017DD4E4E53686A8608A86CC7D4248FEC7C74D38BD05F7025E759835917C
+            DB39E30000000049454E44AE426082}
+        end
+        object PngBitBtn2: TPngBitBtn
+          Left = 497
+          Top = 23
+          Width = 113
+          Height = 24
+          Caption = 'Exportar TXT'
+          TabOrder = 3
+          OnClick = PngBitBtn2Click
+          PngImage.Data = {
+            89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+            61000000097048597300000B1300000B1301009A9C18000000864944415478DA
+            6364A0103052DB8036202E06623634F1AF40EC03C4070819F013882581F81D9A
+            F87F207E05C4E1E88630625188CD5B20715B205E0BC49140BC8F1C0390BDC343
+            AA0138D550DD009201361720CB9D01E259409C06C42658E47106184C1CA47132
+            10E7420D22CA0BC80A4069E219104B01F173720CA0D805E86140FB5820190000
+            6C8B2711D27AAC7C0000000049454E44AE426082}
+        end
+        object PngBitBtn3: TPngBitBtn
+          Left = 616
+          Top = 23
+          Width = 113
+          Height = 24
+          Caption = 'Exportar JSON'
+          TabOrder = 4
+          OnClick = PngBitBtn3Click
+          PngImage.Data = {
+            89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+            61000000097048597300000B1300000B1301009A9C18000000C14944415478DA
+            6364A0103052DB8036202E06623634F1AF40EC03C4070819F013882581F81D9A
+            F87F207E05C4E1E88630625188CD5B20715B205E0BC49140BC8F1C0390BDC343
+            AA0138D550DD009201B2013093FB80381D882702711503246AF380780210D740
+            D51902F179907A6C067C01621B20BE00150745AD0E105F06620EA8BA495043B1
+            1A00B2BD19881B80781A9238327D0388356006A0DB0002FA407C048879897141
+            0B10E743FD580BC49D409C05C45380B8128B3CCE30A03816C8020027213711EC
+            AF47EC0000000049454E44AE426082}
+        end
+        object PngBitBtn4: TPngBitBtn
+          Left = 735
+          Top = 21
+          Width = 113
+          Height = 26
+          Caption = 'Exportar HTML'
+          TabOrder = 5
+          OnClick = PngBitBtn4Click
+          PngImage.Data = {
+            89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+            61000000097048597300000B1300000B1301009A9C18000001224944415478DA
+            A5D23F48026118C7F1933268105AC2961C5D7288CCC172CACD55706B4D2C6AA9
+            A1A95910452341571517574737A345DBFA076D45D11F212707FF60DF171EE3D4
+            3BE9F0850F0777CFFDEE9EE77D6DDA9CCB66706F1787D8C11A3E7083AC5C4D03
+            169042182B2820861CF6D1460567181805A897B71047061E74B1847B9CE01CB7
+            389D0CD846C342EB3E34F50125D491972F1C4BBF43A951F3B8940F451190B6FE
+            029EB18757B4B0814F5D80137758850B35B8F5011D2C5B68A127B319FB83205E
+            4CFEC0748D1E16713D630665BCA32A757D2BBBA06A0E245CAD1F5CE1421FA056
+            125E6DFA1CA81A07DEE4AAFADFC4C364803A890944B4F19338AAC9CBB3457C23
+            8427A301F971247BBF0EBBDCF7CAD63D222D615F3327FC9F3577C02F61414311
+            753F22F70000000049454E44AE426082}
+        end
+      end
+      inherited dbgrdListagem: TDBGrid
+        Width = 1029
+        Height = 301
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'vendaId'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'clienteId'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'dataVenda'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'totalVenda'
+            Width = 100
+            Visible = True
+          end>
+      end
+    end
+    inherited Manutenção: TTabSheet
+      ExplicitWidth = 1029
+      ExplicitHeight = 382
+      object lbl4: TLabel
+        Left = 238
+        Top = 27
+        Width = 33
+        Height = 13
+        Caption = 'Cliente'
+      end
+      object Label1: TLabel
+        Left = 686
+        Top = 28
+        Width = 71
+        Height = 13
+        Caption = 'Data da Venda'
+      end
+      object btnNovoCliente: TSpeedButton
+        Left = 605
+        Top = 41
+        Width = 23
+        Height = 22
+        Glyph.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          18000000000000030000120B0000120B00000000000000000000FF00FFFF00FF
+          FF00FF0A6B0A0A6B0A0A6B0A0A6B0AFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFB25D130A6B0A42D37331B85A0A6B0AA8
+          4E0FA54A0EA4480DA1440DA0420C9F3F0C9D3E0BFF00FFFF00FFFF00FFFF00FF
+          B561140A6B0A78F3A440D1710A6B0AFBF0DEFBEFDAFBEDD5FBEBD1FBE9CDFBE7
+          C89E400BFF00FFFF00FF0A6B0A0A6B0A0A6B0A0A6B0A78F3A444D5740A6B0A0A
+          6B0A0A6B0A0A6B0AFCEDD6FBEBD1FBEACEA1430CFF00FFFF00FF0A6B0A78F3A4
+          53E4844FE1804CDD7C48D97845D67541D27231B85A0A6B0AFBEFDBFCEDD6FBEB
+          D1A3470DFF00FFFF00FF0A6B0A78F3A478F3A478F3A478F3A44DDE7D78F3A478
+          F3A442D3730A6B0AFCF1E0FBEFDBFBEDD7A64B0EFF00FFFF00FF0A6B0A0A6B0A
+          0A6B0A0A6B0A78F3A450E2810A6B0A0A6B0A0A6B0A0A6B0AFCF4E4FBF1E1FCEF
+          DCA94F0FFF00FFFF00FFFF00FFFF00FFC375190A6B0A78F3A454E5850A6B0AFC
+          F9F5FCF7F1FCF7EEFCF5E9FBF3E4FCF2E2AC5110FF00FFFF00FFFF00FFFF00FF
+          C579190A6B0A78F3A478F3A40A6B0AFCFAF7FCF9F5FCF7F2FCF7EEFBF6E9FBF3
+          E5AD5611FF00FFFF00FFFF00FFFF00FFC77C1A0A6B0A0A6B0A0A6B0A0A6B0AFC
+          FBFBFCFAF8FCF9F5FBF8F2FCF7EEFBF6EAB05A12FF00FFFF00FFFF00FFFF00FF
+          C97F1CFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFAFCFBF8FCF9F6FCF8F2FCF7
+          EFB35E13FF00FFFF00FFFF00FFFF00FFCC821CFCFCFCFCFCFCFCFCFCFCFCFCFC
+          FCFCFCFCFCFCFCFAFCFBF9FCFAF6FCF8F3B66214FF00FFFF00FFFF00FFFF00FF
+          CE851DFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFBFBFCFBF9FCFA
+          F7B96615FF00FFFF00FFFF00FFFF00FFCF861DFCFCFCFCFCFCFCFCFCFCFCFCFC
+          FCFCFCFCFCFCFCFCFCFCFCFCFCFBFCFBF8BC6A16FF00FFFF00FFFF00FFFF00FF
+          CF871DCF871DCE861DCC831CCC821CCA801BC87D1BC67A1AC47719C37419C172
+          17BF6F17FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF}
+        OnClick = btnNovoClienteClick
+      end
+      object btnPesquisarClientes: TSpeedButton
+        Left = 634
+        Top = 41
+        Width = 23
+        Height = 22
+        Glyph.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          18000000000000030000120B0000120B00000000000000000000FF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FF9B3B0A9B3B0A9B3B0A993B0DFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF9B3B0AFA
+          EAC2E9B171953B11FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FF9B3B0AFAE9C0EAB474953B11FF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF9B3B0AF9
+          E7BFEBB677953B11FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FFC3B6B09B3B0AA54D1E9B3B0A983B0EC3B8B4FF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFA86441C58355FA
+          DEB1F7D6A5B3724AAC6C4CFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFB89787A54E20F6D4A8FBE2B7F6D19DDBAB799A461FBDA79BFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFC5BEBBA0491DDDA876F9E3C2F9
+          DBADF4CB96E9B97FB17047A3542CFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFAE7559B86F40F6D6ACFBE9CDF7D5A4F2C68FEBB879CA905A984D28B68E
+          7AFF00FFFF00FFFF00FFFF00FFFF00FFBDA79B9F4516EBBC84FAE9D1FBE8CBF6
+          D09CEFC187E9B272D49758A7653C9B4419C5BEBBFF00FFFF00FFFF00FFC7C4C3
+          A4532BCD8E5BF5D5AAFBF5E9FAE2BEF3CB95EDBC80E7AD6ADF9C55B8743D924D
+          2BAE7254FF00FFFF00FFFF00FFB3856FAC5E30EFC187FAEEDEFCF9F5F7D6A9F1
+          C58DEBB778E4A862DF994EC179399B582E93411BC0ADA4FF00FFFF00FF9D3E0F
+          9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9A3B0B983B
+          0E973B0FA65B36FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF}
+        OnClick = btnPesquisarClientesClick
+      end
+      object edtVendaId: TLabeledEdit
+        Tag = 1
+        Left = 111
+        Top = 43
+        Width = 121
+        Height = 21
+        EditLabel.Width = 70
+        EditLabel.Height = 13
+        EditLabel.BiDiMode = bdLeftToRight
+        EditLabel.Caption = 'N'#250'mero Venda'
+        EditLabel.ParentBiDiMode = False
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 0
+      end
+      object lkpCliente: TDBLookupComboBox
+        Left = 238
+        Top = 42
+        Width = 361
+        Height = 21
+        KeyField = 'clienteId'
+        ListField = 'nome'
+        ListSource = dtmVendas.dtsCliente
+        TabOrder = 1
+        OnCloseUp = lkpClienteCloseUp
+      end
+      object edtDataVenda: TDateEdit
+        Left = 680
+        Top = 42
+        Width = 121
+        Height = 21
+        ClickKey = 114
+        DialogTitle = 'Selecione a Data'
+        NumGlyphs = 2
+        TabOrder = 2
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 76
+        Width = 1029
+        Height = 306
+        Align = alBottom
+        TabOrder = 3
+        object Panel2: TPanel
+          Left = 1
+          Top = 42
+          Width = 1027
+          Height = 222
+          Align = alClient
+          TabOrder = 0
+          object dbGridItensVenda: TDBGrid
+            Left = 1
+            Top = 1
+            Width = 1025
+            Height = 220
+            Align = alClient
+            Color = clGradientInactiveCaption
+            DataSource = dtmVendas.dtsItensVenda
+            DrawingStyle = gdsClassic
+            FixedColor = clAppWorkSpace
+            Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgCancelOnExit]
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'Tahoma'
+            TitleFont.Style = []
+            OnDrawColumnCell = dbGridItensVendaDrawColumnCell
+            OnDblClick = dbGridItensVendaDblClick
+            OnKeyDown = dbGridItensVendaKeyDown
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'produtoId'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'NomeProduto'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'quantidade'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'valorUnitario'
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'valorTotalProduto'
+                Width = 64
+                Visible = True
+              end>
+          end
+        end
+        object Panel3: TPanel
+          Left = 1
+          Top = 264
+          Width = 1027
+          Height = 41
+          Align = alBottom
+          TabOrder = 1
+          object lbl2: TLabel
+            Left = 797
+            Top = 16
+            Width = 84
+            Height = 13
+            Caption = 'Valor da Venda'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
+          object edtValorTotal: TCurrencyEdit
+            Left = 887
+            Top = 13
+            Width = 121
+            Height = 21
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentColor = True
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 0
+          end
+        end
+        object Panel4: TPanel
+          Left = 1
+          Top = 1
+          Width = 1027
+          Height = 41
+          Align = alTop
+          TabOrder = 2
+          object Label2: TLabel
+            Left = 120
+            Top = -1
+            Width = 38
+            Height = 13
+            Caption = 'Produto'
+          end
+          object Label4: TLabel
+            Left = 458
+            Top = -1
+            Width = 56
+            Height = 13
+            Caption = 'Quantidade'
+          end
+          object Label5: TLabel
+            Left = 553
+            Top = -1
+            Width = 80
+            Height = 13
+            Caption = 'Total do Produto'
+          end
+          object btnPesquisarProduto: TSpeedButton
+            Left = 308
+            Top = 13
+            Width = 23
+            Height = 22
+            Glyph.Data = {
+              36030000424D3603000000000000360000002800000010000000100000000100
+              18000000000000030000120B0000120B00000000000000000000FF00FFFF00FF
+              FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+              00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFFF00FFFF00FFFF00FF9B3B0A9B3B0A9B3B0A993B0DFF00FFFF00FFFF00
+              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF9B3B0AFA
+              EAC2E9B171953B11FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFFF00FFFF00FFFF00FF9B3B0AFAE9C0EAB474953B11FF00FFFF00FFFF00
+              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF9B3B0AF9
+              E7BFEBB677953B11FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFFF00FFFF00FFC3B6B09B3B0AA54D1E9B3B0A983B0EC3B8B4FF00FFFF00
+              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFA86441C58355FA
+              DEB1F7D6A5B3724AAC6C4CFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFFF00FFB89787A54E20F6D4A8FBE2B7F6D19DDBAB799A461FBDA79BFF00
+              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFC5BEBBA0491DDDA876F9E3C2F9
+              DBADF4CB96E9B97FB17047A3542CFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFAE7559B86F40F6D6ACFBE9CDF7D5A4F2C68FEBB879CA905A984D28B68E
+              7AFF00FFFF00FFFF00FFFF00FFFF00FFBDA79B9F4516EBBC84FAE9D1FBE8CBF6
+              D09CEFC187E9B272D49758A7653C9B4419C5BEBBFF00FFFF00FFFF00FFC7C4C3
+              A4532BCD8E5BF5D5AAFBF5E9FAE2BEF3CB95EDBC80E7AD6ADF9C55B8743D924D
+              2BAE7254FF00FFFF00FFFF00FFB3856FAC5E30EFC187FAEEDEFCF9F5F7D6A9F1
+              C58DEBB778E4A862DF994EC179399B582E93411BC0ADA4FF00FFFF00FF9D3E0F
+              9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9B3B0A9A3B0B983B
+              0E973B0FA65B36FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+              00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF}
+            OnClick = btnPesquisarProdutoClick
+          end
+          object Label3: TLabel
+            Left = 365
+            Top = -2
+            Width = 64
+            Height = 13
+            Caption = 'Valor Unit'#225'rio'
+          end
+          object lkpProduto: TDBLookupComboBox
+            Left = 110
+            Top = 14
+            Width = 192
+            Height = 21
+            DataField = 'nome'
+            KeyField = 'produtoId'
+            ListField = 'nome'
+            ListSource = dtmVendas.dtsProdutos
+            TabOrder = 0
+            OnExit = lkpProdutoExit
+          end
+          object edtValorUnitario: TCurrencyEdit
+            Left = 365
+            Top = 11
+            Width = 83
+            Height = 21
+            DisplayFormat = ' ,0.00;- ,0.00'
+            ReadOnly = True
+            TabOrder = 1
+          end
+          object edtQuantidade: TCurrencyEdit
+            Left = 458
+            Top = 11
+            Width = 88
+            Height = 21
+            DisplayFormat = ' ,0.00;- ,0.00'
+            TabOrder = 2
+            OnEnter = edtQuantidadeEnter
+            OnExit = edtQuantidadeExit
+          end
+          object edtTotalProduto: TCurrencyEdit
+            Left = 553
+            Top = 11
+            Width = 121
+            Height = 21
+            TabStop = False
+            DisplayFormat = ' ,0.00;- ,0.00'
+            ReadOnly = True
+            TabOrder = 3
+          end
+          object btnAdicionarItem: TBitBtn
+            Left = 684
+            Top = 11
+            Width = 65
+            Height = 25
+            Caption = 'Adicionar'
+            TabOrder = 4
+            OnClick = btnAdicionarItemClick
+          end
+          object btnApagarItem: TBitBtn
+            Left = 755
+            Top = 11
+            Width = 63
+            Height = 25
+            Caption = 'Remover'
+            TabOrder = 5
+            OnClick = btnApagarItemClick
+          end
+        end
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    Top = 410
+    Width = 1037
+    ExplicitTop = 410
+    ExplicitWidth = 1037
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+    inherited btnFechar: TBitBtn
+      Left = 982
+      ExplicitLeft = 982
+    end
+  end
+  inherited QryListagem: TFDQuery
+    SQL.Strings = (
+      'select vendas.vendaId,'
+      '       vendas.clienteId,'
+      '       clientes.nome,'
+      '       vendas.dataVenda,'
+      '       vendas.totalVenda'
+      'from vendas'
+      'inner join clientes on clientes.clienteId = vendas.clienteId')
+    Left = 196
+    Top = 0
+    object QryListagemvendaId: TFDAutoIncField
+      DisplayLabel = 'N'#250'mero Venda'
+      FieldName = 'vendaId'
+      Origin = 'vendas'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryListagemclienteId: TIntegerField
+      DisplayLabel = 'Cod. Cliente'
+      FieldName = 'clienteId'
+      Origin = 'vendas'
+      Required = True
+    end
+    object QryListagemnome: TStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Origin = 'clientes'
+      Size = 60
+    end
+    object QryListagemdataVenda: TSQLTimeStampField
+      DisplayLabel = 'Data Venda'
+      FieldName = 'dataVenda'
+      Origin = 'vendas'
+    end
+    object QryListagemtotalVenda: TFMTBCDField
+      DisplayLabel = 'Total da Venda'#13#10
+      FieldName = 'totalVenda'
+      Origin = 'vendas'
+      Precision = 18
+      Size = 2
+    end
+  end
+  inherited dtsListagem: TDataSource
+    Left = 292
+    Top = 0
+  end
+  object QryCSV: TFDQuery
+    Connection = dtmConexao.dtmPrincipal
+    SQL.Strings = (
+      'SELECT '
+      '  v.vendaId,'
+      '  c.nome AS nomeCliente,'
+      '  p.nome AS nomeProduto,'
+      '  p.produtoId as codProduto,'
+      '  iv.quantidade'
+      'FROM vendas v'
+      'JOIN clientes c ON c.clienteId = v.clienteId'
+      'JOIN vendasItens iv ON iv.vendaId = v.vendaId'
+      'JOIN produtos p ON p.produtoId = iv.produtoId')
+    Left = 388
+    object QryCSVvendaId: TFDAutoIncField
+      FieldName = 'vendaId'
+      Origin = 'vendaId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryCSVnomeCliente: TStringField
+      FieldName = 'nomeCliente'
+      Origin = 'nomeCliente'
+      Size = 60
+    end
+    object QryCSVnomeProduto: TStringField
+      FieldName = 'nomeProduto'
+      Origin = 'nomeProduto'
+      Size = 60
+    end
+    object QryCSVquantidade: TFMTBCDField
+      FieldName = 'quantidade'
+      Origin = 'quantidade'
+      Precision = 18
+      Size = 5
+    end
+    object QryCSVcodProduto: TFDAutoIncField
+      FieldName = 'codProduto'
+      Origin = 'codProduto'
+      ReadOnly = True
+    end
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 848
+    Top = 248
+  end
+  object IdSMTP1: TIdSMTP
+    SASLMechanisms = <>
+    Left = 896
+    Top = 168
+  end
+  object IdMessage1: TIdMessage
+    AttachmentEncoding = 'UUE'
+    BccList = <>
+    CCList = <>
+    Encoding = meDefault
+    FromList = <
+      item
+      end>
+    Recipients = <>
+    ReplyTo = <>
+    ConvertPreamble = True
+    Left = 960
+    Top = 168
+  end
+  object QryEmail: TFDQuery
+    Connection = dtmConexao.dtmPrincipal
+    SQL.Strings = (
+      'select clienteId, email from clientes')
+    Left = 468
+    Top = 8
+    object QryEmailclienteId: TFDAutoIncField
+      FieldName = 'clienteId'
+      Origin = 'clienteId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object QryEmailemail: TStringField
+      FieldName = 'email'
+      Origin = 'email'
+      Size = 100
+    end
+  end
+end

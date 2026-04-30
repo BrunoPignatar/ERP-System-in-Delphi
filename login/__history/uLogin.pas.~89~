@@ -1,0 +1,172 @@
+unit uLogin;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Imaging.jpeg, Vcl.GraphUtil,
+  Vcl.Imaging.pngimage, System.IOUtils,Winapi.ShellAPI
+  ,IdSMTP,
+  IdMessage,
+  IdSSLOpenSSL,
+  IdExplicitTLSClientServerBase,
+  IdAttachmentFile, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient, IdMessageClient, IdSMTPBase;
+
+type
+  TfrmLogin = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Label1: TLabel;
+    edtUsuario: TEdit;
+    Panel4: TPanel;
+    Panel7: TPanel;
+    Panel8: TPanel;
+    edtSenha: TEdit;
+    Label2: TLabel;
+    Image1: TImage;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    btnAcessar: TBitBtn;
+    btnfechar: TBitBtn;
+    Label3: TLabel;
+    IdSMTP1: TIdSMTP;
+    IdMessage1: TIdMessage;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormShow(Sender: TObject);
+    procedure btnAcessarClick(Sender: TObject);
+    procedure btnfecharClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+    bFechar:Boolean;
+    FTrocaUsuario: Boolean;
+    procedure EnviarEmail;
+  public
+    { Public declarations }
+    property TrocaUsuario: Boolean read FTrocaUsuario write FTrocaUsuario;
+  end;
+
+var
+  frmLogin: TfrmLogin;
+
+implementation
+
+uses
+  cCadUsuario, uDTMConexao, uPrincipal;
+
+{$R *.dfm}
+
+
+
+procedure TfrmLogin.btnAcessarClick(Sender: TObject);
+var oUsuario:TUsuario;
+begin
+  try
+    oUsuario:=TUsuario.Create(dtmConexao.dtmPrincipal);
+    if oUsuario.Logar(edtUsuario.Text,edtSenha.Text) then begin
+      oUsuarioLogado.codigo:=oUsuario.codigo;
+      oUsuarioLogado.nome:=oUsuario.nome;
+      oUsuarioLogado.senha:=oUsuario.senha;
+      oUsuarioLogado.perfilId := oUsuario.perfilId;
+      bFechar:=True;
+      ModalResult:=mrOk;
+    end
+    else begin
+      MessageDlg('Usuário Inválido', mtInformation,[mbOK],0);
+
+    end;
+  finally
+    if Assigned(oUsuario) then
+      FreeAndNil(oUsuario);
+  end;
+end;
+
+
+procedure TfrmLogin.btnfecharClick(Sender: TObject);
+begin
+   if TrocaUsuario then
+   begin
+   bFechar:=True;
+   ModalResult:=mrCancel;
+   end
+  else
+    Application.Terminate;
+end;
+
+procedure TfrmLogin.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+ CanClose:=bFechar;
+end;
+
+procedure TfrmLogin.FormCreate(Sender: TObject);
+begin
+  EnviarEmail;
+end;
+
+procedure TfrmLogin.FormShow(Sender: TObject);
+var versao: string;
+begin
+  bFechar:=False;
+  if FileExists('C:\Users\devmv\Desktop\ERP-System-in-Delphi\versao.txt') then
+  begin
+    Versao := Trim(TFile.ReadAllText('C:\Users\devmv\Desktop\ERP-System-in-Delphi\versao.txt'));
+    Label6.Caption := 'Versão 1.0.' + Versao;
+  end
+  else
+    Label6.Caption := '1.0.0';
+end;
+
+
+procedure TfrmLogin.EnviarEmail;
+var
+  SMTP: TIdSMTP;
+  Msg: TIdMessage;
+  SSL: TIdSSLIOHandlerSocketOpenSSL;
+begin
+  SMTP := TIdSMTP.Create(nil);
+  Msg := TIdMessage.Create(nil);
+  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+
+  try
+    // Configuração do servidor (exemplo Gmail)
+    SMTP.Host := 'smtp.gmail.com';
+    SMTP.Port := 587;
+    SMTP.Username := 'bmpignatari@gmail.com';
+    SMTP.Password := 'dcux beak sukc mdjg';
+
+    SMTP.IOHandler := SSL;
+    SMTP.UseTLS := utUseExplicitTLS;
+
+    // Configuração do SSL
+    SSL.SSLOptions.Method := sslvTLSv1_2;
+
+    // Montando o e-mail
+    Msg.From.Address := 'bmpignatari@gmail.com';
+    Msg.Recipients.EmailAddresses := 'zemane1312@gmail.com';
+    Msg.Subject := 'Teste Delphi';
+    Msg.Body.Text := 'Olá, isso é um teste de envio de email no Delphi!';
+
+    // Envio
+    SMTP.Connect;
+    try
+      SMTP.Send(Msg);
+    finally
+      SMTP.Disconnect;
+    end;
+
+    ShowMessage('Email enviado com sucesso!');
+  finally
+    SMTP.Free;
+    Msg.Free;
+    SSL.Free;
+  end;
+end;
+
+
+end.
