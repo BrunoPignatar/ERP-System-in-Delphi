@@ -42,25 +42,28 @@ begin
 end;
 
 procedure TAtualizaBancoDados.ExecutaDiretoBancoDeDados(aScript: String);
-var Qry:TFDQuery;
+var Qry: TFDQuery;
 begin
-   try
-     Qry:=TFDQuery.Create(nil);
-     Qry.Connection:=ConexaoDB;
-     Qry.SQL.Clear;
-     Qry.SQL.Add(aScript);
-     try
-       ConexaoDB.StartTransaction;
-       Qry.ExecSQL;
-       ConexaoDB.Commit;
-     except
-       ConexaoDB.Rollback;
-     end;
-   finally
-     Qry.Close;
-     if Assigned(Qry) then
-        FreeAndNil(Qry);
-   end;
+  try
+    Qry := TFDQuery.Create(nil);
+    Qry.Connection := ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add(aScript);
+    try
+      ConexaoDB.StartTransaction;
+      Qry.ExecSQL;
+      ConexaoDB.Commit;
+    except on E: Exception do
+    begin
+      ConexaoDB.Rollback;
+      ShowMessage('Erro ao executar script: ' + E.Message); // vai mostrar o erro real
+    end;
+    end;
+  finally
+    Qry.Close;
+    if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
 end;
 
 { TAtualizaBancoDadosMSSQL }

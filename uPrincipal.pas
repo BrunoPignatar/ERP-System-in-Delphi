@@ -177,68 +177,48 @@ end;
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
-   if not FileExists(TArquivoIni.ArquivoIni) then
    begin
-   TArquivoIni.AtualizarIni('SERVER','TipoDataSet','MSSQL');
-   TArquivoIni.AtualizarIni('SERVER','HostName','.\');
-   TArquivoIni.AtualizarIni('SERVER','Port','1433');
-   TArquivoIni.AtualizarIni('SERVER','User','sa');
-   TArquivoIni.AtualizarIni('SERVER','Password','domtec@10');
-   TArquivoIni.AtualizarIni('SERVER','Database','vendas');
-
-   MessageDlg('Arquivo ' + TArquivoIni.ArquivoIni +
-           'Criado com sucesso,' + #13 +
-           'Configure o arquivo antes de inicializar a aplicação',
-           mtInformation, [mbOK], 0);
-
-   Application.Terminate;
-   end
-   else
-   begin
+   frmAtualizaDB:=TfrmAtualizaDB.Create(self);
+   frmAtualizaDB.Show;
+   frmAtualizaDB.Refresh;
 
 
 
- frmAtualizaDB:=TfrmAtualizaDB.Create(self);
- frmAtualizaDB.Show;
- frmAtualizaDB.Refresh;
+   dtmConexao := TdtmConexao.Create(Self);
+   dtmConexao.dtmPrincipal.Connected:=True;
 
 
-
- dtmConexao := TdtmConexao.Create(Self);
- dtmConexao.dtmPrincipal.Connected:=True;
+   AtualizacaoBancoDados(frmAtualizaDB);
 
 
- AtualizacaoBancoDados(frmAtualizaDB);
+      TAcaoAcesso.CriarAcoes(TfrmCadCategorias, dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmCadCliente,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmCadProduto,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmCadUsuario,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmCadAcaoAcesso,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmAlterarSenha,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmProVenda,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmRelVendaPorData,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmRelCadClienteFicha,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmRelCadCliente,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmRelCadProdutoComGrupoCategoria,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmRelCadProduto,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmRelCategoria,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmUsuarioVsAcoes,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.CriarAcoes(TfrmSelecionarData,dtmConexao.dtmPrincipal);
+      TAcaoAcesso.PreencherUsuariosVsAcoes(dtmConexao.dtmPrincipal);
 
+      TAcaoAcesso.CriarAcoes(TfrmCadFornecedor, dtmConexao.dtmPrincipal);
 
-    TAcaoAcesso.CriarAcoes(TfrmCadCategorias, dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmCadCliente,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmCadProduto,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmCadUsuario,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmCadAcaoAcesso,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmAlterarSenha,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmProVenda,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmRelVendaPorData,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmRelCadClienteFicha,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmRelCadCliente,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmRelCadProdutoComGrupoCategoria,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmRelCadProduto,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmRelCategoria,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmUsuarioVsAcoes,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.CriarAcoes(TfrmSelecionarData,dtmConexao.dtmPrincipal);
-    TAcaoAcesso.PreencherUsuariosVsAcoes(dtmConexao.dtmPrincipal);
+      DTMGrafico:=TDTMGrafico.Create(Self);
+      AtualizarDashBoard;
 
-    TAcaoAcesso.CriarAcoes(TfrmCadFornecedor, dtmConexao.dtmPrincipal);
+   frmAtualizaDB.Free;
 
-    DTMGrafico:=TDTMGrafico.Create(Self);
-    AtualizarDashBoard;
-
- frmAtualizaDB.Free;
-
- TeclaEnter := TMREnter.Create(Self);
- TeclaEnter.FocusEnabled:=True;
- TeclaEnter.FocusColor:=clInfoBk;
- end;
+   TeclaEnter := TMREnter.Create(Self);
+   TeclaEnter.FocusEnabled:=True;
+   TeclaEnter.FocusColor:=clInfoBk;
+   end;
 
 end;
 

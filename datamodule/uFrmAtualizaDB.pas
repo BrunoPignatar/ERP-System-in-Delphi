@@ -23,6 +23,9 @@ var
 
 implementation
 
+uses
+  uDTMConexao;
+
 {$R *.dfm}
 
 end.

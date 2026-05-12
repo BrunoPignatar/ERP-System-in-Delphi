@@ -119,8 +119,6 @@ object frmPrincipal: TfrmPrincipal
         Zoom.MouseButton = mbRight
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -3
-        ExplicitTop = -3
         DefaultCanvas = 'TGDIPlusCanvas'
         PrintMargins = (
           15

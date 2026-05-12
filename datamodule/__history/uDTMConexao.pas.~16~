@@ -1,0 +1,86 @@
+unit uDTMConexao;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
+  FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MSSQL,
+  FireDAC.Phys.MSSQLDef, FireDAC.VCLUI.Wait, Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet,System.IOUtils, System.IniFiles;
+
+type
+  TdtmConexao = class(TDataModule)
+    dtmPrincipal: TFDConnection;
+    procedure DataModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure CriarBanco;
+  end;
+
+var
+  dtmConexao: TdtmConexao;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TdtmConexao.DataModuleCreate(Sender: TObject);
+var
+  Ini: TIniFile;
+  Path, Auth: string;
+begin
+  CriarBanco;
+  Path := TPath.Combine(ExtractFilePath(ParamStr(0)), 'Vendas.INI');
+
+  if not FileExists(Path) then
+    raise Exception.Create('Arquivo config.ini não encontrado.');
+
+  Ini := TIniFile.Create(Path);
+  try
+    dtmPrincipal.Params.DriverID := 'MSSQL';
+
+    dtmPrincipal.Params.Values['Server'] := Ini.ReadString('DB','Server','');
+    dtmPrincipal.Params.Values['Database'] := Ini.ReadString('DB','Database','');
+
+    Auth := Ini.ReadString('DB','Auth','SQL');
+
+    if SameText(Auth, 'Windows') then
+    begin
+      dtmPrincipal.Params.Values['OSAuthent'] := 'Yes';
+    end
+    else
+    begin
+      dtmPrincipal.Params.Values['User_Name'] := Ini.ReadString('DB','User','');
+      dtmPrincipal.Params.Values['Password'] := Ini.ReadString('DB','Password','');
+    end;
+
+    dtmPrincipal.LoginPrompt := False;
+    dtmPrincipal.Connected := True;
+
+  finally
+    Ini.Free;
+  end;
+end;
+
+
+
+procedure TdtmConexao.CriarBanco;
+begin
+  dtmPrincipal.Connected := False;
+  dtmPrincipal.Params.Values['Database'] := 'master';
+  dtmPrincipal.Connected := True;
+
+
+  dtmPrincipal.ExecSQL(
+    'IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = ''Vendas'') ' +
+   ' create database filmes ');
+
+  dtmPrincipal.Connected := False;
+  dtmPrincipal.Params.Values['Database'] := 'Vendas';
+  dtmPrincipal.Connected := True;
+end;
+end.
