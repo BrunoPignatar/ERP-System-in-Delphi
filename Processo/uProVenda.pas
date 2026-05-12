@@ -739,7 +739,7 @@ var i : Integer;
 v: Double;
 begin
   inherited;
-
+    QryListagem.Active:=True;
     dbGridItensVenda.TitleFont.Color:=clWhite;
 
   // Centraliza os titulos

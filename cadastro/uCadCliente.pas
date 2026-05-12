@@ -525,6 +525,7 @@ end;
 procedure TfrmCadCliente.FormCreate(Sender: TObject);
 begin
   inherited;
+    QrySituacao.Active:=True;
     QrySituacao.Open;
     oCliente:=TCliente.create(dtmConexao.dtmPrincipal);
     IndiceAtual:='nome';

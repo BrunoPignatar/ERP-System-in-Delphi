@@ -398,6 +398,8 @@
       end
     end
     inherited Manutenção: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 1028
       ExplicitHeight = 367
       object lblDoc: TLabel

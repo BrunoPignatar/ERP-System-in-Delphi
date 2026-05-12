@@ -10,7 +10,6 @@
   inherited pgcPrincipal: TPageControl
     Width = 729
     Height = 297
-    ActivePage = Manutenção
     ExplicitWidth = 729
     ExplicitHeight = 297
     inherited Listagem: TTabSheet
@@ -159,13 +158,11 @@
     ExplicitTop = 297
     ExplicitWidth = 729
     inherited btnNavigator: TDBNavigator
-      Left = 407
       Hints.Strings = ()
-      ExplicitLeft = 407
     end
     inherited btnFechar: TBitBtn
-      Left = 635
-      ExplicitLeft = 635
+      Left = 659
+      ExplicitLeft = 659
     end
   end
   inherited QryListagem: TFDQuery
@@ -202,7 +199,6 @@
     Left = 500
   end
   object QryFuncao: TFDQuery
-    Active = True
     Connection = dtmConexao.dtmPrincipal
     SQL.Strings = (
       'select perfilId, descricao from perfil')

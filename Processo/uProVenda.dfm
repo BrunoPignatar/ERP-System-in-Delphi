@@ -302,6 +302,7 @@
               item
                 Expanded = False
                 FieldName = 'NomeProduto'
+                Width = 64
                 Visible = True
               end
               item
@@ -312,7 +313,6 @@
               item
                 Expanded = False
                 FieldName = 'valorUnitario'
-                Width = 64
                 Visible = True
               end
               item

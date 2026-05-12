@@ -36,6 +36,7 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure dbgrdListagemCellClick(Column: TColumn);
+    procedure btnApagarClick(Sender: TObject);
   private
     { Private declarations }
     oUsuario:TUsuario;
@@ -143,6 +144,15 @@ begin
 
 end;
 
+procedure TfrmCadUsuario.btnApagarClick(Sender: TObject);
+begin
+  if QryListagem.FieldByName('usuarioId').AsInteger  < 4 then begin
+    ShowMessage('Esses usuários não podem ser excluidos!! ');
+    Abort;
+  end;
+  inherited;
+end;
+
 procedure TfrmCadUsuario.btnGravarClick(Sender: TObject);
 var
   PerfilId: Integer;
@@ -179,7 +189,7 @@ end;
 {$ENDREGION}
 
 
- procedure TfrmCadUsuario.AplicarFuncoes(AUsuarioId, APerfilId: Integer);
+procedure TfrmCadUsuario.AplicarFuncoes(AUsuarioId, APerfilId: Integer);
 var Qry: TFDQuery;
 begin
   Qry := TFDQuery.Create(nil);
@@ -189,31 +199,32 @@ begin
     dtmConexao.dtmPrincipal.StartTransaction;
 
     try
-      if APerfilId = 1 then begin
+      if lkpFuncao.Text = 'ESTOQUISTA' then begin
       Qry.SQL.Text :=
         'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
         'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) '+
         'SELECT :usuarioId, acaoAcessoId, ativo '+
         'FROM usuariosAcaoAcesso '+
-        'WHERE usuarioId = 42';
+        'WHERE usuarioId = 1'; //estoquista
 
       Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
-      end else if APerfilId = 2 then begin
+
+      end else if lkpFuncao.Text = 'ADM' then begin
         Qry.SQL.Text :=
         'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
         'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) '+
         'SELECT :usuarioId, acaoAcessoId, ativo '+
         'FROM usuariosAcaoAcesso '+
-        'WHERE usuarioId = 41';
+        'WHERE usuarioId = 3'; //admin
 
       Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
-      end else if APerfilId = 3 then begin
+      end else if lkpFuncao.Text = 'VENDEDOR'  then begin
         Qry.SQL.Text :=
         'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
         'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) '+
         'SELECT :usuarioId, acaoAcessoId, ativo '+
         'FROM usuariosAcaoAcesso '+
-        'WHERE usuarioId = 43';
+        'WHERE usuarioId = 2'; //vendedor
 
       Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
       end;
@@ -264,6 +275,7 @@ end;
 procedure TfrmCadUsuario.FormCreate(Sender: TObject);
 begin
   inherited;
+  QryFuncao.Active:=True;
    oUsuario:=TUsuario.Create(dtmConexao.dtmPrincipal);
    IndiceAtual:='nome';
    Randomize;

@@ -65,7 +65,6 @@ type
     QryEmail: TFDQuery;
     QryEmailclienteId: TFDAutoIncField;
     QryEmailemail: TStringField;
-    QryPdf: TFDQuery;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dbGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -116,7 +115,6 @@ type
     procedure ExportarJSON(ADataset: TDataSet);
     procedure ExportarHTML(ADataset: TDataSet);
     procedure EnviarEmail;
-    procedure csvVendas(ADataset: TDataSet);
 
   public
     { Public declarations }
@@ -165,6 +163,16 @@ begin
     oVenda.VendaId := oVenda.Inserir(dtmVendas.cdsItensVenda)
   else if (EstadoDoCadastro=ecAlterar) then
     oVenda.Atualizar(dtmVendas.cdsItensVenda);
+
+
+  frmRelProVenda:=TfrmRelProVenda.Create(self);
+  frmRelProVenda.QryVendas.Close;
+  frmRelProVenda.QryVendas.ParamByName('VendaId').AsInteger:= oVenda.VendaId;
+  frmRelProVenda.QryVendas.Open;
+
+  frmRelProVenda.QryVendasItens.Close;
+  frmRelProVenda.QryVendasItens.ParamByName('VendaId').AsInteger:= oVenda.VendaId;
+  frmRelProVenda.QryVendasItens.Open;
 
 
   frmRelProVenda.Relatorio.PreviewModal;
@@ -506,7 +514,10 @@ begin
   if MessageDlg('Deseja Realizar a venda?', mtInformation, [mbYes, mbNo], 0) <> mrYes then
     Abort;
 
-  EnviarEmail;
+  QryCSV.Open();
+  ExportarCSV(QryCSV);
+  QryCSV.Close;
+  EnviarEmail;   // tentar usar esse enviarEmail para outras coisas mais uteis
 
   inherited;
   LimparCds;
@@ -816,7 +827,7 @@ begin
       ADataset.Next;
     end;
      try
-      Lista.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.csv');
+      Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.csv');
     except
       on E: EFCreateError do
         ShowMessage('Para exportar CSV é preciso fechar o arquivo já aberto.');
@@ -860,7 +871,7 @@ begin
       ADataset.Next;
     end;
 
-    Lista.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.txt');
+    Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.txt');
   finally
     Lista.Free;
   end;
@@ -904,7 +915,7 @@ begin
       ADataset.Next;
     end;
 
-    TFile.WriteAllText('C:\Users\devmv\Desktop\Conversao\Vendas.json',
+    TFile.WriteAllText('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.json',
       JSONArray.ToString
     );
 
@@ -974,7 +985,7 @@ begin
     SL.Add('</body>');
     SL.Add('</html>');
 
-    SL.SaveToFile('C:\Users\devmv\Desktop\Conversao\Vendas.html');
+    SL.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.html');
   finally
     SL.Free;
   end;
@@ -1019,7 +1030,7 @@ begin
     Msg.Subject := 'Relatório de venda';
     Msg.Body.Text := 'receba esse doce';
     Attachment := TIdAttachmentFile.Create(Msg.MessageParts,
-    'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas\Vendas.pdf');
+    'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas\Vendas.csv');
 
     // Envio
     SMTP.Connect;
@@ -1038,47 +1049,5 @@ begin
 end;
 
 
-procedure TfrmProVenda.csvVendas(ADataset: TDataSet);
-var
-  Lista: TStringList;
-  UltimaVenda: string;
-begin
-  Lista := TStringList.Create;
-  try
-    Lista.Add('CodVenda;NomeCliente;NomeProduto;TotalVenda;Quantidade');
-    UltimaVenda := '';
-
-    ADataset.First;
-    while not ADataset.Eof do
-    begin
-
-      if (UltimaVenda <> '') and
-         (UltimaVenda <> ADataset.FieldByName('vendaId').AsString) then
-      begin
-        Lista.Add('');
-      end;
-      Lista.Add(
-        ADataset.FieldByName('vendaId').AsString + ';' +
-        ADataset.FieldByName('nomeCliente').AsString + ';' +
-        ADataset.FieldByName('nomeProduto').AsString + ';' +
-        ADataset.FieldByName('totalVenda').AsString + ';' +
-        ADataset.FieldByName('quantidade').AsString );
-
-      UltimaVenda := ADataset.FieldByName('vendaId').AsString;
-
-      ADataset.Next;
-    end;
-     try
-      Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas\Vendas.csv');
-    except
-      on E: EFCreateError do
-        ShowMessage('Para exportar CSV é preciso fechar o arquivo já aberto.');
-      on E: Exception do
-        ShowMessage('Erro ao exportar CSV: ' + E.Message);
-    end;
-  finally
-    Lista.Free;
-  end;
-end;
 
 end.

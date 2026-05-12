@@ -116,6 +116,10 @@ begin
       'CREATE TABLE situacao ' +
       ' (IDSituacao int identity primary key, situacaoCliente varchar(50) )'
     );
+
+    ExecutaDiretoBancoDeDados(
+      'insert into situacao values (''ATIVO''), (''BLOQUEADO''), (''ATENÇÃO''), (''INATIVO''), (''PROSPECTO'')'
+    );
   end;
 end;
 
@@ -151,15 +155,18 @@ begin
     ExecutaDiretoBancoDeDados(
       'CREATE TABLE produtos ( ' +
       '  produtoId int IDENTITY(1,1) NOT NULL, ' +
+      '  fornId int, ' +
       '  nome varchar(60) NULL, ' +
       '  descricao varchar(255) null, ' +
       '  valor decimal(18,5) default 0.00000 null, ' +
       '  quantidade decimal(18,5) default 0.00000 null, ' +
       '  qntmini decimal(18,5) default 0.00000 null, ' +
       '  categoriaId int null, ' +
+      '  DataProduto datetime NULL DEFAULT (getdate()),' +
       '  PRIMARY KEY (produtoId), ' +
       '  CONSTRAINT FK_ProdutosCategorias ' +
-      '  FOREIGN KEY (categoriaId) references categorias(categoriaId)) '
+      '  FOREIGN KEY (categoriaId) references categorias(categoriaId)), ' +
+      '  foreign key (fornId) references fornecedor(fornId) '
     );
   end;
 end;
@@ -209,6 +216,10 @@ begin
       '  descricao VARCHAR(50) ' +
       ') '
     );
+
+    ExecutaDiretoBancoDeDados(
+      'insert into perfil values (''ESTOQUISTA''), (''ADM''), (''VENDEDOR'')'
+    );
   end;
 end;
 
@@ -227,6 +238,12 @@ begin
       '  PRIMARY KEY (usuarioId) '+
       ') '
     );
+
+    ExecutaDiretoBancoDeDados(
+    'insert into usuarios (nome, senha, perfilId) values ' +
+    '(''ESTOQUISTA'', ''454'', 1), ' +
+    '(''VENDEDOR'', ''12312'', 3)'
+);
   end;
 
   try

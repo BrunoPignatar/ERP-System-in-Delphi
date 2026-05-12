@@ -116,6 +116,10 @@ begin
       'CREATE TABLE situacao ' +
       ' (IDSituacao int identity primary key, situacaoCliente varchar(50) )'
     );
+
+    ExecutaDiretoBancoDeDados(
+      'insert into situacao values (''ATIVO''), (''BLOQUEADO''), (''ATENÇÃO''), (''INATIVO''), (''PROSPECTO'')'
+    );
   end;
 end;
 
@@ -233,8 +237,10 @@ begin
     );
 
     ExecutaDiretoBancoDeDados(
-      'insert into usuarios values (''ESTOQUISTA', '454''), (''VENDEDOR', '12312'')'
-    );
+    'insert into usuarios (nome, senha, perfilId) values ' +
+    '(''ESTOQUISTA'', ''454'', 1), ' +
+    '(''VENDEDOR'', ''12312'', 3)'
+);
   end;
 
   try

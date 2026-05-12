@@ -1,57 +1,44 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\login\uLogin.pas',0,1,48,28,44,0,0,,
-File_1=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cProVenda.pas',0,1,19,48,469,0,0,{{63,0}
-File_2=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Processo\uProVenda.pas',0,1,499,30,500,0,0,,
-File_3=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelProVenda.pas',0,1,49,7,72,0,0,,
-File_4=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\cEmail.pas',0,1,4,7,14,0,0,,
-File_5=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMGrafico.pas',0,1,1,1,1,0,0,,
-File_6=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMVenda.pas',0,1,1,1,1,0,0,,
-File_7=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Classes\cAcaoAcesso.pas',0,1,1,47,16,0,0,{{46,0}
-File_8=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Classes\cValidacaoDocumento.pas',0,1,10,21,11,0,0,,
-File_9=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadProduto.pas',0,1,350,7,363,0,0,{{104,0}
-File_10=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Controle\uConFinanceiro.pas',0,1,66,5,69,0,0,,
-File_11=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Processo\uProVenda.pas',0,1,181,21,185,0,0,,
-File_12=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\heranca\uTelaHerancaConsulta.pas',0,1,95,25,103,0,0,,
-File_13=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Processo\uProVenda.dfm',0,1,1,38,18,0,0,,
-File_14=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCadProdutoComGrupoCategoria.pas',0,1,1,1,1,0,0,,
+File_0=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoBancoDeDados.pas',0,1,68,24,53,0,0,,
+File_1=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Controle\uConFinanceiro.pas',0,1,1,1,1,0,0,,
+File_2=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uFrmAtualizaDB.pas',0,1,19,6,31,0,0,,
+File_3=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\login\uLogin.pas',0,1,48,28,44,0,0,,
+File_4=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cProVenda.pas',0,1,19,48,469,0,0,{{63,0}
+File_5=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Processo\uProVenda.pas',0,1,499,30,500,0,0,,
+File_6=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\relatorio\uRelProVenda.pas',0,1,49,7,72,0,0,,
+File_7=TSourceModule,'C:\Users\devmv\Desktop\ERP-System-in-Delphi\cEmail.pas',0,1,4,7,14,0,0,,
+File_8=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMGrafico.pas',0,1,1,1,1,0,0,,
+File_9=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\datamodule\uDTMVenda.pas',0,1,1,1,1,0,0,,
+File_10=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Classes\cAcaoAcesso.pas',0,1,1,47,16,0,0,{{46,0}
+File_11=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Classes\cValidacaoDocumento.pas',0,1,10,21,11,0,0,,
 
 [Modules]
 Module0=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoTabelaMSSQL.pas
-Module1=C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.pas
-Module2=C:\Users\devmv\Desktop\ERP-System-in-Delphi\heranca\uTelaHeranca.pas
-Module3=C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uDTMConexao.pas
-Module4=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoBancoDeDados.pas
-Module5=C:\Users\devmv\Desktop\ERP-System-in-Delphi\uPrincipal.pas
-Count=6
+Module1=C:\Users\devmv\Desktop\ERP-System-in-Delphi\uPrincipal.pas
+Module2=C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadCliente.pas
+Module3=C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.pas
+Count=4
 EditWindowCount=1
 
 [C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoTabelaMSSQL.pas]
 ModuleType=TSourceModule
 
-[C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.pas]
-ModuleType=TSourceModule
-
-[C:\Users\devmv\Desktop\ERP-System-in-Delphi\heranca\uTelaHeranca.pas]
-ModuleType=TSourceModule
-
-[C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uDTMConexao.pas]
-ModuleType=TSourceModule
-
-[C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoBancoDeDados.pas]
-ModuleType=TSourceModule
-
 [C:\Users\devmv\Desktop\ERP-System-in-Delphi\uPrincipal.pas]
 ModuleType=TSourceModule
 
+[C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadCliente.pas]
+ModuleType=TSourceModule
+
+[C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.pas]
+ModuleType=TSourceModule
+
 [EditWindow0]
-ViewCount=6
+ViewCount=4
 CurrentEditView=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoTabelaMSSQL.pas
 View0=0
 View1=1
 View2=2
 View3=3
-View4=4
-View5=5
 PercentageSizes=1
 Create=1
 Visible=1
@@ -83,21 +70,21 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 
 [View0]
 CustomEditViewType=TEditView
-Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\heranca\uTelaHeranca.pas
-CursorX=39
-CursorY=531
-TopLine=517
+Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadCliente.pas
+CursorX=1
+CursorY=1
+TopLine=1
 LeftCol=1
-Elisions={{82,2},{210,13},{'FUNCTION AND PROCEDURE'}}{{439,2},{442,13},{'OBSERVAÇÕES'}}{{615,2},{636,13},{'Metodos virtuais'}}
+Elisions={{127,0},{469,11},{'BOTÕES'}}{{473,0},{509,11},{'OVERRIDED'}}
 Bookmarks=
-EditViewName=C:\Users\devmv\Desktop\ERP-System-in-Delphi\heranca\uTelaHeranca.pas
+EditViewName=Borland.FormDesignerView
 
 [View1]
 CustomEditViewType=TEditView
 Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\uPrincipal.pas
-CursorX=21
-CursorY=206
-TopLine=191
+CursorX=54
+CursorY=251
+TopLine=239
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -105,47 +92,25 @@ EditViewName=C:\Users\devmv\Desktop\ERP-System-in-Delphi\uPrincipal.pas
 
 [View2]
 CustomEditViewType=TEditView
-Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\datamodule\uDTMConexao.pas
-CursorX=1
-CursorY=21
-TopLine=40
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=Borland.FormDesignerView
-
-[View3]
-CustomEditViewType=TEditView
 Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoTabelaMSSQL.pas
-CursorX=17
-CursorY=165
-TopLine=147
+CursorX=10
+CursorY=183
+TopLine=169
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoTabelaMSSQL.pas
 
-[View4]
-CustomEditViewType=TEditView
-Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoBancoDeDados.pas
-CursorX=24
-CursorY=53
-TopLine=39
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=C:\Users\devmv\Desktop\ERP-System-in-Delphi\Classes\cAtualizacaoBancoDeDados.pas
-
-[View5]
+[View3]
 CustomEditViewType=TEditView
 Module=C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.pas
-CursorX=38
-CursorY=212
-TopLine=199
+CursorX=46
+CursorY=205
+TopLine=194
 LeftCol=1
-Elisions={{71,0},{118,11},{'OVERRIDE'}}{{122,0},{179,11},{'BOTÕES'}}{{235,0},{255,11},{'CARREGAR REGISTROS NA TELA'}}
+Elisions={{71,0},{118,11},{'OVERRIDE'}}{{122,0},{179,11},{'BOTÕES'}}{{236,0},{256,11},{'CARREGAR REGISTROS NA TELA'}}
 Bookmarks=
-EditViewName=C:\Users\devmv\Desktop\ERP-System-in-Delphi\cadastro\uCadUsuario.pas
+EditViewName=Borland.FormDesignerView
 
 [UndockedDesigner]
 Count=0
@@ -332,6 +297,11 @@ LRDockWidth=1897
 Dockable=1
 StayOnTop=0
 SplitPos=111
+
+[PropInspDesignerSelection]
+ArrangeBy=Name
+SelectedItem=Name,
+ExpandedItems="LiveBindings Designer=0"
 
 [ClassBrowserTool]
 PercentageSizes=1

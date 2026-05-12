@@ -44,14 +44,14 @@ begin
    AcaoAcesso;
    Situacao;
    Cliente;
+   Fornecedor;
    Produto;
    Vendas;
    VendasItens;
    Usuario;
-   UsuariosAcaoAcesso;
-   Fornecedor;
    Perfil;
    Auditoria;
+   UsuariosAcaoAcesso;
 end;
 
 destructor TAtualizaTableMSSQL.Destroy;
@@ -148,6 +148,24 @@ begin
   end;
 end;
 
+procedure TAtualizaTableMSSQL.Fornecedor;
+begin
+  if not TabelaExiste('fornecedor') then
+  begin
+    ExecutaDiretoBancoDeDados(
+      'CREATE TABLE fornecedor ( ' +
+      '  fornId int identity primary key, ' +
+      '  nome varchar(50), ' +
+      '  cnpj varchar(18), ' +
+      '  endereco varchar(50), ' +
+      '  telefone varchar(15), ' +
+      '  email varchar(50), ' +
+      '  observacao varchar(100) ' +
+      ') '
+    );
+  end;
+end;
+
 procedure TAtualizaTableMSSQL.Produto;
 begin
   if not TabelaExiste('produtos') then
@@ -155,15 +173,21 @@ begin
     ExecutaDiretoBancoDeDados(
       'CREATE TABLE produtos ( ' +
       '  produtoId int IDENTITY(1,1) NOT NULL, ' +
+      '  fornId int NULL, ' +
       '  nome varchar(60) NULL, ' +
-      '  descricao varchar(255) null, ' +
-      '  valor decimal(18,5) default 0.00000 null, ' +
-      '  quantidade decimal(18,5) default 0.00000 null, ' +
-      '  qntmini decimal(18,5) default 0.00000 null, ' +
-      '  categoriaId int null, ' +
+      '  descricao varchar(255) NULL, ' +
+      '  valor decimal(18,5) DEFAULT 0.00000 NULL, ' +
+      '  quantidade decimal(18,5) DEFAULT 0.00000 NULL, ' +
+      '  qntmini decimal(18,5) DEFAULT 0.00000 NULL, ' +
+      '  categoriaId int NULL, ' +
+      '  foto varbinary(max) NULL, '+
+      '  DataProduto datetime NULL DEFAULT GETDATE(), ' +
       '  PRIMARY KEY (produtoId), ' +
       '  CONSTRAINT FK_ProdutosCategorias ' +
-      '  FOREIGN KEY (categoriaId) references categorias(categoriaId)) '
+      '   FOREIGN KEY (categoriaId) REFERENCES categorias(categoriaId), ' +
+      '  CONSTRAINT FK_ProdutosFornecedor ' +
+      '    fOREIGN KEY (fornId) REFERENCES fornecedor(fornId) ' +
+      ')'
     );
   end;
 end;
@@ -275,23 +299,7 @@ begin
   end;
 end;
 
-procedure TAtualizaTableMSSQL.Fornecedor;
-begin
-  if not TabelaExiste('fornecedor') then
-  begin
-    ExecutaDiretoBancoDeDados(
-      'CREATE TABLE fornecedor ( ' +
-      '  fornId int identity primary key, ' +
-      '  nome varchar(50), ' +
-      '  cnpj varchar(18), ' +
-      '  endereco varchar(50), ' +
-      '  telefone varchar(15), ' +
-      '  email varchar(50), ' +
-      '  observacao varchar(100) ' +
-      ') '
-    );
-  end;
-end;
+
 
 procedure TAtualizaTableMSSQL.Auditoria;
 begin

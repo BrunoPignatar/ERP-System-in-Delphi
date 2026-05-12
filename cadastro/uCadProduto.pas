@@ -445,6 +445,8 @@ end;
 procedure TfrmCadProduto.FormShow(Sender: TObject);
 begin
   inherited;
+  QryCategoria.Active:=True;
+  QryFornecedor.Active:=True;
   SelectOriginal:=QryListagem.SQL.Text;
   QryCategoria.Open;
   QryFornecedor.Open;

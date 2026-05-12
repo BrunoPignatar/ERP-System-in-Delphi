@@ -36,6 +36,7 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure dbgrdListagemCellClick(Column: TColumn);
+    procedure btnApagarClick(Sender: TObject);
   private
     { Private declarations }
     oUsuario:TUsuario;
@@ -143,6 +144,15 @@ begin
 
 end;
 
+procedure TfrmCadUsuario.btnApagarClick(Sender: TObject);
+begin
+  if QryListagemusuarioId.AsInteger < 4 then begin
+    ShowMessage('Esse usuários não podem ser excluidos!! ');
+    Abort;
+  end;
+  inherited;
+end;
+
 procedure TfrmCadUsuario.btnGravarClick(Sender: TObject);
 var
   PerfilId: Integer;
@@ -179,7 +189,7 @@ end;
 {$ENDREGION}
 
 
- procedure TfrmCadUsuario.AplicarFuncoes(AUsuarioId, APerfilId: Integer);
+procedure TfrmCadUsuario.AplicarFuncoes(AUsuarioId, APerfilId: Integer);
 var Qry: TFDQuery;
 begin
   Qry := TFDQuery.Create(nil);

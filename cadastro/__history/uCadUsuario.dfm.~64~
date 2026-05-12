@@ -10,6 +10,7 @@
   inherited pgcPrincipal: TPageControl
     Width = 729
     Height = 297
+    ActivePage = Manutenção
     ExplicitWidth = 729
     ExplicitHeight = 297
     inherited Listagem: TTabSheet
@@ -95,6 +96,13 @@
         Caption = #55357#56594
         OnClick = SpeedButton2Click
       end
+      object Label2: TLabel
+        Left = 370
+        Top = 85
+        Width = 35
+        Height = 13
+        Caption = 'Fun'#231#227'o'
+      end
       object edtUsuarioId: TLabeledEdit
         Tag = 1
         Left = 23
@@ -151,21 +159,18 @@
     ExplicitTop = 297
     ExplicitWidth = 729
     inherited btnNavigator: TDBNavigator
-      Left = 407
       Hints.Strings = ()
-      ExplicitLeft = 407
     end
     inherited btnFechar: TBitBtn
-      Left = 635
-      ExplicitLeft = 635
+      Left = 659
+      ExplicitLeft = 659
     end
   end
   inherited QryListagem: TFDQuery
-    Active = True
     SQL.Strings = (
       'select usuarioId,'
       'nome,'
-      'senha from usuarios')
+      'senha, perfilId from usuarios')
     Left = 428
     object QryListagemusuarioId: TFDAutoIncField
       DisplayLabel = 'C'#243'digo'
@@ -186,12 +191,15 @@
       Required = True
       Size = 40
     end
+    object QryListagemperfilId: TIntegerField
+      FieldName = 'perfilId'
+      Origin = 'perfilId'
+    end
   end
   inherited dtsListagem: TDataSource
     Left = 500
   end
   object QryFuncao: TFDQuery
-    Active = True
     Connection = dtmConexao.dtmPrincipal
     SQL.Strings = (
       'select perfilId, descricao from perfil')

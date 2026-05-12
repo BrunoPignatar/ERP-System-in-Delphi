@@ -238,9 +238,19 @@ end;
 
 procedure TfrmPrincipal.Fornecedores1Click(Sender: TObject);
 begin
- TFuncao.CriarForm(TfrmCadFornecedor, oUsuarioLogado, dtmConexao.dtmPrincipal);
-end;
+ inherited;
+  if oUsuarioLogado.perfilId = 2 then begin
+  try
+  frmCadFornecedor:=TfrmCadFornecedor.Create(self);
 
+      frmCadFornecedor.ShowModal;
+
+  finally
+    frmCadFornecedor.Release;
+  end;
+  end else
+  ShowMessage('Apenas o Administrador do Sistema consegue abrir está tela');
+end;
 
 
 procedure TfrmPrincipal.Label1Click(Sender: TObject);

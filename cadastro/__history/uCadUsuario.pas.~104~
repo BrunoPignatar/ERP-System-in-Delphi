@@ -189,31 +189,32 @@ begin
     dtmConexao.dtmPrincipal.StartTransaction;
 
     try
-      if APerfilId = 1 then begin
+      if lkpFuncao.Text = 'ESTOQUISTA' then begin
       Qry.SQL.Text :=
         'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
         'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) '+
         'SELECT :usuarioId, acaoAcessoId, ativo '+
         'FROM usuariosAcaoAcesso '+
-        'WHERE usuarioId = 1'; //admin
+        'WHERE usuarioId = 1'; //estoquista
 
       Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
-      end else if APerfilId = 2 then begin
+
+      end else if lkpFuncao.Text = 'ADM' then begin
         Qry.SQL.Text :=
         'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
         'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) '+
         'SELECT :usuarioId, acaoAcessoId, ativo '+
         'FROM usuariosAcaoAcesso '+
-        'WHERE usuarioId = 2'; //estoquista
+        'WHERE usuarioId = 3'; //admin
 
       Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
-      end else if APerfilId = 3 then begin
+      end else if lkpFuncao.Text = 'VENDEDOR'  then begin
         Qry.SQL.Text :=
         'DELETE FROM usuariosAcaoAcesso WHERE usuarioId = :usuarioId; ' +
         'INSERT INTO usuariosAcaoAcesso (usuarioId, acaoAcessoId, ativo) '+
         'SELECT :usuarioId, acaoAcessoId, ativo '+
         'FROM usuariosAcaoAcesso '+
-        'WHERE usuarioId = 3'; //vendedor
+        'WHERE usuarioId = 2'; //vendedor
 
       Qry.ParamByName('usuarioId').AsInteger := AUsuarioId;
       end;
@@ -264,7 +265,7 @@ end;
 procedure TfrmCadUsuario.FormCreate(Sender: TObject);
 begin
   inherited;
-    QryFuncao.Active:=True;
+  QryFuncao.Active:=True;
    oUsuario:=TUsuario.Create(dtmConexao.dtmPrincipal);
    IndiceAtual:='nome';
    Randomize;
