@@ -59,9 +59,6 @@ type
     PngBitBtn2: TPngBitBtn;
     PngBitBtn3: TPngBitBtn;
     PngBitBtn4: TPngBitBtn;
-    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
-    IdSMTP1: TIdSMTP;
-    IdMessage1: TIdMessage;
     QryEmail: TFDQuery;
     QryEmailclienteId: TFDAutoIncField;
     QryEmailemail: TStringField;
@@ -97,7 +94,7 @@ type
     procedure PngBitBtn2Click(Sender: TObject);
     procedure PngBitBtn3Click(Sender: TObject);
     procedure PngBitBtn4Click(Sender: TObject);
-    procedure btnEmailClick(Sender: TObject);
+    procedure dbgrdListagemDblClick(Sender: TObject);
 
 
   private
@@ -114,7 +111,6 @@ type
     procedure ExportarTXT(ADataset: TDataSet);
     procedure ExportarJSON(ADataset: TDataSet);
     procedure ExportarHTML(ADataset: TDataSet);
-    procedure EnviarEmail;
 
   public
     { Public declarations }
@@ -370,6 +366,11 @@ end;
 
 procedure TfrmProVenda.btnAlterarClick(Sender: TObject);
 begin
+  if QryListagemvendaId.AsInteger = 0 then begin
+    ShowMessage('Nenhuma venda encontrada');
+    Abort;
+  end;
+
   if oVenda.Selecionar(QryListagem.FieldByName('vendaId').AsInteger, dtmVendas.cdsItensVenda) then begin
     edtVendaId.Text     :=IntToStr(oVenda.VendaId);
     lkpCliente.KeyValue :=oVenda.ClienteId;
@@ -471,15 +472,12 @@ begin
   QryCSV.Close;
 end;
 
-procedure TfrmProVenda.btnEmailClick(Sender: TObject);
-begin
-  inherited;
-  EnviarEmail;
-end;
-
 procedure TfrmProVenda.btnGravarClick(Sender: TObject);
 begin
-
+  if lkpCliente.Text = '' then begin
+    ShowMessage('É preciso selecionar um Cliente');
+    Abort;
+  end;
   if (dtmVendas.QryCliente.FieldByName('IDSituacao').AsInteger = 5)then
   begin
     if MessageDlg('Deseja tornar o cliente ativo?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -513,11 +511,6 @@ begin
 
   if MessageDlg('Deseja Realizar a venda?', mtInformation, [mbYes, mbNo], 0) <> mrYes then
     Abort;
-
-  QryCSV.Open();
-  ExportarCSV(QryCSV);
-  QryCSV.Close;
-  EnviarEmail;   // tentar usar esse enviarEmail para outras coisas mais uteis
 
   inherited;
   LimparCds;
@@ -609,6 +602,15 @@ begin
   QryCSV.Open();
   ExportarTXT(QryCSV);
   QryCSV.Close;
+end;
+
+procedure TfrmProVenda.dbgrdListagemDblClick(Sender: TObject);
+begin
+  if QryListagemvendaId.AsInteger = 0 then begin
+    ShowMessage('Nenhuma venda encontrada');
+    Abort;
+  end;
+  inherited;
 end;
 
 procedure TfrmProVenda.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
@@ -828,6 +830,7 @@ begin
     end;
      try
       Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.csv');
+      ShowMessage('EXPORTADO COM SUCESSO!!!!');
     except
       on E: EFCreateError do
         ShowMessage('Para exportar CSV é preciso fechar o arquivo já aberto.');
@@ -872,6 +875,7 @@ begin
     end;
 
     Lista.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.txt');
+    ShowMessage('EXPORTADO COM SUCESSO!!!!');
   finally
     Lista.Free;
   end;
@@ -918,6 +922,7 @@ begin
     TFile.WriteAllText('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.json',
       JSONArray.ToString
     );
+    ShowMessage('EXPORTADO COM SUCESSO!!!!');
 
   finally
     JSONArray.Free;
@@ -986,68 +991,11 @@ begin
     SL.Add('</html>');
 
     SL.SaveToFile('C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas.html');
+    ShowMessage('EXPORTADO COM SUCESSO!!!!');
   finally
     SL.Free;
   end;
 end;
-
-
-procedure TfrmProVenda.EnviarEmail;
-var
-  SMTP: TIdSMTP;
-  Msg: TIdMessage;
-  SSL: TIdSSLIOHandlerSocketOpenSSL;
-  Attachment: TIdAttachmentFile;
-  EmailCliente: string;
-begin
-  QryEmail.Close;
-  QryEmail.SQL.Add('SELECT email from clientes where clienteId = :clienteId');
-  QryEmail.ParamByName('clienteId').AsInteger := lkpCliente.KeyValue;
-  QryEmail.Open();
-
-  EmailCliente:= QryEmail.FieldByName('email').AsString;
-
-  SMTP := TIdSMTP.Create(nil);
-  Msg := TIdMessage.Create(nil);
-  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
-
-  try
-    // Configuração do servidor (exemplo Gmail)
-    SMTP.Host := 'smtp.gmail.com';
-    SMTP.Port := 587;
-    SMTP.Username := 'bmpignatari@gmail.com';
-    SMTP.Password := 'dcux beak sukc mdjg';
-
-    SMTP.IOHandler := SSL;
-    SMTP.UseTLS := utUseExplicitTLS;
-
-    // Configuração do SSL
-    SSL.SSLOptions.Method := sslvTLSv1_2;
-
-    // Montando o e-mail
-    Msg.From.Address := 'bmpignatari@gmail.com';
-    Msg.Recipients.EmailAddresses := EmailCliente;
-    Msg.Subject := 'Relatório de venda';
-    Msg.Body.Text := 'receba esse doce';
-    Attachment := TIdAttachmentFile.Create(Msg.MessageParts,
-    'C:\Users\devmv\Desktop\ERP-System-in-Delphi\Conversao\Vendas\Vendas.csv');
-
-    // Envio
-    SMTP.Connect;
-    try
-      SMTP.Send(Msg);
-    finally
-      SMTP.Disconnect;
-    end;
-
-    ShowMessage('Email enviado com sucesso!');
-  finally
-    SMTP.Free;
-    Msg.Free;
-    SSL.Free;
-  end;
-end;
-
 
 
 end.

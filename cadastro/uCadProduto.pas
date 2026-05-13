@@ -78,6 +78,8 @@ type
     procedure btnPesquisarClick(Sender: TObject);
     procedure dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
+    procedure btnGravarClick(Sender: TObject);
+    procedure dbgrdListagemDblClick(Sender: TObject);
   private
     { Private declarations }
     oProduto:TProduto;
@@ -178,6 +180,28 @@ begin
   end;
 
   ShowMessage(Msg);
+end;
+
+procedure TfrmCadProduto.btnGravarClick(Sender: TObject);
+begin
+  if (Trim(edtNome.Text) = '') then begin
+    ShowMessage('Campo Nome não pode ser vazio');
+    Abort;
+  end;
+  if (Trim(edtDescricao.Text) = '') then begin
+    ShowMessage('Campo Descrição não pode ser vazio');
+    Abort;
+  end;
+
+  if (lkpCategoria.Text = '') or (lkpFornecedor.Text = '') then begin
+    ShowMessage('Categoria ou Forncedor vazio');
+    Abort;
+  end;
+  if (edtValor.Text = '') or (edtQuantidade.Text = '') then begin
+    ShowMessage('Valor ou Quantidade não pode ser 0');
+    Abort;
+  end;
+  inherited;
 end;
 
 procedure TfrmCadProduto.btnIncluirCategoriaClick(Sender: TObject);
@@ -347,6 +371,16 @@ end;
 
 
 
+procedure TfrmCadProduto.dbgrdListagemDblClick(Sender: TObject);
+begin
+  if QryListagemprodutoId.AsInteger = 0 then begin
+    ShowMessage('Nenhum produto encontrado');
+    Abort;
+  end;
+  inherited;
+
+end;
+
 procedure TfrmCadProduto.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
@@ -403,6 +437,13 @@ end;
 
 procedure TfrmCadProduto.btnAlterarClick(Sender: TObject);
 begin
+  if QryListagemprodutoId.AsInteger = 0 then begin
+    ShowMessage('Nenhum produto encontrado');
+    Abort;
+  end;
+
+
+
   if oProduto.Seleciona(QryListagem.FieldByName('produtoId').AsInteger) then begin
      edtprodutoId.Text:=IntToStr(oProduto.codigo);
      edtNome.Text:=oProduto.nome;

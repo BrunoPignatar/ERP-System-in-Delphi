@@ -36,7 +36,7 @@ begin
   Path := TPath.Combine(ExtractFilePath(ParamStr(0)), 'Vendas.INI');
 
   if not FileExists(Path) then
-    raise Exception.Create('Arquivo config.ini não encontrado.');
+    raise Exception.Create('Arquivo Vendas.ini não encontrado.');
 
   Ini := TIniFile.Create(Path);
   try

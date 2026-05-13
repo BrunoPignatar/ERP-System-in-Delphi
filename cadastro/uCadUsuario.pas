@@ -123,6 +123,12 @@ end;
 {$REGION 'BOTÕES'}
 procedure TfrmCadUsuario.btnAlterarClick(Sender: TObject);
 begin
+  if QryListagemusuarioId.AsInteger = 0 then begin
+    ShowMessage('Nenhum usuário encontrada');
+    Abort;
+  end;
+
+
   if oUsuario.Selecionar(QryListagem.FieldByName('usuarioID').AsInteger) then
   begin
     edtUsuarioId.Text := IntToStr(oUsuario.codigo);
@@ -157,6 +163,23 @@ procedure TfrmCadUsuario.btnGravarClick(Sender: TObject);
 var
   PerfilId: Integer;
 begin
+  if (Trim(edtNome.Text) = '') then begin
+    ShowMessage('Campo Nome não pode ser vazio');
+    Abort;
+  end;
+
+  if (Trim(edtSenha.Text) = '') then begin
+    ShowMessage('Campo Senha não pode ser vazio');
+    Abort;
+  end;
+
+  if lkpFuncao.Text = '' then begin
+    ShowMessage('Campo Função não pode ser vazio');
+    Abort;
+  end;
+
+
+
   if (EstadoDoCadastro = ecInserir) and oUsuario.UsuarioExiste(edtNome.Text) then
   begin
     MessageDlg('Usuário ja cadastrado', mtInformation, [mbok], 0);
@@ -252,6 +275,10 @@ end;
 
 procedure TfrmCadUsuario.dbgrdListagemDblClick(Sender: TObject);
 begin
+  if QryListagemusuarioId.AsInteger = 0 then begin
+    ShowMessage('Nenhum usuário encontrada');
+    Abort;
+  end;
   inherited;
   CarregarRegistrosSelecionar;
 end;

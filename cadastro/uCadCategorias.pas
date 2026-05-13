@@ -18,6 +18,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btnGravarClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
+    procedure dbgrdListagemDblClick(Sender: TObject);
   private
     oCategoria:TCategoria;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -39,6 +40,12 @@ implementation
 {$REGION 'BOTÕES'}
 procedure TfrmCadCategorias.btnAlterarClick(Sender: TObject);
 begin
+  if QryListagemcategoriaId.AsInteger = 0 then begin
+    ShowMessage('Nenhuma categoria encontrado');
+    Abort;
+  end;
+
+
   if oCategoria.Seleciona(QryListagem.FieldByName('categoriaId').AsInteger) then begin
     edtCategoriaId.Text:=IntToStr(oCategoria.categoriaId);
     edtDescricao.Text:=oCategoria.Descricao;
@@ -53,7 +60,21 @@ end;
 
 procedure TfrmCadCategorias.btnGravarClick(Sender: TObject);
 begin
+  if Trim(edtDescricao.Text) = '' then begin
+    ShowMessage('O campo Descrição não pode ficar em branco');
+    Abort;
+  end;
   inherited;
+end;
+
+procedure TfrmCadCategorias.dbgrdListagemDblClick(Sender: TObject);
+begin
+  if QryListagemcategoriaId.AsInteger = 0 then begin
+    ShowMessage('Nenhuma categoria encontrado');
+    Abort;
+  end;
+  inherited;
+
 end;
 
 {$ENDREGION}
@@ -74,7 +95,7 @@ begin
      oCategoria.CategoriaId:=StrToInt(edtCategoriaId.Text)
   else
       oCategoria.CategoriaId:=0;
-      oCategoria.Descricao := edtDescricao.Text;
+      oCategoria.Descricao := Trim(edtDescricao.Text);
   if (EstadoDoCadastro=ecInserir) then
     Result:=oCategoria.Gravar
    else if (EstadoDoCadastro=ecAlterar) then

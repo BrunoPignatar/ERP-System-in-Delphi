@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Vcl.ExtCtrls,
   Vcl.StdCtrls, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.Mask,
-  Vcl.ComCtrls, cCadFornecedor, uEnum, uDTMConexao;
+  Vcl.ComCtrls, cCadFornecedor, uEnum, uDTMConexao, system.RegularExpressions;
 
 type
   TfrmCadFornecedor = class(TfrmTelaHeranca)
@@ -36,11 +36,13 @@ type
     procedure dbgrdListagemDblClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
     procedure mskEditChange(Sender: TObject);
+    procedure edtEmailExit(Sender: TObject);
   private
     { Private declarations }
     oFornecedor:TFornecedor;
     procedure CarregarItensSelecionados;
     function GetDesc: string; override;
+    procedure campoObrigatorio;
   public
   procedure limparComponenteitem;
   function Excluir:Boolean; override;
@@ -97,6 +99,11 @@ end;
 
 procedure TfrmCadFornecedor.dbgrdListagemDblClick(Sender: TObject);
 begin
+
+   if QryListagemfornId.AsInteger = 0 then begin
+    ShowMessage('Nenhum fornecedor encontrado');
+    Abort;
+  end;
   inherited;
   CarregarItensSelecionados;
 end;
@@ -169,6 +176,12 @@ end;
 
 procedure TfrmCadFornecedor.btnAlterarClick(Sender: TObject);
 begin
+  if QryListagemfornId.AsInteger = 0 then begin
+    ShowMessage('Nenhum fornecedor encontrado');
+    Abort;
+  end;
+
+
 
   if oFornecedor.Seleciona(QryListagem.FieldByName('fornId').AsInteger) then begin
      edtFornId.Text:=IntToStr(oFornecedor.codigo);
@@ -188,8 +201,23 @@ begin
 
 end;
 
+procedure TfrmCadFornecedor.campoObrigatorio;
+begin
+  if (Trim(edtNome.Text) = '') or
+     (Trim(edtDocumento.Text) = '') or
+     (Trim(edtEmail.Text) = '') or
+     (Trim(edtEndereco.Text) = '') or
+     (Trim(edtObservacao.Text) = '') or
+     (Trim(edtTelefone.Text) = '')  then begin
+       ShowMessage('Algum campo obrigatorio está vazio');
+       Abort;
+     end;
+
+end;
+
 procedure TfrmCadFornecedor.btnGravarClick(Sender: TObject);
 begin
+  campoObrigatorio;
   if not ValidarCNPJ(edtDocumento.Text) then
   begin
     ShowMessage('CNPJ Inválido');
@@ -224,6 +252,19 @@ begin
   end;
 end;
 
+procedure TfrmCadFornecedor.edtEmailExit(Sender: TObject);
+var
+  Email: string;
+begin
+  Email := Trim(edtEmail.Text);
+
+  if not TRegEx.IsMatch(Email, '^[^@\s]{2,}@[^@\s]{5,}\.[^@\s]{2,}$') then
+  begin
+    ShowMessage('Informe um e-mail válido');
+    edtEmail.SetFocus;
+    Exit;
+  end;
+end;
 procedure TfrmCadFornecedor.edtTelefoneChange(Sender: TObject);
 var Texto: string;
 begin
@@ -237,7 +278,7 @@ begin
   if Texto = '' then Exit;
 
 
-  if Texto[1] = '0' then
+  if (Texto[1] = '0') and (texto[3] = '0') and (Texto[4] = '0') then
   begin
     if Length(Texto) <= 4 then
       edtTelefone.Text := Copy(Texto, 1, Length(Texto))

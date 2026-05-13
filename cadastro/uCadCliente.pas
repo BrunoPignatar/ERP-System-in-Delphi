@@ -89,6 +89,7 @@ type
     procedure mskEditChange(Sender: TObject);
     procedure edtDataNascimentoExit(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
+    procedure dbgrdListagemDblClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -101,6 +102,7 @@ type
     procedure PreencherEndereco(const CEP: string);
     function GetDesc:string; override;
     procedure DefinirTipoPessoaPeloDocumento(const ADoc: string);
+    procedure campoObrigatorio;
 
   public
     { Public declarations }
@@ -127,6 +129,12 @@ uses
 {$REGION 'BOTÕES'}
 procedure TfrmCadCliente.btnAlterarClick(Sender: TObject);
 begin
+
+  if fdtncfldQryListagemclienteId.AsInteger = 0 then begin
+    ShowMessage('Nenhum cliente encontrado');
+    Abort;
+  end;
+
   if ((QryListagem.FieldByName('IDSituacao').AsInteger = 2) or (QryListagem.FieldByName('IDSituacao').AsInteger = 3) ) then
   begin
     Panel2.Visible:=True;
@@ -165,8 +173,26 @@ begin
 
 end;
 
+procedure TfrmCadCliente.campoObrigatorio;
+begin
+  if (Trim(edtNome.Text) = '') or
+     (Trim(edtCEP.Text) = '') or
+     (Trim(edtCidade.Text) = '') or
+     (Trim(edtCidade.Text) = '') or
+     (Trim(edtEmail.Text) = '') or
+     (Trim(edtEstado.Text) = '') or
+     (Trim(edtDoc.Text) = '') or
+     (Trim(edtDocumento.Text) = '') or
+     (Trim(edtEndereco.Text) = '') or
+     (Trim(edtBairro.Text) = '') or
+     (Trim(edtTelefone.Text) = '') or
+     (lkpSituacao.Text = '') or
+     (Trim(edtNumeroCasa.Text) = '') then begin
+       ShowMessage('Algum campo obrigatorio está vazio');
+       Abort;
+     end;
 
-
+end;
 
 procedure TfrmCadCliente.btnCancelarClick(Sender: TObject);
 begin
@@ -221,6 +247,8 @@ end;
     ShowMessage('Selecione uma Situação para o Cliente');
     Exit;
   end;
+
+  campoObrigatorio;
 inherited;
 end;
 
@@ -234,6 +262,16 @@ end;
 
 
 
+
+procedure TfrmCadCliente.dbgrdListagemDblClick(Sender: TObject);
+begin
+  if fdtncfldQryListagemclienteId.AsInteger = 0 then begin
+    ShowMessage('Nenhum cliente encontrado');
+    Abort;
+  end;
+  inherited;
+
+end;
 
 procedure TfrmCadCliente.dbgrdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
@@ -478,19 +516,19 @@ begin
   else
      oCliente.codigo:=0;
 
-  oCliente.nome                   :=edtNome.Text;
-  oCliente.cep                    :=edtCEP.Text;
-  oCliente.endereco               :=edtEndereco.Text;
-  oCliente.bairro                 :=edtBairro.Text;
-  oCliente.estado                 :=edtEstado.Text;
-  oCliente.cidade                 :=edtCidade.Text;
-  oCliente.telefone               :=edtTelefone.Text;
-  oCliente.email                  :=edtEmail.Text;
+  oCliente.nome                   :=Trim(edtNome.Text);
+  oCliente.cep                    :=Trim(edtCEP.Text);
+  oCliente.endereco               :=Trim(edtEndereco.Text);
+  oCliente.bairro                 :=Trim(edtBairro.Text);
+  oCliente.estado                 :=Trim(edtEstado.Text);
+  oCliente.cidade                 :=Trim(edtCidade.Text);
+  oCliente.telefone               :=Trim(edtTelefone.Text);
+  oCliente.email                  :=Trim(edtEmail.Text);
   oCliente.dataNascimento         :=edtDataNascimento.Date;
-  oCliente.doc                    :=edtDocumento.Text;
+  oCliente.doc                    :=Trim(edtDocumento.Text);
   oCliente.IDSituacao             :=lkpSituacao.KeyValue;
-  oCliente.observacao             :=edtObservacao.Text;
-  oCliente.NumeroCasa             :=edtNumeroCasa.Text;
+  oCliente.observacao             :=Trim(edtObservacao.Text);
+  oCliente.NumeroCasa             :=Trim(edtNumeroCasa.Text);
 
   if (EstadoDoCadastro=ecInserir) then
     result:=oCliente.Gravar
