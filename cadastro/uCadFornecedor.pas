@@ -37,6 +37,7 @@ type
     procedure btnAlterarClick(Sender: TObject);
     procedure mskEditChange(Sender: TObject);
     procedure edtEmailExit(Sender: TObject);
+    procedure mskEditKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     oFornecedor:TFornecedor;
@@ -170,6 +171,20 @@ begin
     mskEdit.SelStart := Length(Texto);
   finally
     mskEdit.OnChange := mskEditChange;
+  end;
+  end;
+end;
+
+procedure TfrmCadFornecedor.mskEditKeyPress(Sender: TObject; var Key: Char);
+var i: Integer;
+begin
+  inherited;
+    if IndiceAtual = 'fornId' then
+  begin
+  if not TryStrToInt(mskEdit.Text, I) then
+  begin
+    ShowMessage('Esse campo de pesquisa não aceita letras!!');
+    Abort;
   end;
   end;
 end;

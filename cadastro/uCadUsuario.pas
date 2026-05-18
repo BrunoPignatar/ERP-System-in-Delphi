@@ -37,6 +37,7 @@ type
     procedure SpeedButton2Click(Sender: TObject);
     procedure dbgrdListagemCellClick(Column: TColumn);
     procedure btnApagarClick(Sender: TObject);
+    procedure mskEditKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     oUsuario:TUsuario;
@@ -94,6 +95,20 @@ begin
     AplicarFuncoes(oUsuario.codigo, PerfilId);
 
   TAcaoAcesso.PreencherUsuariosVsAcoes(dtmConexao.dtmPrincipal);
+end;
+
+procedure TfrmCadUsuario.mskEditKeyPress(Sender: TObject; var Key: Char);
+var i: Integer;
+begin
+  inherited;
+  if IndiceAtual = 'usuarioId' then
+  begin
+  if not TryStrToInt(mskEdit.Text, I) then
+  begin
+    ShowMessage('Esse campo de pesquisa não aceita letras!!');
+    Abort;
+  end;
+  end;
 end;
 
 procedure TfrmCadUsuario.SpeedButton1Click(Sender: TObject);

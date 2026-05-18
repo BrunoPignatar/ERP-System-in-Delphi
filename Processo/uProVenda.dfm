@@ -18,6 +18,9 @@
       inherited pnlListagemTopo: TPanel
         Width = 1029
         ExplicitWidth = 1029
+        inherited mskEdit: TMaskEdit
+          OnKeyPress = mskEditKeyPress
+        end
         object PngBitBtn1: TPngBitBtn
           Left = 378
           Top = 23
@@ -311,12 +314,14 @@
                 Expanded = False
                 FieldName = 'valorUnitario'
                 Title.Caption = 'Valor Unit'#225'rio'
+                Width = 64
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'valorTotalProduto'
                 Title.Caption = 'Valor Total do Produto'
+                Width = 64
                 Visible = True
               end>
           end

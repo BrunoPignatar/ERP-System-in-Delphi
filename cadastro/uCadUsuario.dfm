@@ -27,6 +27,7 @@
         inherited mskEdit: TMaskEdit
           Left = 12
           Top = 17
+          OnKeyPress = mskEditKeyPress
           ExplicitLeft = 12
           ExplicitTop = 17
         end

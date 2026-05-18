@@ -80,6 +80,7 @@ type
       State: TGridDrawState);
     procedure btnGravarClick(Sender: TObject);
     procedure dbgrdListagemDblClick(Sender: TObject);
+    procedure mskEditKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     oProduto:TProduto;
@@ -150,6 +151,20 @@ procedure TfrmCadProduto.LimparImagem1Click(Sender: TObject);
 begin
   inherited;
   TFuncao.LimparImagem(imgImagem);
+end;
+
+procedure TfrmCadProduto.mskEditKeyPress(Sender: TObject; var Key: Char);
+var i: Integer;
+begin
+  inherited;
+  if IndiceAtual = 'produtoId' then
+  begin
+  if not TryStrToInt(mskEdit.Text, I) then
+  begin
+    ShowMessage('Esse campo de pesquisa não aceita letras!!');
+    Abort;
+  end;
+  end;
 end;
 
 procedure TfrmCadProduto.QryListagemvalorGetText(Sender: TField; var Text: string; DisplayText: Boolean);

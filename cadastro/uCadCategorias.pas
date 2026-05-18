@@ -19,6 +19,7 @@ type
     procedure btnGravarClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
     procedure dbgrdListagemDblClick(Sender: TObject);
+    procedure mskEditKeyPress(Sender: TObject; var Key: Char);
   private
     oCategoria:TCategoria;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -103,6 +104,20 @@ begin
    else
     Result:=false;
 end;
+procedure TfrmCadCategorias.mskEditKeyPress(Sender: TObject; var Key: Char);
+var I:Integer;
+begin
+  inherited;
+    if IndiceAtual = 'categoriaId' then
+  begin
+  if not TryStrToInt(mskEdit.Text, I) then
+  begin
+    ShowMessage('Esse campo de pesquisa não aceita letras!!');
+    Abort;
+  end;
+  end;
+end;
+
 {$ENDREGION}
 
 procedure TfrmCadCategorias.FormClose(Sender: TObject; var Action: TCloseAction);

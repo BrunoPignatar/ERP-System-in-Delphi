@@ -18,6 +18,9 @@
       inherited pnlListagemTopo: TPanel
         Width = 1246
         ExplicitWidth = 1246
+        inherited mskEdit: TMaskEdit
+          OnKeyPress = mskEditKeyPress
+        end
       end
       inherited dbgrdListagem: TDBGrid
         Width = 1246

@@ -15,6 +15,7 @@
         inherited mskEdit: TMaskEdit
           Left = 12
           TextHint = 'Digite sua Pesquisa'
+          OnKeyPress = mskEditKeyPress
           ExplicitLeft = 12
         end
         inherited btnPesquisar: TBitBtn

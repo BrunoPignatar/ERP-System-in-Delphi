@@ -90,6 +90,7 @@ type
     procedure edtDataNascimentoExit(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure dbgrdListagemDblClick(Sender: TObject);
+    procedure mskEditKeyPress(Sender: TObject; var Key: Char);
 
   private
     { Private declarations }
@@ -406,6 +407,20 @@ begin
     mskEdit.SelStart := Length(Texto);
   finally
     mskEdit.OnChange := mskEditChange;
+  end;
+  end;
+end;
+
+procedure TfrmCadCliente.mskEditKeyPress(Sender: TObject; var Key: Char);
+var I: Integer;
+begin
+  inherited;
+  if IndiceAtual = 'clienteId' then
+  begin
+  if not TryStrToInt(mskEdit.Text, I) then
+  begin
+    ShowMessage('Esse campo de pesquisa não aceita letras!!');
+    Abort;
   end;
   end;
 end;

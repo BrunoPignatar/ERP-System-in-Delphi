@@ -95,6 +95,7 @@ type
     procedure PngBitBtn3Click(Sender: TObject);
     procedure PngBitBtn4Click(Sender: TObject);
     procedure dbgrdListagemDblClick(Sender: TObject);
+    procedure mskEditKeyPress(Sender: TObject; var Key: Char);
 
 
   private
@@ -229,6 +230,20 @@ begin
      edtValorUnitario.value:= Ceil(edtValorUnitario.Value / 0.45);
      edtQuantidade.Value:=1;
      edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
+  end;
+end;
+
+procedure TfrmProVenda.mskEditKeyPress(Sender: TObject; var Key: Char);
+var i: Integer;
+begin
+  inherited;
+  if IndiceAtual = 'vendaId' then
+  begin
+  if not TryStrToInt(mskEdit.Text, I) then
+  begin
+    ShowMessage('Esse campo de pesquisa não aceita letras!!');
+    Abort;
+  end;
   end;
 end;
 

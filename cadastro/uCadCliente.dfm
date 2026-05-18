@@ -33,6 +33,7 @@
         end
         inherited mskEdit: TMaskEdit
           Left = 15
+          OnKeyPress = mskEditKeyPress
           ExplicitLeft = 15
         end
         inherited btnPesquisar: TBitBtn
